@@ -1,0 +1,32 @@
+# Secrets (only .env.example is committed)
+.env
+.env.*
+!.env.example
+
+# Python
+api/.venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+api/.cache/
+
+# Node / Next.js
+node_modules/
+web/.next/
+web/out/
+web/next-env.d.ts
+*.tsbuildinfo
+
+# Generated audio and eval output
+data/corpus/audio/
+eval/results/*.json
+!eval/results/latest.json
+scripts/out/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
