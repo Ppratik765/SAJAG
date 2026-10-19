@@ -1,0 +1,6 @@
+# Direct dependencies, pinned. Full resolved set: requirements-lock.txt
+fastapi==0.149.0
+uvicorn[standard]==0.54.0
+httpx==0.28.1
+websockets==17.3
+pytest==9.1.1
