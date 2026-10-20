@@ -1,0 +1,123 @@
+:root {
+  --bg: #F5F7FB;
+  --sheet: #FFFFFF;
+  --ink: #14163A;
+  --ink-muted: #4A4E7A;
+  --line: rgba(20, 22, 58, 0.12);
+  --stamp: #2A2FB8;
+  --marker: #FFD60A;
+  --alarm: #E5322D;
+  --alarm-text: #B91C1C;
+  --safe: #12A150;
+  --safe-text: #0B6B34;
+}
+
+[data-theme="dark"] {
+  --bg: #0E1030;
+  --sheet: #171A45;
+  --ink: #ECEEFF;
+  --ink-muted: #A5A9D6;
+  --line: rgba(236, 238, 255, 0.14);
+  --stamp: #8C93FF;
+  --marker: rgba(255, 214, 10, 0.40);
+  --alarm: #FF5A52;
+  --alarm-text: #FF8A84;
+  --safe: #3DDC84;
+  --safe-text: #3DDC84;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  margin: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+:lang(hi) {
+  font-size: 1.06em;
+  line-height: 1.72;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+}
+
+.font-hand {
+  font-family: var(--font-hand), cursive;
+}
+
+/* Paper sheet shadow peek effects */
+.paper-sheet {
+  background-color: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  position: relative;
+  box-shadow: 0 4px 20px -2px rgba(20, 22, 58, 0.08);
+}
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+@media (min-width: 640px) {
+  .paper-sheet::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--sheet);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    transform: rotate(0.6deg);
+    z-index: -1;
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  .paper-sheet::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--sheet);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    transform: rotate(1.2deg);
+    z-index: -2;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+}
+
+[data-theme="dark"] .paper-sheet {
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.45);
+}
+
+/* Subtly folded dog-ear corner */
+.paper-folded {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 14px) 0,
+    100% 14px,
+    100% 100%,
+    0 100%
+  );
+}
+
+.paper-dog-ear {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, transparent 50%, var(--line) 50%);
+  pointer-events: none;
+}

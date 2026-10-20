@@ -1,0 +1,116 @@
+{
+  "brand": {
+    "name": "Sajag",
+    "tagline": "Scam-call shield for Indian families"
+  },
+  "nav": {
+    "live": "Live call",
+    "check": "Check recording",
+    "paste": "Paste message",
+    "parent": "Parent mode",
+    "demo": "Demo replay",
+    "accuracy": "Accuracy",
+    "about": "About"
+  },
+  "hero": {
+    "title_primary": "Is this call a scam?",
+    "title_secondary": "क्या यह कॉल ठगी है?",
+    "description": "Sajag listens on your speakerphone, marks warning signs on a live call sheet, and speaks a warning aloud in your language when to hang up.",
+    "cta_watch_demo": "Watch Sajag catch a scam",
+    "cta_parent_mode": "Set up for my parents",
+    "cta_check_recording": "Check a recording",
+    "disclaimer": "Sajag is a helper, not a guarantee."
+  },
+  "modes": {
+    "title": "Three ways to protect your family",
+    "live_title": "1. Live on speaker",
+    "live_desc": "Place a phone or laptop beside the speakerphone. Sajag transcribes speech in real time with Gnani Prisma and warns you instantly.",
+    "check_title": "2. Check a recording",
+    "check_desc": "Upload a voice note or call recording from WhatsApp or recorder (up to 3 minutes).",
+    "paste_title": "3. Paste text",
+    "paste_desc": "Paste an SMS, WhatsApp forward, or transcript. Analyzed entirely on-device by our rules engine."
+  },
+  "steps": {
+    "title": "How Sajag works",
+    "step1_title": "1. Listen",
+    "step1_desc": "Prisma v2.5 listens to code-mixed Hindi, Hinglish, and English telephony audio directly from your speaker.",
+    "step2_title": "2. Mark",
+    "step2_desc": "A deterministic rule engine marks suspicious phrases with highlighter strokes and hard traps with vermilion circles.",
+    "step3_title": "3. Warn",
+    "step3_desc": "Timbre speaks a calm, clear alert in your mother tongue so elders know immediately when to hang up."
+  },
+  "languages": {
+    "title": "Built for how India actually speaks",
+    "subtitle": "No robotic English menus. Real code-mixed Hindi, Hinglish, and regional speech over noisy phone lines.",
+    "items": ["हिन्दी", "English", "Hinglish", "ગુજરાતી", "मराठी", "தமிழ்", "తెలుగు", "ಕನ್ನಡ", "বাংলা", "ਪੰਜਾਬੀ"]
+  },
+  "scams": {
+    "title": "Scams Sajag knows",
+    "subtitle": "Common traps identified by pattern, authority claims, urgency, and money requests.",
+    "digital_arrest": {
+      "title": "Digital arrest",
+      "desc": "Claims to be police, CBI, or customs, threatens a court case or arrest, and orders you to stay on a video call."
+    },
+    "bank_kyc": {
+      "title": "Fake bank KYC",
+      "desc": "Warns your account, SIM, or card will be blocked tonight unless you update details and share an OTP."
+    },
+    "upi_refund": {
+      "title": "Refund or wrong payment",
+      "desc": "Claims money was sent by mistake, asks you to scan a QR code or enter your UPI PIN to 'receive' money."
+    },
+    "utility_disconnect": {
+      "title": "Electricity / utility cut",
+      "desc": "Urgent SMS or call claiming power will be cut in 30 minutes unless a bill is paid to a private number."
+    },
+    "courier_parcel": {
+      "title": "Courier and customs",
+      "desc": "Alleges a parcel in your name contains narcotics or contraband, demanding immediate money to clear it."
+    },
+    "tech_support_remote": {
+      "title": "Remote access apps",
+      "desc": "Instructs you to install AnyDesk, TeamViewer, or an APK so they can 'assist' you."
+    },
+    "family_emergency": {
+      "title": "Family emergency",
+      "desc": "Claims your child or relative was arrested or injured, asking for urgent money and strict secrecy."
+    },
+    "lottery_prize": {
+      "title": "Lottery & prizes",
+      "desc": "Tells you that you won a lottery or reward, but demands an upfront processing fee."
+    },
+    "investment_task": {
+      "title": "Part-time task & investment",
+      "desc": "Promises guaranteed returns for liking videos or joining Telegram investment groups."
+    }
+  },
+  "parent_band": {
+    "title": "Simple enough for grandparents",
+    "description": "Parent mode has one giant button, huge high-contrast text, full-screen color fields, and speaks loud Hindi warnings automatically.",
+    "cta": "Open Parent mode"
+  },
+  "limits": {
+    "title": "Honest limits",
+    "body": "Sajag is a helper, not an official guarantee. Same-phone live call recording is restricted by phone operating systems, so Sajag uses a second device, uploaded recordings, or pasted text. No blocking, no official police authority.",
+    "link": "Read our full privacy and limitations policy"
+  },
+  "stamps": {
+    "safe": "NO SIGNS FOUND",
+    "safe_sub": "कोई संकेत नहीं",
+    "suspicious": "BE CAREFUL",
+    "suspicious_sub": "सावधान रहें",
+    "likely_scam": "LIKELY SCAM",
+    "likely_scam_sub": "ठगी की आशंका",
+    "scam": "SCAM — HANG UP",
+    "scam_sub": "ठगी — अभी फोन काटें"
+  },
+  "footer": {
+    "credits": "Speech recognition and voice by Gnani Prisma and Timbre",
+    "privacy": "Zero call recordings or transcripts stored. Privacy by design.",
+    "disclaimer": "Sajag is an advisory shield, not a legal guarantee."
+  },
+  "placeholder": {
+    "milestone_notice": "Coming in a later milestone",
+    "back_home": "Back to Home"
+  }
+}

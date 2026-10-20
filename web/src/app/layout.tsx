@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
+import { fontDisplay, fontBody, fontHand } from "@/lib/fonts";
+import { AppShell } from "@/components/common/AppShell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sajag",
-  description: "Sajag: a scam-call shield for Indian families.",
+  title: "Sajag — Scam-call shield for Indian families",
+  description:
+    "Sajag listens to suspicious calls, marks warning signs on a live paper call sheet with exact quotes, and speaks an alert aloud in your language.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html
+      lang="hi"
+      className={`${fontDisplay.variable} ${fontBody.variable} ${fontHand.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col font-sans">
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   );
 }
