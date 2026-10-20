@@ -1,4 +1,4 @@
-"""Minimal settings loader.
+"""Settings loader and configuration values for Sajag API.
 
 Reads the repo-root `.env` (if present) into the process environment without
 overriding variables that are already set. Standard library only.
@@ -32,7 +32,50 @@ def load_dotenv(path: Path = ENV_PATH) -> bool:
     return True
 
 
+load_dotenv()
+
+
+def get_gnani_api_key() -> str:
+    """Return the Gnani API key from environment."""
+    key = os.environ.get("GNANI_API_KEY", "").strip()
+    return key
+
+
 def allowed_origins() -> list[str]:
     """CORS origins from ALLOWED_ORIGINS (comma-separated)."""
     raw = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000")
     return [o.strip() for o in raw.split(",") if o.strip()]
+
+
+def get_daily_stt_seconds_cap() -> float:
+    return float(os.environ.get("DAILY_STT_SECONDS_CAP", "1800"))
+
+
+def get_daily_tts_chars_cap() -> int:
+    return int(os.environ.get("DAILY_TTS_CHARS_CAP", "20000"))
+
+
+def get_max_upload_seconds() -> float:
+    return float(os.environ.get("MAX_UPLOAD_SECONDS", "180"))
+
+
+def get_admin_token() -> str:
+    return os.environ.get("ADMIN_TOKEN", "")
+
+
+def is_maintenance_mode() -> bool:
+    return os.environ.get("MAINTENANCE_MODE", "false").lower() in ("true", "1", "yes")
+
+
+SUPPORTED_STT_LANGUAGES = [
+    "bn-IN",
+    "en-IN",
+    "gu-IN",
+    "hi-IN",
+    "kn-IN",
+    "ml-IN",
+    "mr-IN",
+    "pa-IN",
+    "ta-IN",
+    "te-IN",
+]

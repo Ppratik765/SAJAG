@@ -4,3 +4,7 @@ uvicorn[standard]==0.54.0
 httpx==0.28.1
 websockets==17.3
 pytest==9.1.1
+pytest-asyncio==1.4.0
+respx==0.23.1
+pyyaml==6.0.3
+python-multipart==0.0.32

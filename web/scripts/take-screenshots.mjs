@@ -396,6 +396,70 @@ async function main() {
       await ctx.close();
     }
 
+    // 4e. Check recording page processing and result (desktop & mobile)
+    {
+      const ctx = await browser.newContext({ viewport: viewports.desktop });
+      const page = await ctx.newPage();
+      await page.goto(`${BASE_URL}/check`, { waitUntil: "networkidle" });
+      await page.waitForTimeout(300);
+
+      const fileInput = page.locator("#audio-upload-input");
+      await fileInput.setInputFiles({
+        name: "sample_recording.wav",
+        mimeType: "audio/wav",
+        buffer: Buffer.from("RIFFdummydata"),
+      });
+      await page.waitForTimeout(200);
+
+      const transcribeBtn = page.getByRole("button", { name: "Transcribe recording" });
+      await transcribeBtn.click();
+
+      // Capture during processing (showing living ruler progress track)
+      await page.waitForTimeout(400);
+      await page.screenshot({
+        path: path.join(SCREENS_DIR, "check-processing-desktop.png"),
+      });
+      console.log("Captured: check-processing-desktop.png");
+
+      // Wait for complete
+      await page.waitForSelector("text=Speech-to-Text verified", { timeout: 15000 }).catch(() => page.waitForTimeout(4500));
+      await page.waitForTimeout(400);
+      await page.screenshot({
+        path: path.join(SCREENS_DIR, "check-result-desktop.png"),
+      });
+      console.log("Captured: check-result-desktop.png");
+      await ctx.close();
+    }
+
+    {
+      const ctx = await browser.newContext({
+        viewport: viewports.mobile,
+        isMobile: true,
+        hasTouch: true,
+      });
+      const page = await ctx.newPage();
+      await page.goto(`${BASE_URL}/check`, { waitUntil: "networkidle" });
+      await page.waitForTimeout(300);
+
+      const fileInput = page.locator("#audio-upload-input");
+      await fileInput.setInputFiles({
+        name: "sample_recording.wav",
+        mimeType: "audio/wav",
+        buffer: Buffer.from("RIFFdummydata"),
+      });
+      await page.waitForTimeout(200);
+
+      const transcribeBtn = page.getByRole("button", { name: "Transcribe recording" });
+      await transcribeBtn.click();
+      await page.waitForSelector("text=Speech-to-Text verified", { timeout: 15000 }).catch(() => page.waitForTimeout(4500));
+      await page.waitForTimeout(400);
+      await page.screenshot({
+        path: path.join(SCREENS_DIR, "check-result-mobile.png"),
+      });
+      console.log("Captured: check-result-mobile.png");
+      await ctx.close();
+    }
+
     // 5. Desktop Hero WebM Video Recording (~12s, 1440x900)
     console.log("\n5. Recording desktop landing hero video (~12s, 1440x900)...");
     {

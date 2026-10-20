@@ -6,17 +6,22 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config.settings import allowed_origins, load_dotenv
+from app.routes import analyze, meta
 
 load_dotenv()
 
-app = FastAPI(title="Sajag API", version="0.0.1")
+app = FastAPI(title="Sajag API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins(),
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
 )
+
+app.include_router(meta.router)
+app.include_router(analyze.router)
 
 
 @app.get("/healthz")
