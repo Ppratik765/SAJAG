@@ -64,7 +64,13 @@ html:lang(hi) {
   font-family: var(--font-hand), cursive;
 }
 
-/* Hero cycling headline sizing */
+.hero-cycling-headline-container {
+  height: 96px; /* fixed reserved box height for mobile */
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
 .hero-cycling-headline {
   font-family: var(--font-display), var(--font-body), sans-serif;
   font-weight: 800;
@@ -75,7 +81,16 @@ html:lang(hi) {
   user-select: none;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
+  .hero-cycling-headline-container {
+    height: 125px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-cycling-headline-container {
+    height: 220px; /* fixed reserved box height for desktop clamp(48px, 7vw, 112px) */
+  }
   .hero-cycling-headline {
     font-size: clamp(48px, 7vw, 112px);
     line-height: 1.04;

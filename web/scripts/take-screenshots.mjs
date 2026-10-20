@@ -167,47 +167,125 @@ async function main() {
     }
 
     // 3. Headline at three different languages
-    console.log("\n3. Capturing headline at three different languages...");
+    console.log("\n3. Capturing headline across all 11 languages (desktop & mobile)...");
+    const languages = [
+      { code: "en", name: "English" },
+      { code: "hi", name: "हिन्दी" },
+      { code: "hinglish", name: "Hinglish" },
+      { code: "ta", name: "தமிழ்" },
+      { code: "te", name: "తెలుగు" },
+      { code: "bn", name: "বাংলা" },
+      { code: "gu", name: "ગુજરાતી" },
+      { code: "mr", name: "मराठी" },
+      { code: "kn", name: "ಕನ್ನಡ" },
+      { code: "ml", name: "മലയാളം" },
+      { code: "pa", name: "ਪੰਜਾਬੀ" },
+    ];
+
+    // 3a. Desktop 1440x900 verification across all 11 languages
     {
       const ctx = await browser.newContext({ viewport: viewports.desktop });
       const page = await ctx.newPage();
       await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
       await page.evaluate(() => document.fonts.ready);
 
-      // Language 1: English
-      const enBtn = page.getByRole("button", { name: "View headline in English" });
-      if (await enBtn.isVisible()) {
-        await enBtn.click();
-        await page.waitForTimeout(300);
-        await page.screenshot({
-          path: path.join(MOTION_DIR, "headline-lang-en.png"),
-          clip: { x: 0, y: 50, width: 1440, height: 350 },
-        });
-        console.log("Captured: headline-lang-en.png");
-      }
+      let initialButtonsTop = null;
+      let initialSheetTop = null;
 
-      // Language 2: Hindi
-      const hiBtn = page.getByRole("button", { name: "View headline in हिन्दी" });
-      if (await hiBtn.isVisible()) {
-        await hiBtn.click();
-        await page.waitForTimeout(300);
-        await page.screenshot({
-          path: path.join(MOTION_DIR, "headline-lang-hi.png"),
-          clip: { x: 0, y: 50, width: 1440, height: 350 },
-        });
-        console.log("Captured: headline-lang-hi.png");
-      }
+      for (const lang of languages) {
+        const btn = page.getByRole("button", { name: `View headline in ${lang.name}` });
+        if (await btn.isVisible()) {
+          await btn.click();
+          await page.waitForTimeout(300);
 
-      // Language 3: Tamil
-      const taBtn = page.getByRole("button", { name: "View headline in தமிழ்" });
-      if (await taBtn.isVisible()) {
-        await taBtn.click();
-        await page.waitForTimeout(400);
-        await page.screenshot({
-          path: path.join(MOTION_DIR, "headline-lang-ta.png"),
-          clip: { x: 0, y: 50, width: 1440, height: 350 },
-        });
-        console.log("Captured: headline-lang-ta.png");
+          const metrics = await page.evaluate(() => {
+            const headlineBox = document.querySelector(".hero-cycling-headline-container")?.getBoundingClientRect();
+            const btnEl = document.querySelector(".btn-stamp");
+            const buttonsBox = btnEl?.parentElement?.getBoundingClientRect();
+            const sheetBox = document.querySelector(".paper-sheet")?.getBoundingClientRect();
+            return {
+              headlineHeight: headlineBox ? Math.round(headlineBox.height) : 0,
+              buttonsTop: buttonsBox ? Math.round(buttonsBox.top) : 0,
+              sheetTop: sheetBox ? Math.round(sheetBox.top) : 0,
+            };
+          });
+
+          if (initialButtonsTop === null) {
+            initialButtonsTop = metrics.buttonsTop;
+            initialSheetTop = metrics.sheetTop;
+          } else {
+            if (metrics.buttonsTop !== initialButtonsTop || metrics.sheetTop !== initialSheetTop) {
+              console.warn(`[LAYOUT SHIFT DESKTOP] ${lang.code}: buttonsTop ${metrics.buttonsTop} vs ${initialButtonsTop}, sheetTop ${metrics.sheetTop} vs ${initialSheetTop}`);
+            }
+          }
+
+          const filename = `headline-lang-${lang.code}-desktop.png`;
+          await page.screenshot({
+            path: path.join(MOTION_DIR, filename),
+            clip: { x: 0, y: 50, width: 1440, height: 420 },
+          });
+
+          // Also save traditional names for en, hi, ta
+          if (lang.code === "en" || lang.code === "hi" || lang.code === "ta") {
+            await page.screenshot({
+              path: path.join(MOTION_DIR, `headline-lang-${lang.code}.png`),
+              clip: { x: 0, y: 50, width: 1440, height: 420 },
+            });
+          }
+          console.log(`Captured desktop: ${filename} (h: ${metrics.headlineHeight}px, btnTop: ${metrics.buttonsTop}px)`);
+        }
+      }
+      await ctx.close();
+    }
+
+    // 3b. Mobile 390x844 verification across all 11 languages
+    {
+      const ctx = await browser.newContext({
+        viewport: viewports.mobile,
+        isMobile: true,
+        hasTouch: true,
+      });
+      const page = await ctx.newPage();
+      await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
+      await page.evaluate(() => document.fonts.ready);
+
+      let initialButtonsTop = null;
+      let initialSheetTop = null;
+
+      for (const lang of languages) {
+        const btn = page.getByRole("button", { name: `View headline in ${lang.name}` });
+        if (await btn.isVisible()) {
+          await btn.click();
+          await page.waitForTimeout(300);
+
+          const metrics = await page.evaluate(() => {
+            const headlineBox = document.querySelector(".hero-cycling-headline-container")?.getBoundingClientRect();
+            const btnEl = document.querySelector(".btn-stamp");
+            const buttonsBox = btnEl?.parentElement?.getBoundingClientRect();
+            const sheetBox = document.querySelector(".paper-sheet")?.getBoundingClientRect();
+            return {
+              headlineHeight: headlineBox ? Math.round(headlineBox.height) : 0,
+              buttonsTop: buttonsBox ? Math.round(buttonsBox.top) : 0,
+              sheetTop: sheetBox ? Math.round(sheetBox.top) : 0,
+            };
+          });
+
+          if (initialButtonsTop === null) {
+            initialButtonsTop = metrics.buttonsTop;
+            initialSheetTop = metrics.sheetTop;
+          } else {
+            if (metrics.buttonsTop !== initialButtonsTop || metrics.sheetTop !== initialSheetTop) {
+              console.warn(`[LAYOUT SHIFT MOBILE] ${lang.code}: buttonsTop ${metrics.buttonsTop} vs ${initialButtonsTop}, sheetTop ${metrics.sheetTop} vs ${initialSheetTop}`);
+            }
+          }
+
+          const filename = `headline-lang-${lang.code}-mobile.png`;
+          await page.screenshot({
+            path: path.join(MOTION_DIR, filename),
+            clip: { x: 0, y: 50, width: 390, height: 500 },
+          });
+          console.log(`Captured mobile: ${filename} (h: ${metrics.headlineHeight}px, btnTop: ${metrics.buttonsTop}px, sheetTop: ${metrics.sheetTop}px)`);
+        }
       }
       await ctx.close();
     }

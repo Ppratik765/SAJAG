@@ -266,12 +266,13 @@ export function LivingHero() {
           {/* Visible cycling display headline: clamp(48px, 7vw, 112px) desktop, 40px mobile */}
           <div
             aria-hidden="true"
-            className="hero-cycling-headline min-h-[1.15em] flex items-center"
+            className="hero-cycling-headline-container hero-cycling-headline w-full"
           >
             <span
-              className="inline-block transition-all duration-300 transform-gpu"
+              className="inline-block transition-all duration-300 transform-gpu max-w-full"
               style={{
                 fontFamily: activeFontFamily,
+                fontSize: `calc(1em * ${currentCycleEntry.scale})`,
                 clipPath: isWiping
                   ? "inset(0 100% 0 0)"
                   : "inset(0 0 0 0)",
