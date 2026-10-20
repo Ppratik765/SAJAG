@@ -1,0 +1,316 @@
+version: 1
+
+categories:
+  AUTHORITY_CLAIM:
+    weight: 2
+    hard: false
+    patterns:
+      - {text: "cbi", lang: any, reviewed: true}
+      - {text: "सीबीआई", lang: hi, reviewed: true}
+      - {text: "police", lang: any, reviewed: true}
+      - {text: "पुलिस", lang: hi, reviewed: true}
+      - {text: "crime branch", lang: any, reviewed: true}
+      - {text: "क्राइम ब्रांच", lang: hi, reviewed: true}
+      - {text: "narcotics", lang: any, reviewed: true}
+      - {text: "नारकोटिक्स", lang: hi, reviewed: true}
+      - {text: "customs", lang: any, reviewed: true}
+      - {text: "कस्टम्स", lang: hi, reviewed: true}
+      - {text: "कस्टम", lang: hi, reviewed: true}
+      - {text: "trai", lang: any, reviewed: true}
+      - {text: "ट्राई", lang: hi, reviewed: true}
+      - {text: "rbi", lang: any, reviewed: true}
+      - {text: "आरबीआई", lang: hi, reviewed: true}
+      - {text: "cyber cell", lang: any, reviewed: true}
+      - {text: "साइबर सेल", lang: hi, reviewed: true}
+      - {text: "supreme court", lang: any, reviewed: true}
+      - {text: "हाई कोर्ट", lang: hi, reviewed: true}
+      - {text: "court order", lang: any, reviewed: true}
+      - {text: "कोर्ट", lang: hi, reviewed: true}
+      - {text: "officer", lang: any, reviewed: true}
+      - {text: "अफसर", lang: hi, reviewed: true}
+      - {text: "इन्स्पेक्टर", lang: hi, reviewed: true}
+      - {text: "inspector", lang: any, reviewed: true}
+      - {text: "dsp", lang: any, reviewed: true}
+      - {text: "dcp", lang: any, reviewed: true}
+
+  THREAT_ARREST:
+    weight: 3
+    hard: true
+    patterns:
+      - {text: "arrest", lang: any, reviewed: true}
+      - {text: "अरेस्ट", lang: hi, reviewed: true}
+      - {text: "गिरफ्तार", lang: hi, reviewed: true}
+      - {text: "गिरफ्तारी", lang: hi, reviewed: true}
+      - {text: "warrant", lang: any, reviewed: true}
+      - {text: "वारंट", lang: hi, reviewed: true}
+      - {text: "arrest warrant", lang: any, reviewed: true}
+      - {text: "गैर जमानती", lang: hi, reviewed: true}
+      - {text: "money laundering", lang: any, reviewed: true}
+      - {text: "मनी लॉन्ड्रिंग", lang: hi, reviewed: true}
+      - {text: "case registered", lang: any, reviewed: true}
+      - {text: "केस दर्ज", lang: hi, reviewed: true}
+      - {text: "fir", lang: any, reviewed: true}
+      - {text: "एफआईआर", lang: hi, reviewed: true}
+      - {text: "jail", lang: any, reviewed: true}
+      - {text: "जेल", lang: hi, reviewed: true}
+      - {text: "legal action", lang: any, reviewed: true}
+      - {text: "कानूनी कार्रवाई", lang: hi, reviewed: true}
+
+  ISOLATION:
+    weight: 3
+    hard: true
+    patterns:
+      - {text: "digital arrest", lang: any, reviewed: true}
+      - {text: "डिजिटल अरेस्ट", lang: hi, reviewed: true}
+      - {text: "stay on the call", lang: any, reviewed: true}
+      - {text: "stay on the line", lang: any, reviewed: true}
+      - {text: "don't disconnect", lang: any, reviewed: true}
+      - {text: "do not disconnect", lang: any, reviewed: true}
+      - {text: "disconnect मत करना", lang: hinglish, reviewed: true}
+      - {text: "कॉल पर रहिए", lang: hi, reviewed: true}
+      - {text: "लाइन पर रहिए", lang: hi, reviewed: true}
+      - {text: "video call पर रहिए", lang: hi, reviewed: true}
+      - {text: "वीडियो कॉल", lang: hi, reviewed: true}
+      - {text: "video call", lang: any, reviewed: true}
+      - {text: "skype call", lang: any, reviewed: true}
+      - {text: "स्काइप", lang: hi, reviewed: true}
+      - {text: "camera on", lang: any, reviewed: true}
+      - {text: "कैमरा ऑन", lang: hi, reviewed: true}
+      - {text: "call mat kaatna", lang: hinglish, reviewed: true}
+      - {text: "फोन मत काटना", lang: hi, reviewed: true}
+      - {text: "room lock", lang: any, reviewed: true}
+      - {text: "कमरा बंद", lang: hi, reviewed: true}
+
+  SECRECY:
+    weight: 3
+    hard: false
+    patterns:
+      - {text: "don't tell anyone", lang: any, reviewed: true}
+      - {text: "do not tell anyone", lang: any, reviewed: true}
+      - {text: "kisi ko mat batana", lang: hinglish, reviewed: true}
+      - {text: "किसी को मत बताना", lang: hi, reviewed: true}
+      - {text: "किसी को नहीं बताना", lang: hi, reviewed: true}
+      - {text: "keep this confidential", lang: any, reviewed: true}
+      - {text: "confidential", lang: any, reviewed: true}
+      - {text: "गोपनीय", lang: hi, reviewed: true}
+      - {text: "secret investigation", lang: any, reviewed: true}
+      - {text: "गुप्त जांच", lang: hi, reviewed: true}
+      - {text: "family ko mat batana", lang: hinglish, reviewed: true}
+      - {text: "घर वालों को मत बताना", lang: hi, reviewed: true}
+
+  OTP_PIN_REQUEST:
+    weight: 4
+    hard: true
+    needs_request_context: true
+    patterns:
+      - {text: "otp", lang: any, reviewed: true}
+      - {text: "ओटीपी", lang: hi, reviewed: true}
+      - {text: "one time password", lang: any, reviewed: true}
+      - {text: "upi pin", lang: any, reviewed: true}
+      - {text: "यूपीआई पिन", lang: hi, reviewed: true}
+      - {text: "pin", lang: any, reviewed: true}
+      - {text: "पिन", lang: hi, reviewed: true}
+      - {text: "cvv", lang: any, reviewed: true}
+      - {text: "सीवीवी", lang: hi, reviewed: true}
+      - {text: "card number", lang: any, reviewed: true}
+      - {text: "कार्ड नंबर", lang: hi, reviewed: true}
+      - {text: "expiry date", lang: any, reviewed: true}
+      - {text: "4 digit code", lang: any, reviewed: true}
+      - {text: "6 digit code", lang: any, reviewed: true}
+      - {text: "छह अंकों का कोड", lang: hi, reviewed: true}
+
+  MONEY_TRANSFER:
+    weight: 3
+    hard: true
+    patterns:
+      - {text: "transfer", lang: any, reviewed: true}
+      - {text: "ट्रांसफर", lang: hi, reviewed: true}
+      - {text: "भेजिए", lang: hi, reviewed: true}
+      - {text: "पैसे भेजिए", lang: hi, reviewed: true}
+      - {text: "paise bhej", lang: hinglish, reviewed: true}
+      - {text: "send money", lang: any, reviewed: true}
+      - {text: "safe account", lang: any, reviewed: true}
+      - {text: "सेफ अकाउंट", lang: hi, reviewed: true}
+      - {text: "government account", lang: any, reviewed: true}
+      - {text: "सरकारी खाते", lang: hi, reviewed: true}
+      - {text: "verification amount", lang: any, reviewed: true}
+      - {text: "security deposit", lang: any, reviewed: true}
+      - {text: "रिफंडेबल सिक्योरिटी", lang: hi, reviewed: true}
+      - {text: "refundable deposit", lang: any, reviewed: true}
+      - {text: "qr code", lang: any, reviewed: true}
+      - {text: "scan qr", lang: any, reviewed: true}
+      - {text: "क्यूआर कोड स्कैन", lang: hi, reviewed: true}
+      - {text: "processing fee", lang: any, reviewed: true}
+      - {text: "प्रोसेसिंग फीस", lang: hi, reviewed: true}
+      - {text: "penalty", lang: any, reviewed: true}
+      - {text: "जुर्माना", lang: hi, reviewed: true}
+
+  REMOTE_ACCESS_APP:
+    weight: 4
+    hard: true
+    patterns:
+      - {text: "anydesk", lang: any, reviewed: true}
+      - {text: "एनीडेस्क", lang: hi, reviewed: true}
+      - {text: "teamviewer", lang: any, reviewed: true}
+      - {text: "टीमव्यूअर", lang: hi, reviewed: true}
+      - {text: "quicksupport", lang: any, reviewed: true}
+      - {text: "क्विकसपोर्ट", lang: hi, reviewed: true}
+      - {text: "rustdesk", lang: any, reviewed: true}
+      - {text: "screen share", lang: any, reviewed: true}
+      - {text: "स्क्रीन शेयर", lang: hi, reviewed: true}
+      - {text: "apk", lang: any, reviewed: true}
+      - {text: "download apk", lang: any, reviewed: true}
+      - {text: "एपीके", lang: hi, reviewed: true}
+      - {text: "app install", lang: any, reviewed: true}
+      - {text: "ऐप डाउनलोड", lang: hi, reviewed: true}
+      - {text: "ऐप इंस्टॉल", lang: hi, reviewed: true}
+
+  ACCOUNT_THREAT:
+    weight: 2
+    hard: false
+    patterns:
+      - {text: "account block", lang: any, reviewed: true}
+      - {text: "खाता बंद", lang: hi, reviewed: true}
+      - {text: "अकाउंट ब्लॉक", lang: hi, reviewed: true}
+      - {text: "account suspend", lang: any, reviewed: true}
+      - {text: "kyc update", lang: any, reviewed: true}
+      - {text: "kyc expired", lang: any, reviewed: true}
+      - {text: "केवाईसी", lang: hi, reviewed: true}
+      - {text: "sim block", lang: any, reviewed: true}
+      - {text: "सिम ब्लॉक", lang: hi, reviewed: true}
+      - {text: "sim deactivate", lang: any, reviewed: true}
+      - {text: "electricity disconnect", lang: any, reviewed: true}
+      - {text: "बिजली काट दी जाएगी", lang: hi, reviewed: true}
+      - {text: "बिजली कनेक्शन", lang: hi, reviewed: true}
+      - {text: "power connection", lang: any, reviewed: true}
+      - {text: "power supply disconnect", lang: any, reviewed: true}
+      - {text: "power cut", lang: any, reviewed: true}
+      - {text: "electricity cut", lang: any, reviewed: true}
+      - {text: "unpaid bill", lang: any, reviewed: true}
+      - {text: "electricity bill", lang: any, reviewed: true}
+      - {text: "pan card link", lang: any, reviewed: true}
+      - {text: "आधार लिंक", lang: hi, reviewed: true}
+
+  URGENCY:
+    weight: 1
+    hard: false
+    patterns:
+      - {text: "right now", lang: any, reviewed: true}
+      - {text: "immediately", lang: any, reviewed: true}
+      - {text: "तुरंत", lang: hi, reviewed: true}
+      - {text: "अभी", lang: hi, reviewed: true}
+      - {text: "within 30 minutes", lang: any, reviewed: true}
+      - {text: "within 10 minutes", lang: any, reviewed: true}
+      - {text: "आधे घंटे में", lang: hi, reviewed: true}
+      - {text: "दस मिनट में", lang: hi, reviewed: true}
+      - {text: "last warning", lang: any, reviewed: true}
+      - {text: "अंतिम चेतावनी", lang: hi, reviewed: true}
+      - {text: "आज रात", lang: hi, reviewed: true}
+      - {text: "tonight at 9", lang: any, reviewed: true}
+
+  PRIZE_REFUND:
+    weight: 2
+    hard: false
+    patterns:
+      - {text: "lottery", lang: any, reviewed: true}
+      - {text: "लॉटरी", lang: hi, reviewed: true}
+      - {text: "prize", lang: any, reviewed: true}
+      - {text: "इनाम", lang: hi, reviewed: true}
+      - {text: "refund", lang: any, reviewed: true}
+      - {text: "रिफंड", lang: hi, reviewed: true}
+      - {text: "cashback", lang: any, reviewed: true}
+      - {text: "कैशबैक", lang: hi, reviewed: true}
+      - {text: "kbc", lang: any, reviewed: true}
+      - {text: "केबीसी", lang: hi, reviewed: true}
+      - {text: "25 lakh", lang: any, reviewed: true}
+      - {text: "25 लाख", lang: hi, reviewed: true}
+      - {text: "wrong payment sent", lang: any, reviewed: true}
+      - {text: "गलती से पैसे आ गए", lang: hi, reviewed: true}
+      - {text: "galti se paise", lang: hinglish, reviewed: true}
+      - {text: "galti se transfer", lang: hinglish, reviewed: true}
+      - {text: "galti se bhej", lang: hinglish, reviewed: true}
+      - {text: "galti se", lang: hinglish, reviewed: true}
+      - {text: "गलती से", lang: hi, reviewed: true}
+
+  FAMILY_EMERGENCY:
+    weight: 2
+    hard: false
+    patterns:
+      - {text: "accident", lang: any, reviewed: true}
+      - {text: "एक्सीडेंट", lang: hi, reviewed: true}
+      - {text: "दुर्घटना", lang: hi, reviewed: true}
+      - {text: "hospital", lang: any, reviewed: true}
+      - {text: "अस्पताल", lang: hi, reviewed: true}
+      - {text: "police station me hu", lang: hinglish, reviewed: true}
+      - {text: "थाने में हूँ", lang: hi, reviewed: true}
+      - {text: "police station", lang: any, reviewed: true}
+      - {text: "new number", lang: any, reviewed: true}
+      - {text: "नया नंबर", lang: hi, reviewed: true}
+      - {text: "mera phone kho gaya", lang: hinglish, reviewed: true}
+      - {text: "bail", lang: any, reviewed: true}
+      - {text: "ज़मानत", lang: hi, reviewed: true}
+      - {text: "emergency operation", lang: any, reviewed: true}
+
+  PARCEL:
+    weight: 2
+    hard: false
+    patterns:
+      - {text: "courier", lang: any, reviewed: true}
+      - {text: "कूरियर", lang: hi, reviewed: true}
+      - {text: "fedex", lang: any, reviewed: true}
+      - {text: "फेडेक्स", lang: hi, reviewed: true}
+      - {text: "parcel", lang: any, reviewed: true}
+      - {text: "पार्सल", lang: hi, reviewed: true}
+      - {text: "customs clearance", lang: any, reviewed: true}
+      - {text: "contraband", lang: any, reviewed: true}
+      - {text: "illegal drugs", lang: any, reviewed: true}
+      - {text: "ड्रग्स", lang: hi, reviewed: true}
+      - {text: "mdma", lang: any, reviewed: true}
+      - {text: "taiwan parcel", lang: any, reviewed: true}
+      - {text: "पासपोर्ट मिला", lang: hi, reviewed: true}
+
+  INVESTMENT:
+    weight: 2
+    hard: false
+    patterns:
+      - {text: "guaranteed returns", lang: any, reviewed: true}
+      - {text: "गारंटीड रिटर्न", lang: hi, reviewed: true}
+      - {text: "double your money", lang: any, reviewed: true}
+      - {text: "पैसे डबल", lang: hi, reviewed: true}
+      - {text: "trading group", lang: any, reviewed: true}
+      - {text: "ट्रेडिंग", lang: hi, reviewed: true}
+      - {text: "telegram task", lang: any, reviewed: true}
+      - {text: "टेलीग्राम", lang: hi, reviewed: true}
+      - {text: "part time job", lang: any, reviewed: true}
+      - {text: "घर बैठे कमाई", lang: hi, reviewed: true}
+      - {text: "like subscribe task", lang: any, reviewed: true}
+      - {text: "daily profit", lang: any, reviewed: true}
+
+types:
+  digital_arrest:
+    all_of: [AUTHORITY_CLAIM]
+    any_of: [THREAT_ARREST, PARCEL]
+    also_any_of: [ISOLATION, SECRECY]
+  bank_kyc:
+    all_of: [ACCOUNT_THREAT]
+    any_of: [OTP_PIN_REQUEST, REMOTE_ACCESS_APP]
+  courier_parcel:
+    all_of: [PARCEL, AUTHORITY_CLAIM]
+    any_of: [MONEY_TRANSFER, THREAT_ARREST]
+  lottery_prize:
+    all_of: [PRIZE_REFUND, MONEY_TRANSFER]
+  upi_refund:
+    all_of: [PRIZE_REFUND]
+    any_of: [OTP_PIN_REQUEST, MONEY_TRANSFER, REMOTE_ACCESS_APP]
+  utility_disconnect:
+    all_of: [ACCOUNT_THREAT, URGENCY]
+    any_of: [MONEY_TRANSFER, REMOTE_ACCESS_APP]
+  tech_support_remote:
+    all_of: [REMOTE_ACCESS_APP]
+    any_of: [ACCOUNT_THREAT, PRIZE_REFUND, URGENCY]
+  family_emergency:
+    all_of: [FAMILY_EMERGENCY, MONEY_TRANSFER]
+    any_of: [SECRECY, URGENCY]
+  investment_task:
+    all_of: [INVESTMENT]
+    any_of: [MONEY_TRANSFER, PRIZE_REFUND]

@@ -15,7 +15,7 @@ import {
   Clock,
   Sparkles,
 } from "lucide-react";
-import { uploadAudioForAnalysis, AnalysisResponse } from "@/lib/api/analyze";
+import { uploadAudioForAnalysis, AnalysisResponse, TranscriptSegment } from "@/lib/api/analyze";
 import { useI18n } from "@/lib/i18n/context";
 
 const SUPPORTED_LANGUAGES = [
@@ -484,7 +484,7 @@ export default function CheckPage() {
               {/* Ruled Lines Content */}
               {result ? (
                 <div className="space-y-4">
-                  {result.segments.map((seg, idx) => (
+                  {result.segments.map((seg: TranscriptSegment, idx: number) => (
                     <div
                       key={idx}
                       className="flex items-start gap-4 py-2 border-b border-[var(--line)]/60 text-sm leading-relaxed"

@@ -21,7 +21,7 @@ def get_meta() -> dict[str, Any]:
     return {
         "supported_stt_languages": SUPPORTED_STT_LANGUAGES,
         "reviewed_warning_languages": ["en-IN", "hi-IN"],
-        "engine_attached": False,  # M1: False; M2 flips to True
+        "engine_attached": True,  # M2: detection engine active
     }
 
 

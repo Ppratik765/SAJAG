@@ -1,8 +1,8 @@
-"""Audio transcription route (M1).
+"""Audio and Text Analysis routes (M1 & M2).
 
-Splits audio into <= 28s chunks, transcribes in parallel with concurrency <= 3,
-reassembles in order, records verified STT seconds, cleans temp files, and maps
-all typed errors to clean API responses.
+- /api/analyze/audio: Splits audio into <= 28s chunks, transcribes via Gnani Prisma REST,
+  reassembles transcript segments, runs deterministic detection engine, and returns AnalysisResult.
+- /api/analyze/text: Runs deterministic detection engine on pasted/text transcript.
 """
 
 from __future__ import annotations
@@ -39,10 +39,33 @@ from app.util.audio import (
     to_wav_16k_mono,
     validate_upload,
 )
+from app.models.analysis import (
+    AnalysisResult,
+    Segment,
+    TextAnalysisRequest,
+)
+from app.engine.analyzer import analyze_text, analyze_segments
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/analyze", tags=["analyze"])
+
+
+@router.post("/text")
+async def analyze_text_route(req: TextAnalysisRequest) -> JSONResponse:
+    """Analyze a pasted message or text transcript with the deterministic detection engine.
+
+    Works offline of any speech API, uses 0 speech credits.
+    """
+    if is_maintenance_mode():
+        return JSONResponse(
+            status_code=503,
+            content={"error": {"code": "maintenance", "message": "Service is currently in maintenance mode."}},
+        )
+
+    clean_text = req.text.strip()
+    result = analyze_text(clean_text, language_code=req.language_code)
+    return JSONResponse(status_code=200, content=result.model_dump())
 
 
 @router.post("/audio")
@@ -50,10 +73,7 @@ async def analyze_audio(
     file: UploadFile = File(...),
     language_code: str = Form("hi-IN"),
 ) -> JSONResponse:
-    """Analyze/transcribe uploaded audio (<= 3 min, <= 25MB).
-
-    M1 returns transcript and segment timestamps. Engine analysis is attached in M2.
-    """
+    """Analyze/transcribe uploaded audio (<= 3 min, <= 25MB) with attached detection engine."""
     if is_maintenance_mode():
         return JSONResponse(
             status_code=503,
@@ -123,33 +143,28 @@ async def analyze_audio(
         # Sort in original sequence order
         chunk_results.sort(key=lambda x: x["index"])
 
-        # Reassemble full transcript
-        full_transcript = " ".join(c["text"] for c in chunk_results if c["text"]).strip()
-
         # 6. Record real STT usage
         record_stt_usage(total_duration)
 
-        analysis_id = str(uuid.uuid4())
+        # 7. Convert to Segment objects
+        segments = [
+            Segment(
+                index=c["index"],
+                text=c["text"],
+                duration_s=round(c["duration_s"], 2),
+                offset_s=round(c["offset_s"], 2),
+            )
+            for c in chunk_results
+        ]
 
-        return JSONResponse(
-            status_code=200,
-            content={
-                "analysis_id": analysis_id,
-                "language_code": language_code,
-                "duration_seconds": round(total_duration, 2),
-                "transcript": full_transcript,
-                "segments": [
-                    {
-                        "index": c["index"],
-                        "text": c["text"],
-                        "duration_s": round(c["duration_s"], 2),
-                        "offset_s": round(c["offset_s"], 2),
-                    }
-                    for c in chunk_results
-                ],
-                "engine_attached": False,  # M1: False (engine attached in M2)
-            },
+        # 8. Run deterministic detection engine (M2 attached)
+        analysis = analyze_segments(
+            segments=segments,
+            language_code=language_code,
+            total_duration=round(total_duration, 2),
         )
+
+        return JSONResponse(status_code=200, content=analysis.model_dump())
 
     except GnaniAuthError as err:
         return JSONResponse(status_code=500, content={"error": {"code": "auth_error", "message": str(err)}})

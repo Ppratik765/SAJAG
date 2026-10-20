@@ -1,4 +1,4 @@
-"""Tests for FastAPI endpoints: /healthz, /api/meta, /api/usage, /api/analyze/audio."""
+"""Tests for FastAPI endpoints: /healthz, /api/meta, /api/usage, /api/analyze/audio, /api/analyze/text."""
 
 import io
 import wave
@@ -40,7 +40,7 @@ async def test_meta():
         assert resp.status_code == 200
         data = resp.json()
         assert "hi-IN" in data["supported_stt_languages"]
-        assert data["engine_attached"] is False
+        assert data["engine_attached"] is True  # M2: active
 
 
 @pytest.mark.asyncio
@@ -67,7 +67,7 @@ async def test_analyze_audio_success():
             json={
                 "success": True,
                 "request_id": "req_mock_1",
-                "transcript": "यह एक परीक्षण है",
+                "transcript": "यह एक सामान्य परीक्षण है",
             },
         )
     )
@@ -81,10 +81,31 @@ async def test_analyze_audio_success():
         resp = await client.post("/api/analyze/audio", files=files, data=data)
         assert resp.status_code == 200
         payload = resp.json()
-        assert payload["transcript"] == "यह एक परीक्षण है"
+        assert payload["transcript"] == "यह एक सामान्य परीक्षण है"
         assert payload["language_code"] == "hi-IN"
-        assert payload["engine_attached"] is False
+        assert payload["level"] == "safe"
+        assert payload["score"] == 0
+        assert payload["primary_type"] == "none"
         assert len(payload["segments"]) >= 1
+
+
+@pytest.mark.asyncio
+async def test_analyze_text_route():
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        body = {
+            "text": "Crime Branch officer here. Arrest warrant issued for money laundering. You are under digital arrest, stay on the call.",
+            "language_code": "en-IN",
+        }
+        resp = await client.post("/api/analyze/text", json=body)
+        assert resp.status_code == 200
+        payload = resp.json()
+        assert payload["level"] in ("likely_scam", "scam")
+        assert payload["primary_type"] == "digital_arrest"
+        assert len(payload["signals"]) >= 3
+        # Invariant check
+        for sig in payload["signals"]:
+            assert sig["evidence"] in body["text"]
 
 
 @pytest.mark.asyncio
@@ -101,11 +122,11 @@ async def test_analyze_audio_invalid_lang():
 
 @pytest.mark.asyncio
 async def test_analyze_audio_maintenance_mode():
-    wav_bytes = _create_wav_bytes(duration_s=1.0)
-    transport = httpx.ASGITransport(app=app)
     with patch("app.routes.analyze.is_maintenance_mode", return_value=True):
+        wav_bytes = _create_wav_bytes(duration_s=1.0)
+        transport = httpx.ASGITransport(app=app)
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
             files = {"file": ("test.wav", wav_bytes, "audio/wav")}
-            resp = await client.post("/api/analyze/audio", files=files, data={"language_code": "hi-IN"})
+            resp = await client.post("/api/analyze/audio", files=files)
             assert resp.status_code == 503
             assert resp.json()["error"]["code"] == "maintenance"
