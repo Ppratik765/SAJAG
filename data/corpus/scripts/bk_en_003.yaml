@@ -1,0 +1,22 @@
+id: bk_en_003
+language: en-IN
+label: bank_kyc
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: This is Bank of Baroda central processing center calling regarding your account
+    verification.
+- speaker: victim
+  text: Yes officer, tell me.
+- speaker: caller
+  text: Due to regulatory guidelines, your card and account will freeze tonight unless
+    KYC is verified online.
+- speaker: victim
+  text: What do I need to provide?
+- speaker: caller
+  text: Just read out the six-digit authorization code received on your registered
+    phone number.
+- speaker: victim
+  text: I received the SMS, code is three nine five zero.

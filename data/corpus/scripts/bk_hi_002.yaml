@@ -1,0 +1,22 @@
+id: bk_hi_002
+language: hi-IN
+label: bank_kyc
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: पीएनबी बैंक कस्टमर केयर से वेरिफिकेशन ऑफिसर। आपका डेबिट कार्ड ब्लॉक कर दिया
+    गया है।
+- speaker: victim
+  text: मेरा कार्ड क्यों ब्लॉक हुआ? कल तो मैंने पैसे निकाले थे।
+- speaker: caller
+  text: केवाईसी एक्सपायर हो चुकी है। अगर अभी रिन्यू नहीं किया तो अकाउंट सीज हो जाएगा।
+    मोबाइल पर आया ओटीपी शेयर कीजिए।
+- speaker: victim
+  text: क्या बैंक फोन पर ओटीपी मांगता है?
+- speaker: caller
+  text: यह हेड ऑफिस की इमरजेंसी वेरिफिकेशन है। ओटीपी नहीं देंगे तो खाता कभी दोबारा
+    नहीं खुलेगा।
+- speaker: victim
+  text: अच्छा ठीक है सर, ओटीपी चार पांच दो एक है।

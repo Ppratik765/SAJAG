@@ -1,0 +1,21 @@
+id: da_hi_001
+language: hi-IN
+label: digital_arrest
+legit_kind: null
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: नमस्ते, मैं दिल्ली पुलिस क्राइम ब्रांच से सब इंस्पेक्टर अजय बात कर रहा हूँ।
+- speaker: victim
+  text: हाँ जी, पुलिस ने मेरे नंबर पर क्यों कॉल किया?
+- speaker: caller
+  text: आपके आधार नंबर पर गैरकानूनी पार्सल मिला है जिसमें नशीली दवाएं हैं। आपके खिलाफ
+    गिरफ्तारी वारंट जारी हुआ है।
+- speaker: victim
+  text: अरे भगवान, मैंने कोई पार्सल नहीं भेजा।
+- speaker: caller
+  text: सुप्रीम कोर्ट के आदेश पर आपको डिजिटल अरेस्ट में रखा गया है। कमरा बंद कर लीजिए
+    और किसी को मत बताना। वीडियो कॉल मत काटना।
+- speaker: victim
+  text: जी सर, मैं कमरा बंद करके कॉल पर ही हूँ।

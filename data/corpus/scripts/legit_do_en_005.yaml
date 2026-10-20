@@ -1,0 +1,18 @@
+id: legit_do_en_005
+language: en-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Dunzo parcel pickup and drop delivery executive calling.
+- speaker: victim
+  text: Yes, did you collect the laptop charger?
+- speaker: caller
+  text: Collected and reached your destination address sir. Please share receiver
+    delivery code.
+- speaker: victim
+  text: The receiver delivery code is six one four eight.
+- speaker: caller
+  text: Handover completed sir, thank you.

@@ -1,0 +1,19 @@
+id: legit_a_hien_001
+language: hi-en
+label: legit
+legit_kind: appointment
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: Hello sir, calling from Fortis Hospital cardiology reception.
+- speaker: victim
+  text: Yes, is my routine checkup scheduled for Thursday?
+- speaker: caller
+  text: Yes sir, Dr. Mehta will see you on Thursday at four thirty PM.
+- speaker: victim
+  text: Should I bring the ECG report from last month?
+- speaker: caller
+  text: Yes sir, please bring all previous cardiac reports with you.
+- speaker: victim
+  text: Thank you, I will be there on time.

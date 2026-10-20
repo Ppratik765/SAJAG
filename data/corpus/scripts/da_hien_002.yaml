@@ -1,0 +1,22 @@
+id: da_hien_002
+language: hi-en
+label: digital_arrest
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: This is CBI officer calling. Aapke khilaf illegal money transfer ka case registered
+    hua hai.
+- speaker: victim
+  text: Sir ye kisi ne mere documents ka misuse kiya hoga.
+- speaker: caller
+  text: Aapke naam par arrest warrant nikla hai. You are under digital arrest right
+    now.
+- speaker: victim
+  text: Arrest warrant? But maine to kuch kiya hi nahi.
+- speaker: caller
+  text: Quiet rahiye, family ko mat batana. Jab tak CBI clearance na mile, screen
+    ke samne rahiye.
+- speaker: victim
+  text: Yes sir, main screen ke aage hi baitha hu.

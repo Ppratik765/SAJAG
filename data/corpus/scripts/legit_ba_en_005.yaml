@@ -1,0 +1,18 @@
+id: legit_ba_en_005
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Union Bank of India official notification on cyber hygiene.
+- speaker: victim
+  text: Yes, what is the notification?
+- speaker: caller
+  text: Please ensure your contact credentials are up to date and never share SMS
+    verification codes.
+- speaker: victim
+  text: Understood, thank you officer.
+- speaker: caller
+  text: Stay vigilant and bank safely.

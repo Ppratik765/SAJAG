@@ -19,6 +19,8 @@ from pathlib import Path
 from typing import Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 if str(REPO_ROOT / "api") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "api"))
 
@@ -142,8 +144,12 @@ def project_tts_cost(scripts: Sequence[Script]) -> dict[str, int | float]:
 async def main() -> None:
     parser = argparse.ArgumentParser(description="Generate synthetic call audio using Timbre TTS")
     parser.add_argument("--script-id", help="Single script ID to generate")
+    parser.add_argument("--script-ids", nargs="+", help="Explicit list of script IDs to generate")
     parser.add_argument("--split", choices=["dev", "test"], help="Generate for specific split")
     parser.add_argument("--calibration-only", action="store_true", help="Generate only 5 calibration scripts")
+    parser.add_argument("--exclude-calibration", action="store_true", help="Exclude calibration scripts")
+    parser.add_argument("--limit", type=int, default=None, help="Maximum number of scripts to process")
+    parser.add_argument("--offset", type=int, default=0, help="Offset into scripts list")
     parser.add_argument("--dry-run", action="store_true", help="Print projection without synthesizing")
 
     args = parser.parse_args()
@@ -156,12 +162,18 @@ async def main() -> None:
         if not selected:
             print(f"Error: Script {args.script_id} not found.")
             return
+    elif args.script_ids:
+        id_set = set(args.script_ids)
+        selected = [s for s in all_scripts if s.id in id_set]
     elif args.calibration_only:
         selected = [s for s in all_scripts if "_calib_" in s.id]
-    elif args.split:
-        selected = [s for s in all_scripts if s.split == args.split]
     else:
-        selected = all_scripts
+        candidates = all_scripts
+        if args.exclude_calibration:
+            candidates = [s for s in candidates if "_calib_" not in s.id]
+        if args.split:
+            candidates = [s for s in candidates if s.split == args.split]
+        selected = candidates[args.offset : (args.offset + args.limit) if args.limit else None]
 
     projection = project_tts_cost(selected)
     print(f"Target scripts: {len(selected)}")

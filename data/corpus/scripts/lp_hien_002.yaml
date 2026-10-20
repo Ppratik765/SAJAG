@@ -1,0 +1,22 @@
+id: lp_hien_002
+language: hi-en
+label: lottery_prize
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Lucky draw reward manager calling. Your mobile number won bumper prize of
+    ten lakh cash.
+- speaker: victim
+  text: Which lucky draw? I never registered.
+- speaker: caller
+  text: Telecom operator national contest sir. Certificate issue karne ke liye registration
+    fee five thousand rupees bhejiye.
+- speaker: victim
+  text: Sounds like a standard lottery scam.
+- speaker: caller
+  text: No sir, 100% genuine award. Transfer fee right now or reward will be given
+    to next runner up.
+- speaker: victim
+  text: Give it to the next runner up then, I am not paying.

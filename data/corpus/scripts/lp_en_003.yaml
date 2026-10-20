@@ -1,0 +1,22 @@
+id: lp_en_003
+language: en-IN
+label: lottery_prize
+legit_kind: null
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Amazon festive sweepstakes winner department calling. You won second prize
+    of twenty lakh rupees!
+- speaker: victim
+  text: Where is the official confirmation email?
+- speaker: caller
+  text: The confirmation letter is dispatched. First deposit seven thousand rupees
+    clearance fee to unblock the prize transfer.
+- speaker: victim
+  text: Send the confirmation letter first, I will not send any money.
+- speaker: caller
+  text: Offer expires in ten minutes sir. If you don't transfer money now, your prize
+    will be canceled.
+- speaker: victim
+  text: Cancel it then, I know this is a fraud.

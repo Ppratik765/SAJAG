@@ -1,0 +1,22 @@
+id: da_en_002
+language: en-IN
+label: digital_arrest
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: This is the Central Bureau of Investigation cyber fraud monitoring cell. Criminal
+    FIR has been lodged against you.
+- speaker: victim
+  text: CBI? What is this allegation about?
+- speaker: caller
+  text: Your bank credentials were found in an illegal money laundering network. Non-bailable
+    arrest warrant is active.
+- speaker: victim
+  text: I have never engaged in any money laundering!
+- speaker: caller
+  text: Remain under digital arrest until verification completes. Keep this completely
+    confidential and do not disconnect.
+- speaker: victim
+  text: Understood officer, I will not disconnect the call.

@@ -1,0 +1,21 @@
+id: ur_hien_001
+language: hi-en
+label: upi_refund
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hello sir, by mistake I sent five thousand rupees to your Google Pay number.
+- speaker: victim
+  text: Let me check my transaction history first.
+- speaker: caller
+  text: Sir urgent hospital bill tha, galti se number galat type ho gaya. Please UPI
+    app open karke refund accept kar lo.
+- speaker: victim
+  text: How do I return it back to your account?
+- speaker: caller
+  text: Maine refund link share kiya hai. Just enter your secret UPI PIN to receive
+    money back.
+- speaker: victim
+  text: Entering UPI PIN to receive money sounds like a scam.

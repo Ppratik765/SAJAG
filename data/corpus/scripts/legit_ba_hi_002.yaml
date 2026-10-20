@@ -1,0 +1,19 @@
+id: legit_ba_hi_002
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: पंजाब नेशनल बैंक साइबर सुरक्षा प्रकोष्ठ से जनहित संदेश।
+- speaker: victim
+  text: जी, मैं सुन रहा हूँ।
+- speaker: caller
+  text: सावधान रहें! बिजली काटने या लॉटरी के फर्जी संदेशों पर दिए गए किसी भी अनजान
+    लिंक पर क्लिक न करें।
+- speaker: victim
+  text: जी बिल्कुल, बैंक ने सही समय पर सचेत किया।
+- speaker: caller
+  text: किसी भी साइबर धोखाधड़ी की स्थिति में तुरंत राष्ट्रीय हेल्पलाइन नंबर उन्नीस
+    तीस पर शिकायत दर्ज करें।

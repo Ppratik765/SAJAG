@@ -1,0 +1,18 @@
+id: legit_ba_hi_004
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: केंद्रीय बैंक सुरक्षा सूचना। वित्तीय लेन देन के नियमों का पालन करें।
+- speaker: victim
+  text: जी सर।
+- speaker: caller
+  text: बैंक अधिकारी बनकर फोन करने वाले किसी भी व्यक्ति को अपना छह अंकों का ओटीपी
+    न बताएं।
+- speaker: victim
+  text: जी, मुझे मालूम है कि बैंक कभी फोन पर ओटीपी नहीं मांगता।
+- speaker: caller
+  text: आपका सहयोग ही आपकी सुरक्षा है। धन्यवाद।

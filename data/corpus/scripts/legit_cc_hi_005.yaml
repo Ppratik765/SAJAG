@@ -1,0 +1,18 @@
+id: legit_cc_hi_005
+language: hi-IN
+label: legit
+legit_kind: customer_care
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: मारुति सुजुकी अधिकृत सर्विस स्टेशन से प्रियंका बात कर रही हूँ।
+- speaker: victim
+  text: नमस्ते प्रियंका जी।
+- speaker: caller
+  text: सर, आपकी कार की छह महीने की पीरियोडिक सर्विस का समय हो गया है। क्या मैं शनिवार
+    का स्लॉट बुक कर दूँ?
+- speaker: victim
+  text: हाँ, शनिवार सुबह दस बजे का समय ठीक रहेगा।
+- speaker: caller
+  text: आपका अपॉइंटमेंट दर्ज कर लिया गया है सर। धन्यवाद।

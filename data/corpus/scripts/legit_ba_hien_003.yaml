@@ -1,0 +1,18 @@
+id: legit_ba_hien_003
+language: hi-en
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Axis Bank security awareness broadcast. Protect your digital money.
+- speaker: victim
+  text: Hello, please continue.
+- speaker: caller
+  text: Do not click on unverified SMS links promising rewards or electricity bill
+    discounts.
+- speaker: victim
+  text: Yes, I delete such messages immediately.
+- speaker: caller
+  text: Thank you for being a responsible digital citizen.

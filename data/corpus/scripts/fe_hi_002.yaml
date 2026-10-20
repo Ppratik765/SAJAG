@@ -1,0 +1,21 @@
+id: fe_hi_002
+language: hi-IN
+label: family_emergency
+legit_kind: null
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: दादी जी, मैं आपका पोता राहुल बोल रहा हूँ। मेरी मदद कीजिए!
+- speaker: victim
+  text: राहुल बेटा? तुम तो हॉस्टल में थे ना? क्या हुआ बच्चे?
+- speaker: caller
+  text: दादी मेरे दोस्त का गंभीर एक्सीडेंट हो गया है, डॉक्टर तुरंत ऑपरेशन के लिए पैसे
+    मांग रहे हैं।
+- speaker: victim
+  text: बेटा अपने पिता जी को फोन क्यों नहीं किया?
+- speaker: caller
+  text: पापा बहुत गुस्सा करेंगे दादी, उन्हें मत बताना। आप तुरंत इस नंबर पर बीस हजार
+    भेज दीजिए, बहुत इमरजेंसी है।
+- speaker: victim
+  text: नहीं बेटा, मैं पहले तेरे पापा से बात करूँगी।

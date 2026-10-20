@@ -1,0 +1,18 @@
+id: legit_ba_hien_001
+language: hi-en
+label: legit
+legit_kind: bank_advisory
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Dear customer, this is an automated security advisory from HDFC Bank.
+- speaker: victim
+  text: Yes, I am listening.
+- speaker: caller
+  text: Bank officials will never call you asking for debit card details, CVV, or
+    one-time password.
+- speaker: victim
+  text: Thank you for the security reminder.
+- speaker: caller
+  text: Never share confidential banking credentials with anyone. Stay safe.

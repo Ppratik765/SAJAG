@@ -1,0 +1,21 @@
+id: bk_hi_003
+language: hi-IN
+label: bank_kyc
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: एचडीएफसी बैंक सुरक्षा विभाग। आपके बचत खाते में संदिग्ध गतिविधि के कारण खाता
+    सस्पेंड हो रहा है।
+- speaker: victim
+  text: सर, खाते में मेरी सारी जमा पूंजी है, कृपया कुछ कीजिए।
+- speaker: caller
+  text: खाता अनब्लॉक करने के लिए बायोमेट्रिक कोड आया है। तुरंत वह छह अंकों का पिन
+    या ओटीपी मुझे बोलिए।
+- speaker: victim
+  text: जी मैं फोन चेक कर रहा हूँ, तुरंत बताता हूँ।
+- speaker: caller
+  text: जल्दी कीजिए, दो मिनट में सर्वर लिंक एक्सपायर हो जाएगा।
+- speaker: victim
+  text: ओटीपी आठ नौ छह तीन है सर।

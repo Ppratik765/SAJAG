@@ -1,0 +1,22 @@
+id: it_en_002
+language: en-IN
+label: investment_task
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Premium quantitative crypto trading consultancy calling regarding guaranteed
+    daily earnings.
+- speaker: victim
+  text: I am not interested in speculative crypto schemes.
+- speaker: caller
+  text: This is an automated AI algorithm with zero risk. Transfer thirty thousand
+    capital to double your money within twenty-four hours.
+- speaker: victim
+  text: All financial investments carry market risk, zero risk claims are fraudulent.
+- speaker: caller
+  text: Sir, thousands of investors are earning lakhs every day. Don't miss this lifetime
+    wealth opportunity.
+- speaker: victim
+  text: Stop harassing people with your fraudulent schemes.

@@ -1,0 +1,21 @@
+id: fe_hi_003
+language: hi-IN
+label: family_emergency
+legit_kind: null
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: चाचा जी, मैं आपका भतीजा अमित बोल रहा हूँ। पुलिस स्टेशन से फोन कर रहा हूँ।
+- speaker: victim
+  text: अमित? तुम्हारी आवाज को क्या हुआ है?
+- speaker: caller
+  text: चाचा जी पुलिस ने मुझे गलत केस में पकड़ लिया है। दरोगा जी रिश्वत मांग रहे हैं,
+    नहीं दिया तो एफआईआर हो जाएगी।
+- speaker: victim
+  text: भाई साहब यानी तुम्हारे पिताजी को पता है?
+- speaker: caller
+  text: नहीं चाचा जी, पापा को हार्ट की बीमारी है, उनको मत बताना। तुरंत चालीस हजार
+    भेज दीजिए, मैं घर आकर लौटा दूँगा।
+- speaker: victim
+  text: रुक मैं अभी तेरे घर जाकर बात करता हूँ।

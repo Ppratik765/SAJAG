@@ -1,0 +1,22 @@
+id: ud_en_002
+language: en-IN
+label: utility_disconnect
+legit_kind: null
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: Urgent notice from Power Corporation. Your residential electrical line is
+    listed for disconnection today.
+- speaker: victim
+  text: There must be an error, my account shows zero balance due.
+- speaker: caller
+  text: System upgrade requires immediate verification fee of five hundred rupees,
+    or supply will be terminated in thirty minutes.
+- speaker: victim
+  text: Why would power be terminated for a verification fee?
+- speaker: caller
+  text: Those are regulatory instructions sir. Pay through the link right now to maintain
+    power supply.
+- speaker: victim
+  text: I am reporting this fraudulent call to the consumer forum.

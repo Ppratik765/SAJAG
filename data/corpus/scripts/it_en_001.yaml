@@ -1,0 +1,23 @@
+id: it_en_001
+language: en-IN
+label: investment_task
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Good day, I am hiring coordinator from international digital task network.
+    Earn daily income working from home.
+- speaker: victim
+  text: What qualifications or skills are needed?
+- speaker: caller
+  text: No skills needed. Simply write five-star reviews on Google Maps and like videos.
+    Join our VIP Telegram channel.
+- speaker: victim
+  text: How do workers receive compensation?
+- speaker: caller
+  text: You earn small bonus initially, then to unlock high-yield financial tasks,
+    deposit twenty thousand rupees for guaranteed two hundred percent returns.
+- speaker: victim
+  text: Guaranteed 200% return is mathematically impossible, this is an investment
+    scam.

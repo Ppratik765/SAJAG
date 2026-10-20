@@ -1,0 +1,18 @@
+id: legit_fm_hien_004
+language: hi-en
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Hi sis, grocery store par hu apartment ke liye.
+- speaker: victim
+  text: Did you buy the fruits and milk?
+- speaker: caller
+  text: Yes, total four hundred rupees hua hai, mere card par network issue hai. Can
+    you pay to store QR?
+- speaker: victim
+  text: Send the store QR photo on WhatsApp, I will pay now.
+- speaker: caller
+  text: Sent, thanks sis!

@@ -1,0 +1,17 @@
+id: legit_c_hi_002
+language: hi-IN
+label: legit
+legit_kind: chitchat
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: नमस्ते मौसी जी! मैं कविता बोल रही हूँ।
+- speaker: victim
+  text: अरे कविता बेटा! कैसी हो? तुम्हारी नौकरी कैसी चल रही है?
+- speaker: caller
+  text: सब बहुत अच्छा है मौसी जी। अगले महीने दीपावली पर घर आ रही हूँ।
+- speaker: victim
+  text: अरे वाह! बहुत खुशी की बात है। तुम्हारे पसंद के बेसन के लड्डू बना कर रखूँगी।
+- speaker: caller
+  text: थैंक यू मौसी जी, मम्मी को आपका प्रणाम कहूँगी।

@@ -1,0 +1,17 @@
+id: legit_fm_hien_003
+language: hi-en
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Dad, project submission fee pay karni hai online portal par.
+- speaker: victim
+  text: Kitna amount hai beta?
+- speaker: caller
+  text: Seven hundred fifty rupees hai dad, deadline aaj shaam tak hai.
+- speaker: victim
+  text: No problem, I will transfer to your bank account right away.
+- speaker: caller
+  text: Thank you dad, receipt submit kar dunga.

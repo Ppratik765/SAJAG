@@ -1,0 +1,18 @@
+id: legit_fm_hien_001
+language: hi-en
+label: legit
+legit_kind: family_money
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hey brother, are you free right now?
+- speaker: victim
+  text: Yes, tell me, kya hua?
+- speaker: caller
+  text: Bhaiya cab book karni thi airport ke liye, wallet balance khatam ho gaya.
+    Can you transfer five hundred?
+- speaker: victim
+  text: Sure, Google Pay kar raha hu abhi check karo.
+- speaker: caller
+  text: Got it bhaiya, thank you so much!

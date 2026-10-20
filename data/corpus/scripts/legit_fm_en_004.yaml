@@ -1,0 +1,17 @@
+id: legit_fm_en_004
+language: en-IN
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Dad, the society sports tournament registration is closing today.
+- speaker: victim
+  text: Which tournament? Badminton or cricket?
+- speaker: caller
+  text: Badminton tournament dad. Entry fee is three hundred rupees.
+- speaker: victim
+  text: Good, sports are important. I will transfer the entry fee now.
+- speaker: caller
+  text: Thanks dad, I will practice hard!

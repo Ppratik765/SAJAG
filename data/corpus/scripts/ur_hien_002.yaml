@@ -1,0 +1,21 @@
+id: ur_hien_002
+language: hi-en
+label: upi_refund
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Paytm cashback desk calling sir. You have won four thousand rupees cashback
+    refund.
+- speaker: victim
+  text: Is it directly deposited in my bank account?
+- speaker: caller
+  text: Yes sir, PhonePe open kijiye, notification click karke UPI PIN enter karein,
+    turant cash credit hoga.
+- speaker: victim
+  text: Why do I need to enter UPI PIN to receive prize money?
+- speaker: caller
+  text: Sir standard RBI protocol hai, bina PIN enter kiye credit verify nahi hota.
+- speaker: victim
+  text: I will not enter my PIN without confirming with bank.

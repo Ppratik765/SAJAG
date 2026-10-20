@@ -1,0 +1,17 @@
+id: legit_a_hi_002
+language: hi-IN
+label: legit
+legit_kind: appointment
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: अपोलो डेंटल क्लिनिक से रीमा। आपका दांतों की सफाई का अपॉइंटमेंट शेड्यूल है।
+- speaker: victim
+  text: नमस्ते रीमा जी, किस समय आना है?
+- speaker: caller
+  text: कल दोपहर दो बजे सर। कृपया अपॉइंटमेंट से आधा घंटा पहले कुछ न खाएं।
+- speaker: victim
+  text: ठीक है, मैं दो बजे पहुंच जाऊँगा।
+- speaker: caller
+  text: धन्यवाद सर, कल मिलते हैं।

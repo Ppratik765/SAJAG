@@ -1,0 +1,17 @@
+id: legit_fm_en_005
+language: en-IN
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Hi grandpa, I am purchasing the blood pressure monitor for you online.
+- speaker: victim
+  text: Thank you grandson, how much does it cost?
+- speaker: caller
+  text: It is twelve hundred rupees grandpa. Dad said he will pay.
+- speaker: victim
+  text: Bless you child, take care of your health too.
+- speaker: caller
+  text: Will do grandpa, order placed for home delivery.

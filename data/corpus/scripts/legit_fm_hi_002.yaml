@@ -1,0 +1,17 @@
+id: legit_fm_hi_002
+language: hi-IN
+label: legit
+legit_kind: family_money
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: मम्मी, मैं मार्केट में हूँ, सब्जी और राशन ले रही हूँ।
+- speaker: victim
+  text: हाँ बेटी, सब ताजी सब्जियां लेना।
+- speaker: caller
+  text: मम्मी मेरे पर्स में कैश थोड़ा कम पड़ गया है, तीन सौ रुपये फोनपे कर दोगी?
+- speaker: victim
+  text: हाँ बिटिया, मैं अभी दो मिनट में भेजती हूँ।
+- speaker: caller
+  text: थैंक यू मम्मी!

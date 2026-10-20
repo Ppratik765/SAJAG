@@ -1,0 +1,19 @@
+id: legit_ba_hi_001
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: प्रिय ग्राहक, भारतीय स्टेट बैंक की सुरक्षा जागरूकता सेवा में आपका स्वागत है।
+- speaker: victim
+  text: हाँ जी, बताइए।
+- speaker: caller
+  text: कृपया ध्यान दें कि बैंक कभी भी आपके पासवर्ड, एटीएम पिन, सीवीवी या ओटीपी की
+    मांग नहीं करता है।
+- speaker: victim
+  text: धन्यवाद, मैं यह जानकारी ध्यान में रखूँगा।
+- speaker: caller
+  text: किसी भी अनजान व्यक्ति के साथ अपनी गोपनीय जानकारी साझा न करें। सुरक्षित बैंकिंग
+    करें।

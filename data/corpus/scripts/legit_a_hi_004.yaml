@@ -1,0 +1,17 @@
+id: legit_a_hi_004
+language: hi-IN
+label: legit
+legit_kind: appointment
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: काया स्किन क्लिनिक रिसेप्शन से सूचना।
+- speaker: victim
+  text: हाँ, क्या मेरा कंसल्टेशन स्लॉट बुक हो गया?
+- speaker: caller
+  text: जी हाँ, शुक्रवार शाम छह बजे डॉक्टर शर्मा उपलब्ध रहेंगी।
+- speaker: victim
+  text: बहुत बढ़िया, मैं छह बजे आ जाऊँगी।
+- speaker: caller
+  text: धन्यवाद मैडम।

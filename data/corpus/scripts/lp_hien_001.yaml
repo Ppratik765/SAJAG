@@ -1,0 +1,22 @@
+id: lp_hien_001
+language: hi-en
+label: lottery_prize
+legit_kind: null
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: Congratulations sir! KBC lottery department head office se bol raha hu. You
+    won twenty five lakh rupees prize!
+- speaker: victim
+  text: Twenty five lakh? Are you serious?
+- speaker: caller
+  text: Yes sir, lucky winner selection hua hai. Cash prize claim karne ke liye processing
+    charge deposit transfer kijiye.
+- speaker: victim
+  text: Why do I need to pay processing charge to receive prize money?
+- speaker: caller
+  text: Sir government tax regulation hai, advance tax bharenge tabhi prize cheque
+    aapke bank me release hoga.
+- speaker: victim
+  text: Deduct the tax from the 25 lakhs and send me the rest.

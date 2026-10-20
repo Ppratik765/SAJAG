@@ -1,0 +1,18 @@
+id: legit_ba_hien_004
+language: hi-en
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: 'Kotak Bank advisory: Essential guidelines for your savings account security.'
+- speaker: victim
+  text: Yes, please tell me.
+- speaker: caller
+  text: Always verify sender identity before making any payment. Never enter UPI PIN
+    to receive money.
+- speaker: victim
+  text: Yes, I know UPI PIN is only for debiting money.
+- speaker: caller
+  text: Have a wonderful and safe banking day.

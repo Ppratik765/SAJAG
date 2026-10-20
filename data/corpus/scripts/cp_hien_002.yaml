@@ -1,0 +1,22 @@
+id: cp_hien_002
+language: hi-en
+label: courier_parcel
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: FedEx customs security officer speaking. Illegal contraband found in parcel
+    booked with your mobile number.
+- speaker: victim
+  text: Someone must have stolen my identity details.
+- speaker: caller
+  text: Aapke khilaf arrest warrant ready hai. Verification penalty amount deposit
+    karke inquiry settle karein.
+- speaker: victim
+  text: Where should I transfer the money?
+- speaker: caller
+  text: Govt verified safe account details SMS kar raha hu, immediately transfer paise
+    bhej dijiye.
+- speaker: victim
+  text: No genuine police asks for money transfer to settle cases.

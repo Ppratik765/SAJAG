@@ -1,0 +1,17 @@
+id: legit_a_hien_003
+language: hi-en
+label: legit
+legit_kind: appointment
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Physiotherapy wellness center reminder call.
+- speaker: victim
+  text: Hello, what time is the knee rehab session?
+- speaker: caller
+  text: Your rehabilitation session is tomorrow at five PM with Dr. Ananya.
+- speaker: victim
+  text: Great, knee pain is much better now. I will attend.
+- speaker: caller
+  text: Glad to hear that sir, see you tomorrow.

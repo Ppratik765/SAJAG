@@ -1,0 +1,21 @@
+id: legit_cc_hi_001
+language: hi-IN
+label: legit
+legit_kind: customer_care
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: नमस्कार, मैं एयरटेल कस्टमर केयर से बात कर रही हूँ।
+- speaker: victim
+  text: हाँ जी, बताइए क्या बात है?
+- speaker: caller
+  text: सर, आपका मौजूदा वाई-फाई ब्रॉडबैंड प्लान अगले सप्ताह समाप्त हो रहा है। क्या
+    आप रिन्यू कराना चाहते हैं?
+- speaker: victim
+  text: हाँ, क्या कोई नया वार्षिक ऑफर चल रहा है?
+- speaker: caller
+  text: जी हाँ, वार्षिक रिचार्ज पर दो महीने की मुफ्त सेवा उपलब्ध है। आप हमारे ऐप पर
+    जाकर देख सकते हैं।
+- speaker: victim
+  text: ठीक है, मैं एयरटेल थैंक्स ऐप पर चेक कर लूँगा। धन्यवाद।

@@ -1,0 +1,18 @@
+id: legit_c_en_002
+language: en-IN
+label: legit
+legit_kind: chitchat
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: Hi Maya, this is Anjali. Did you receive the recipe book I sent?
+- speaker: victim
+  text: Yes Anjali! The traditional coastal curry recipes look authentic and delicious.
+- speaker: caller
+  text: I tried the mango curry yesterday, it turned out amazing. You must try it
+    this weekend.
+- speaker: victim
+  text: I will cook it this Sunday for family lunch, thank you!
+- speaker: caller
+  text: Let me know how everyone likes it!

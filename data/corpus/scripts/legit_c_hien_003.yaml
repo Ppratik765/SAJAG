@@ -1,0 +1,17 @@
+id: legit_c_hien_003
+language: hi-en
+label: legit
+legit_kind: chitchat
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Hello uncle, how is the terrace garden doing after the rains?
+- speaker: victim
+  text: Hello beta! The rose and marigold plants are blooming beautifully.
+- speaker: caller
+  text: I will come over this Sunday to see the flowers and take some cuttings.
+- speaker: victim
+  text: Most welcome beta, your aunt is making homemade jalebis on Sunday.
+- speaker: caller
+  text: Can't wait uncle, see you on Sunday!

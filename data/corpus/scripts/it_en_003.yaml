@@ -1,0 +1,22 @@
+id: it_en_003
+language: en-IN
+label: investment_task
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Freelance work opportunity desk. Complete merchant rating tasks and receive
+    immediate payout.
+- speaker: victim
+  text: Is there any registration fee to sign up?
+- speaker: caller
+  text: Registration is free, but to withdraw accumulated profits, you must deposit
+    fifteen thousand clearance capital into manager wallet.
+- speaker: victim
+  text: You are holding my earned money hostage demanding advance deposit?
+- speaker: caller
+  text: That is company security policy sir. Remit payment now or your account will
+    be frozen.
+- speaker: victim
+  text: I am reporting this Telegram task syndicate to the national cyber portal.

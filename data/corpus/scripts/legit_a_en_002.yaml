@@ -1,0 +1,17 @@
+id: legit_a_en_002
+language: en-IN
+label: legit
+legit_kind: appointment
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Manipal Hospital pediatric department calling.
+- speaker: victim
+  text: Yes, regarding my daughter's measles booster dose?
+- speaker: caller
+  text: Yes sir, booster vaccination is scheduled for Wednesday afternoon at two PM.
+- speaker: victim
+  text: Understood, please ensure the child vaccination booklet is kept ready.
+- speaker: caller
+  text: It will be ready sir, see you on Wednesday.

@@ -1,0 +1,21 @@
+id: ud_hien_003
+language: hi-en
+label: utility_disconnect
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: BSES electricity recovery officer. Aapke meter ka load violation aur overdue
+    bill penalty pending hai.
+- speaker: victim
+  text: What load violation? Aisa kuch nahi hai.
+- speaker: caller
+  text: Fine nahi bhara to tonight power cut karke meter seize kar lenge. Transfer
+    fifteen hundred now to keep supply on.
+- speaker: victim
+  text: Official bill copy bhejenge to hi payment karunga.
+- speaker: caller
+  text: Time nahi hai sir, team nikal chuki hai. Decision aapka hai.
+- speaker: victim
+  text: Main complaint register karwa raha hu.

@@ -1,0 +1,17 @@
+id: legit_do_hien_004
+language: hi-en
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Blinkit grocery delivery rider. Sir aapke apartment ke bahar khada hu.
+- speaker: victim
+  text: Yes, just drop the grocery bags at the door.
+- speaker: caller
+  text: Order complete karne ke liye four digit code bol dijiye sir.
+- speaker: victim
+  text: Code is five seven one two.
+- speaker: caller
+  text: Thank you sir, have a good day.

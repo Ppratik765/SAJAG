@@ -1,0 +1,15 @@
+id: legit_a_hien_002
+language: hi-en
+label: legit
+legit_kind: appointment
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Clove Dental clinic calling to confirm your root canal appointment.
+- speaker: victim
+  text: Is it tomorrow morning at eleven?
+- speaker: caller
+  text: Yes madam, tomorrow eleven AM sharp. Please arrive ten minutes early for registration.
+- speaker: victim
+  text: Sure, see you tomorrow.

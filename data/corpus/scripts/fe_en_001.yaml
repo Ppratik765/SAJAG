@@ -1,0 +1,21 @@
+id: fe_en_001
+language: en-IN
+label: family_emergency
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Dad, dad please listen to me, I am in terrible trouble!
+- speaker: victim
+  text: Who is this? Your voice sounds muffled and strange.
+- speaker: caller
+  text: Dad it is me, your son! I was involved in a serious highway car crash. The
+    other driver is badly injured!
+- speaker: victim
+  text: Oh my god! Where are you? Are you injured?
+- speaker: caller
+  text: The police inspector has detained me. They demand fifty thousand rupees bail
+    right now or they will register an FIR. Do not tell mom, transfer money immediately!
+- speaker: victim
+  text: Hold on, I am calling your college warden right now to verify this.

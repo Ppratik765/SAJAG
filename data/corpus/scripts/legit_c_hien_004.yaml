@@ -1,0 +1,17 @@
+id: legit_c_hien_004
+language: hi-en
+label: legit
+legit_kind: chitchat
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Hey bro, are we playing football turf match tomorrow morning?
+- speaker: victim
+  text: Yes, eight players have already confirmed on the WhatsApp group.
+- speaker: caller
+  text: Great, turf is booked from seven to eight AM. Don't be late!
+- speaker: victim
+  text: I will set an alarm for six AM, see you on the field.
+- speaker: caller
+  text: See you bro.

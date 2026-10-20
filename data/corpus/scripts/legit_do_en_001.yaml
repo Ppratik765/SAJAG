@@ -1,0 +1,18 @@
+id: legit_do_en_001
+language: en-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hello, I am calling from DHL Express regarding your documents delivery.
+- speaker: victim
+  text: Yes, I was expecting the university transcript consignment.
+- speaker: caller
+  text: I have arrived at your office reception. Please provide the delivery security
+    code.
+- speaker: victim
+  text: The delivery security code is four nine two零.
+- speaker: caller
+  text: Verified sir, package handed over to front desk officer.

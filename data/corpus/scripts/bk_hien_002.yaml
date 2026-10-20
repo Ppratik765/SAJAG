@@ -1,0 +1,22 @@
+id: bk_hien_002
+language: hi-en
+label: bank_kyc
+legit_kind: null
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: 'HDFC bank support alert: Aapka debit card expire ho raha hai aur account
+    suspend ho gaya hai.'
+- speaker: victim
+  text: Account suspend? But why?
+- speaker: caller
+  text: Mandatory KYC renewal needed sir. Verification ke liye phone par aaya hua
+    secret OTP share karein.
+- speaker: victim
+  text: Bank says never share OTP on phone.
+- speaker: caller
+  text: Ye system verification call hai sir, agar OTP nahi denge to account permanently
+    close ho jayega.
+- speaker: victim
+  text: Okay okay, OTP is nine two four seven.

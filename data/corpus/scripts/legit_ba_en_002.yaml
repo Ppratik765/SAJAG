@@ -1,0 +1,18 @@
+id: legit_ba_en_002
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: State Bank customer awareness message. Stay protected against online fraud.
+- speaker: victim
+  text: Yes, go ahead.
+- speaker: caller
+  text: Remember, your bank will never ask for your card PIN, password, or security
+    token over phone or email.
+- speaker: victim
+  text: Noted, thank you for the helpful advisory.
+- speaker: caller
+  text: For any security concerns, contact our toll-free customer helpline.

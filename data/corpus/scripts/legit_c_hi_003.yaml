@@ -1,0 +1,18 @@
+id: legit_c_hi_003
+language: hi-IN
+label: legit
+legit_kind: chitchat
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: हेलो रमेश, कल का क्रिकेट मैच देखा तूने? क्या शानदार बैटिंग की इंडिया ने!
+- speaker: victim
+  text: हाँ यार! विराट कोहली ने क्या कमाल की इनिंग्स खेली। आखिरी ओवर तक मैच में जान
+    थी।
+- speaker: caller
+  text: फाइनल मैच साथ में देखेंगे स्क्रीन लगाकर। तू मेरे घर आ जाना।
+- speaker: victim
+  text: पक्का यार, स्नैक्स और कोल्ड ड्रिंक मेरी तरफ से!
+- speaker: caller
+  text: मजा आएगा भाई, संडे को मिलते हैं।

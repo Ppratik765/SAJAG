@@ -1,0 +1,22 @@
+id: ur_en_001
+language: en-IN
+label: upi_refund
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hello, I am speaking from online refund assistance. An accidental wrong transaction
+    of eight thousand was sent to you.
+- speaker: victim
+  text: Wait, I did not receive any incoming credit notification.
+- speaker: caller
+  text: It is on hold at the clearing gateway. Open your Google Pay app and approve
+    the refund request with your secret UPI PIN.
+- speaker: victim
+  text: Entering my UPI PIN will deduct money from my account, not deposit it!
+- speaker: caller
+  text: No sir, it is a specialized reverse payment gateway. You must enter your PIN
+    to claim the refund.
+- speaker: victim
+  text: That is completely fraudulent, I will report your number.

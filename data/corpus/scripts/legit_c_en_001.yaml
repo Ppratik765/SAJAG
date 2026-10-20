@@ -1,0 +1,18 @@
+id: legit_c_en_001
+language: en-IN
+label: legit
+legit_kind: chitchat
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hello David, how are you doing today?
+- speaker: victim
+  text: Hello George! Doing very well, enjoying the pleasant morning breeze.
+- speaker: caller
+  text: Our colony residents association is organizing a tree plantation drive this
+    Saturday morning.
+- speaker: victim
+  text: That is a wonderful initiative, I will definitely join with my family.
+- speaker: caller
+  text: We will gather at the community park at seven thirty AM. See you there!

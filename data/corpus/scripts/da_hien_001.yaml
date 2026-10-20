@@ -1,0 +1,21 @@
+id: da_hien_001
+language: hi-en
+label: digital_arrest
+legit_kind: null
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: Hello, main Delhi Police Cyber Cell se Inspector Verma bol raha hu.
+- speaker: victim
+  text: Yes inspector sir, kya problem ho gayi?
+- speaker: caller
+  text: Aapke Aadhaar card par illegal courier parcel pakda gaya hai. Court order
+    se aapko digital arrest kiya gaya hai.
+- speaker: victim
+  text: Sir maine koi courier nahi mangwaya, main to student hu.
+- speaker: caller
+  text: Abhi investigation chal rahi hai. Kisi ko mat batana, room lock karke video
+    call par bane rahiye. Call mat kaatna.
+- speaker: victim
+  text: Okay sir, please help me, main call cut nahi karunga.

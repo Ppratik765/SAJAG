@@ -1,0 +1,20 @@
+id: legit_cc_hi_002
+language: hi-IN
+label: legit
+legit_kind: customer_care
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: जियो फाइबर कस्टमर सर्विस से सूचना।
+- speaker: victim
+  text: हाँ मैडम, कहिए।
+- speaker: caller
+  text: सर, आपके इलाके में इंटरनेट स्पीड अपग्रेड का मेंटेनेंस कार्य कल सुबह पूरा हो
+    जाएगा।
+- speaker: victim
+  text: क्या कल सुबह इंटरनेट बंद रहेगा?
+- speaker: caller
+  text: केवल पंद्रह मिनट के लिए सेवा प्रभावित होगी सर। असुविधा के लिए खेद है।
+- speaker: victim
+  text: कोई बात नहीं, पहले से सूचना देने के लिए शुक्रिया।

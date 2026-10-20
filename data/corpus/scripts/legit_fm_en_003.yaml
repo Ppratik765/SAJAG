@@ -1,0 +1,18 @@
+id: legit_fm_en_003
+language: en-IN
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Hey brother, quick question, are you near your laptop?
+- speaker: victim
+  text: Yes, working from home today. What do you need?
+- speaker: caller
+  text: Our shared broadband internet recharge is due, bill is nine hundred rupees.
+    Can you pay your half?
+- speaker: victim
+  text: Of course, sending four hundred fifty rupees right away.
+- speaker: caller
+  text: Thanks bro, internet renewed for the month.

@@ -1,0 +1,18 @@
+id: legit_do_en_003
+language: en-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: FedEx domestic courier dispatch. Delivery scheduled within the hour.
+- speaker: victim
+  text: Are you calling from nearby?
+- speaker: caller
+  text: Yes madam, three buildings away. Please confirm the last two digits of your
+    delivery pin.
+- speaker: victim
+  text: The complete four digit pin is eight five two six.
+- speaker: caller
+  text: Thank you madam, arriving at your doorstep shortly.

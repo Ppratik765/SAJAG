@@ -1,0 +1,21 @@
+id: cp_hien_003
+language: hi-en
+label: courier_parcel
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Customs parcel interception department calling. Parcel containing fake currency
+    seized under your name.
+- speaker: victim
+  text: I am completely unaware of this parcel.
+- speaker: caller
+  text: Court trial avoid karne ke liye instant penalty fees bharni hogi. Do not tell
+    anyone and send money.
+- speaker: victim
+  text: I want to speak with customs commissioner directly.
+- speaker: caller
+  text: Main hi authorized officer hu sir. Transfer nahi kiya to CBI team arrest karegi.
+- speaker: victim
+  text: Go ahead and send the police, I won't pay a single rupee.

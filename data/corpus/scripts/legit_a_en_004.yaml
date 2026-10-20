@@ -1,0 +1,18 @@
+id: legit_a_en_004
+language: en-IN
+label: legit
+legit_kind: appointment
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Eye Foundation laser center appointment confirmation.
+- speaker: victim
+  text: Hello, is the retina screening scheduled for tomorrow?
+- speaker: caller
+  text: Yes sir, tomorrow at three PM. Please arrange for someone to accompany you
+    as pupils will be dilated.
+- speaker: victim
+  text: My son will drive me to the clinic. Thank you for the reminder.
+- speaker: caller
+  text: You are welcome sir, see you tomorrow.

@@ -1,0 +1,18 @@
+id: legit_do_hi_003
+language: hi-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: ब्लू डार्ट एक्सप्रेस डिलीवरी। आपका जरूरी पार्सल डिलीवरी के लिए निकला है।
+- speaker: victim
+  text: हाँ, क्या पार्सल है?
+- speaker: caller
+  text: किताबों का पैकेट है सर। डिलीवरी पूरा करने के लिए चार अंकों का डिलीवरी पिन
+    बता दीजिए।
+- speaker: victim
+  text: पिन है छह आठ दो शून्य।
+- speaker: caller
+  text: कोड मैच हो गया है सर, आपका पार्सल डिलीवर हो गया।

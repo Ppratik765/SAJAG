@@ -26,6 +26,8 @@ from pathlib import Path
 from typing import Any, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 if str(REPO_ROOT / "api") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "api"))
 
@@ -90,19 +92,27 @@ async def transcribe_audio_pipeline(
     language_code: str,
     *,
     fmt: str = "verbatim",
+    hinglish_stt_lang: str = "hi-IN",
+    bias_list: Sequence[str] | None = None,
+    bias_score: float = 0.0,
     client: httpx.AsyncClient | None = None,
 ) -> tuple[str, list[dict[str, Any]], float]:
     """Transcribe an audio file using the production chunking pipeline."""
+    # Resolve STT language code: Gnani Prisma accepts hi-IN or en-IN for Hinglish
+    stt_lang = hinglish_stt_lang if language_code == "hi-en" else language_code
+
     # Check disk cache
     cache_dir = REPO_ROOT / "eval" / ".cache" / "stt"
     cache_dir.mkdir(parents=True, exist_ok=True)
-    cache_token = f"{wav_path.name}:{wav_path.stat().st_size}:{language_code}:{fmt}"
+    bias_key = f"{','.join(bias_list)}:{bias_score}" if bias_list and bias_score > 0 else "nobias"
+    cache_token = f"{wav_path.name}:{wav_path.stat().st_size}:{stt_lang}:{fmt}:{bias_key}"
     cache_file = cache_dir / f"{hashlib.sha256(cache_token.encode()).hexdigest()}.json"
 
     if cache_file.is_file():
         try:
             cached = json.loads(cache_file.read_text(encoding="utf-8"))
-            return cached["transcript"], cached["segments"], cached["audio_duration"]
+            if cached.get("transcript"):
+                return cached["transcript"], cached["segments"], cached["audio_duration"]
         except Exception:
             pass
 
@@ -119,17 +129,35 @@ async def transcribe_audio_pipeline(
 
         for idx, (chunk_path, duration, offset) in enumerate(chunks):
             total_audio_time += duration
+            # Convert chunk to lossless FLAC for Cloudflare WAF resilience
+            flac_chunk = chunk_path.with_suffix(".flac")
+            upload_target = chunk_path
+            try:
+                subprocess.run(
+                    ["ffmpeg", "-y", "-i", str(chunk_path), "-c:a", "flac", str(flac_chunk)],
+                    capture_output=True,
+                    check=True,
+                )
+                upload_target = flac_chunk
+            except Exception:
+                upload_target = chunk_path
+
             try:
                 res = await transcribe_file(
-                    chunk_path,
-                    language_code=language_code,
+                    upload_target,
+                    language_code=stt_lang,
                     fmt=fmt,
+                    bias_list=bias_list,
+                    bias_score=bias_score,
                     client=client,
                 )
                 text = res.transcript.strip()
             except Exception as err:
                 logger.error("Chunk transcription error: %s", err)
                 text = ""
+            finally:
+                if flac_chunk.is_file():
+                    flac_chunk.unlink(missing_ok=True)
 
             segments.append({
                 "index": idx,
@@ -169,6 +197,9 @@ async def evaluate_clip(
     variant: str,
     *,
     fmt: str = "verbatim",
+    hinglish_stt_lang: str = "hi-IN",
+    bias_list: Sequence[str] | None = None,
+    bias_score: float = 0.0,
     client: httpx.AsyncClient | None = None,
 ) -> dict[str, Any]:
     """Run full evaluation on a single audio clip."""
@@ -176,6 +207,9 @@ async def evaluate_clip(
         audio_path,
         language_code=script.language,
         fmt=fmt,
+        hinglish_stt_lang=hinglish_stt_lang,
+        bias_list=bias_list,
+        bias_score=bias_score,
         client=client,
     )
 
@@ -285,6 +319,9 @@ async def run_evaluation(
     variants: Sequence[str] = ("clean",),
     *,
     fmt: str = "verbatim",
+    hinglish_stt_lang: str = "hi-IN",
+    bias_list: Sequence[str] | None = None,
+    bias_score: float = 0.0,
 ) -> dict[str, Any]:
     """Execute evaluation over selected scripts and variants."""
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -311,7 +348,16 @@ async def run_evaluation(
                     continue
 
                 logger.info("Evaluating %s [%s]...", script.id, variant)
-                clip_result = await evaluate_clip(audio_path, script, variant, fmt=fmt, client=client)
+                clip_result = await evaluate_clip(
+                    audio_path,
+                    script,
+                    variant,
+                    fmt=fmt,
+                    hinglish_stt_lang=hinglish_stt_lang,
+                    bias_list=bias_list,
+                    bias_score=bias_score,
+                    client=client,
+                )
                 all_results.append(clip_result)
 
     metrics = compute_metrics(all_results)
@@ -359,21 +405,46 @@ async def run_evaluation(
 
 async def main() -> None:
     parser = argparse.ArgumentParser(description="Run Sajag corpus evaluation harness")
+    parser.add_argument("--script-id", help="Single script ID to evaluate")
+    parser.add_argument("--script-ids", nargs="+", help="Explicit list of script IDs to evaluate")
     parser.add_argument("--split", choices=["dev", "test"], default="dev", help="Dataset split (default: dev)")
     parser.add_argument("--variants", nargs="+", default=["clean"], help="Variants to evaluate: clean, tel, tel_noise15, tel_noise5")
     parser.add_argument("--calibration-only", action="store_true", help="Run only on calibration scripts")
+    parser.add_argument("--exclude-calibration", action="store_true", help="Exclude calibration scripts")
+    parser.add_argument("--limit", type=int, default=None, help="Maximum number of scripts to evaluate")
+    parser.add_argument("--offset", type=int, default=0, help="Offset into scripts list")
     parser.add_argument("--format", default="verbatim", choices=["verbatim", "transcribe"], help="STT formatting mode")
+    parser.add_argument("--hinglish-stt-lang", default="hi-IN", choices=["hi-IN", "en-IN"], help="STT language to use for Hinglish (default: hi-IN)")
+    parser.add_argument("--bias-list", nargs="+", help="Word boosting list for STT")
+    parser.add_argument("--bias-score", type=float, default=0.0, choices=[0.0, 0.5, 1.0, 1.5, 2.0], help="Word boosting score")
 
     args = parser.parse_args()
 
     all_scripts = load_all_scripts()
-    if args.calibration_only:
+    if args.script_id:
+        selected = [s for s in all_scripts if s.id == args.script_id]
+    elif args.script_ids:
+        id_set = set(args.script_ids)
+        selected = [s for s in all_scripts if s.id in id_set]
+    elif args.calibration_only:
         selected = [s for s in all_scripts if "_calib_" in s.id]
     else:
-        selected = [s for s in all_scripts if s.split == args.split]
+        candidates = all_scripts
+        if args.exclude_calibration:
+            candidates = [s for s in candidates if "_calib_" not in s.id]
+        if args.split:
+            candidates = [s for s in candidates if s.split == args.split]
+        selected = candidates[args.offset : (args.offset + args.limit) if args.limit else None]
 
     print(f"Running evaluation on {len(selected)} scripts (variants={args.variants})...")
-    report = await run_evaluation(selected, variants=args.variants, fmt=args.format)
+    report = await run_evaluation(
+        selected,
+        variants=args.variants,
+        fmt=args.format,
+        hinglish_stt_lang=args.hinglish_stt_lang,
+        bias_list=args.bias_list,
+        bias_score=args.bias_score,
+    )
     print("\n=== Evaluation Results ===")
     print(json.dumps(report["overall"], indent=2))
 

@@ -1,0 +1,21 @@
+id: fe_en_003
+language: en-IN
+label: family_emergency
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Grandpa, grandpa please help me, I am trapped at the police station!
+- speaker: victim
+  text: Hello, who is speaking? Is that Vikram?
+- speaker: caller
+  text: Yes grandpa, the police raided our hostel and detained everyone. Inspector
+    says pay bribe money of twenty-five thousand to release me!
+- speaker: victim
+  text: Vikram, why are you asking your old grandfather for bribe money?
+- speaker: caller
+  text: Because dad will beat me grandpa! Send the money quickly via Google Pay, please
+    hurry!
+- speaker: victim
+  text: I am calling your father immediately, you cannot hide things from your parents.

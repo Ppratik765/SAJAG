@@ -1,0 +1,21 @@
+id: fe_hien_002
+language: hi-en
+label: family_emergency
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Uncle, main aapka nephew Aryan bol raha hu from police station.
+- speaker: victim
+  text: Aryan? What happened in college?
+- speaker: caller
+  text: Uncle mere room partner ne illegal drugs rakha tha, police ne mujhe bhi detain
+    kar liya hai.
+- speaker: victim
+  text: Have you informed your parents?
+- speaker: caller
+  text: No uncle, mom will get a panic attack. Inspector keh raha hai thirty thousand
+    transfer karo to abhi chhod denge. Don't tell anyone.
+- speaker: victim
+  text: I am calling your father right now, stay calm.

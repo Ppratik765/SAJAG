@@ -1,0 +1,21 @@
+id: bk_hien_001
+language: hi-en
+label: bank_kyc
+legit_kind: null
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: Hello sir, main ICICI bank card division se bol raha hu.
+- speaker: victim
+  text: Yes, what is the matter?
+- speaker: caller
+  text: Sir aapka bank account KYC pending hai. Agar update nahi kiya to aaj raat
+    account block ho jayega.
+- speaker: victim
+  text: Branch aana padega kya update karne ke liye?
+- speaker: caller
+  text: Nahi sir, phone par ho jayega. Aapke number par six digit OTP aaya hai, jaldi
+    se OTP bata dijiye.
+- speaker: victim
+  text: Wait sir, messages check karke OTP bolta hu.

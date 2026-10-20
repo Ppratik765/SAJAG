@@ -1,0 +1,22 @@
+id: da_hi_002
+language: hi-IN
+label: digital_arrest
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: यह सीबीआई मुख्य मुख्यालय से चेतावनी कॉल है। आपके नाम पर मनी लॉन्ड्रिंग का
+    केस दर्ज हुआ है।
+- speaker: victim
+  text: सीबीआई? मैंने जिंदगी में कोई गलत काम नहीं किया।
+- speaker: caller
+  text: आपके बैंक खाते से करोड़ों का अवैध लेन देन हुआ है। सुप्रीम कोर्ट का गैर जमानती
+    वारंट निकला है।
+- speaker: victim
+  text: सर, मैं क्या करूँ? कृपया मदद कीजिए।
+- speaker: caller
+  text: तुरंत वीडियो कॉल चालू रखें, अपने घर वालों को मत बताना। जब तक जांच पूरी न हो,
+    कॉल काटना मना है।
+- speaker: victim
+  text: जी, मैं किसी को नहीं बताऊँगा, प्लीज मेरी बात सुनिए।

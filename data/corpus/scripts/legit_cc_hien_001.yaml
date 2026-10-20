@@ -1,0 +1,20 @@
+id: legit_cc_hien_001
+language: hi-en
+label: legit
+legit_kind: customer_care
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: Good morning sir, calling from Vodafone Idea customer support.
+- speaker: victim
+  text: Yes, what is this regarding?
+- speaker: caller
+  text: Sir your postpaid bill is generated. Due date is on twenty-eighth of this
+    month.
+- speaker: victim
+  text: Can I pay through auto-pay as usual?
+- speaker: caller
+  text: Yes sir, auto-debit will process normally on due date. Just a courtesy update.
+- speaker: victim
+  text: Thank you for the update.

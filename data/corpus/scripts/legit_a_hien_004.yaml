@@ -1,0 +1,17 @@
+id: legit_a_hien_004
+language: hi-en
+label: legit
+legit_kind: appointment
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Pet care veterinary clinic calling regarding Bruno's vaccination.
+- speaker: victim
+  text: Yes, is Bruno's annual rabies vaccine due?
+- speaker: caller
+  text: Yes sir, due date is this Saturday. Can we book morning ten AM slot?
+- speaker: victim
+  text: Saturday morning ten AM is perfect, I will bring Bruno.
+- speaker: caller
+  text: Thank you sir, see you and Bruno on Saturday.

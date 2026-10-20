@@ -1,0 +1,21 @@
+id: ts_en_001
+language: en-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hello, this is senior technical director from Microsoft Windows Security Headquarters.
+- speaker: victim
+  text: Yes, what is this call about?
+- speaker: caller
+  text: Our automated servers received critical error reports that your device is
+    infected with severe financial spyware.
+- speaker: victim
+  text: What steps should I take to clean the infection?
+- speaker: caller
+  text: Open Google Play Store right now, install AnyDesk remote access app, and read
+    out the nine digit address code.
+- speaker: victim
+  text: Giving you AnyDesk access means you will control my phone remotely!

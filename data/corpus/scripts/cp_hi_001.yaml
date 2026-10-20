@@ -1,0 +1,21 @@
+id: cp_hi_001
+language: hi-IN
+label: courier_parcel
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: नमस्कार, मैं फेडेक्स इंटरनेशनल कूरियर हेड ऑफिस मुंबई से बात कर रहा हूँ।
+- speaker: victim
+  text: हाँ जी, क्या बात है?
+- speaker: caller
+  text: आपके नाम पर ताइवान से एक पार्सल आया है जिसमें गैरकानूनी पासपोर्ट और नशीली
+    दवाएं पकड़ी गई हैं।
+- speaker: victim
+  text: मेरा ताइवान में कोई नहीं है, मैंने कोई पार्सल नहीं मंगाया।
+- speaker: caller
+  text: कस्टम्स विभाग ने केस दर्ज किया है। आपको अरेस्ट से बचना है तो क्लीयरेंस पेनल्टी
+    का पैसा ट्रांसफर कीजिए।
+- speaker: victim
+  text: यह गलत है, मैं पुलिस में शिकायत करूँगा।

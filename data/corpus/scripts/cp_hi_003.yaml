@@ -1,0 +1,21 @@
+id: cp_hi_003
+language: hi-IN
+label: courier_parcel
+legit_kind: null
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: कूरियर कस्टम्स जांच ब्यूरो। आपके पते पर भेजे गए पैकेट में अवैध विदेशी मुद्रा
+    और नकली दस्तावेज मिले हैं।
+- speaker: victim
+  text: सर, कोई मेरे पते का गलत इस्तेमाल कर रहा है।
+- speaker: caller
+  text: पुलिस केस दर्ज हो चुका है। तुरंत पचास हजार का जुर्माना भरिए, वरना आज ही जेल
+    जाना पड़ेगा।
+- speaker: victim
+  text: क्या मुझे थाने आकर बात करने की अनुमति है?
+- speaker: caller
+  text: नहीं, तुरंत ऑनलाइन ट्रांसफर कीजिए वरना अरेस्ट टीम आपके घर पहुंच रही है।
+- speaker: victim
+  text: यह सरासर ठगी है, मैं कॉल काट रहा हूँ।

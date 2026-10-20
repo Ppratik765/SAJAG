@@ -1,0 +1,22 @@
+id: ud_en_003
+language: en-IN
+label: utility_disconnect
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: State Electricity Department officer speaking. Power supply to your building
+    will be disconnected tonight.
+- speaker: victim
+  text: Can you provide my consumer service number?
+- speaker: caller
+  text: I have your meter serial number. Line will be cut at ten PM unless penalty
+    deposit is paid to avoid blackout.
+- speaker: victim
+  text: I will visit the subdivision office tomorrow morning.
+- speaker: caller
+  text: If lines are cut tonight, reconnection fee of five thousand rupees will be
+    levied. Transfer money now.
+- speaker: victim
+  text: I know my rights as a consumer, I am not paying anything over phone.

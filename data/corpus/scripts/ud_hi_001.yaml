@@ -1,0 +1,22 @@
+id: ud_hi_001
+language: hi-IN
+label: utility_disconnect
+legit_kind: null
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: बिजली विभाग कंट्रोल रूम से सूचना। आपका बिजली बिल बकाया होने के कारण आज रात
+    नौ बजे पावर कट कर दी जाएगी।
+- speaker: victim
+  text: अरे, मैंने तो पिछले हफ्ते ही पूरा बिल भरा था।
+- speaker: caller
+  text: सिस्टम में पेमेंट अपडेट नहीं हुआ है। अगर तुरंत पेमेंट नहीं किया तो मीटर उखाड़
+    लिया जाएगा।
+- speaker: victim
+  text: सर, इस वक्त मैं कहाँ जाकर बिल जमा करूँ?
+- speaker: caller
+  text: मैं व्हाट्सएप पर तुरंत पेमेंट लिंक भेज रहा हूँ। तुरंत भुगतान कीजिए और रसीद
+    नंबर बताइए, वरना लाइन कट जाएगी।
+- speaker: victim
+  text: जी, जल्दी लिंक भेजिए, मैं देखता हूँ।

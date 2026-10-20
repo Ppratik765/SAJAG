@@ -1,0 +1,22 @@
+id: cp_en_001
+language: en-IN
+label: courier_parcel
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Good morning, this is FedEx international parcel security desk at Mumbai airport.
+- speaker: victim
+  text: Yes, what is this regarding?
+- speaker: caller
+  text: A suspicious package sent from Cambodia to your name was intercepted with
+    illicit narcotics and fake passports.
+- speaker: victim
+  text: That is outrageous, I have never visited Cambodia or ordered anything!
+- speaker: caller
+  text: Customs officers have registered a criminal case. You must transfer forty
+    thousand rupees as a refundable security deposit.
+- speaker: victim
+  text: Legitimate customs officials never ask for private money transfers. I will
+    contact the police.

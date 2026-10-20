@@ -1,0 +1,21 @@
+id: bk_hien_003
+language: hi-en
+label: bank_kyc
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Axis bank manager Verma calling. Urgent KYC update is required on your savings
+    account.
+- speaker: victim
+  text: Maine to pichle saal hi KYC submit kiya tha.
+- speaker: caller
+  text: Aadhaar link disconnect ho gaya hai sir. Turant code verified karwaiye warna
+    account block hoga. Give OTP now.
+- speaker: victim
+  text: Sir message me OTP likha hai, padh ke batata hu.
+- speaker: caller
+  text: Fast boliye sir, session timeout ho jayega.
+- speaker: victim
+  text: The code is five eight three one.

@@ -1,0 +1,22 @@
+id: ts_hien_003
+language: hi-en
+label: tech_support_remote
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Apple technical department calling regarding unauthorized login on your Apple
+    ID.
+- speaker: victim
+  text: I don't even own an iPhone, I use Android phone.
+- speaker: caller
+  text: Aapke number se Apple servers par hacking attempt hui hai. Download RustDesk
+    APK to clear your credentials.
+- speaker: victim
+  text: Why should an Android user download remote APK for Apple ID?
+- speaker: caller
+  text: Cross platform network security breach hai sir, code dijiye warna phone block
+    kar denge.
+- speaker: victim
+  text: You are a scammer, stop calling me.

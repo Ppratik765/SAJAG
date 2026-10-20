@@ -1,0 +1,22 @@
+id: da_en_003
+language: en-IN
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Supreme Court enforcement alert. This call is from Crime Branch headquarters
+    regarding immediate arrest order.
+- speaker: victim
+  text: What arrest order? Please explain.
+- speaker: caller
+  text: Multiple fraudulent bank transactions were traced to your Aadhaar identity.
+    You are under digital arrest.
+- speaker: victim
+  text: Can I go to the local police station to clarify?
+- speaker: caller
+  text: No, stay on the video call inside a private room. Disconnecting the call will
+    result in immediate physical arrest.
+- speaker: victim
+  text: Okay officer, I am staying inside my room.

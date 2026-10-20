@@ -1,0 +1,17 @@
+id: legit_c_hien_001
+language: hi-en
+label: legit
+legit_kind: chitchat
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hey Rohan, long time no see! Where have you been?
+- speaker: victim
+  text: Hey man! Was busy with office sprint release. Finally free this weekend.
+- speaker: caller
+  text: Awesome, let's catch up over coffee this Saturday at the usual cafe.
+- speaker: victim
+  text: Sounds great, Saturday four PM works for me.
+- speaker: caller
+  text: Cool, see you there!

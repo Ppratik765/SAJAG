@@ -1,0 +1,21 @@
+id: ud_hi_002
+language: hi-IN
+label: utility_disconnect
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: विद्युत आपूर्ति निगम। आपके बिजली मीटर में तकनीकी खराबी और बकाया बिल के कारण
+    कनेक्शन बंद होने का नोटिस है।
+- speaker: victim
+  text: हमारे घर में छोटे बच्चे हैं, बिजली मत काटिए।
+- speaker: caller
+  text: लाइनमैन इलाके में ही है। पंद्रह मिनट के अंदर अगर प्रोसेसिंग फीस जमा नहीं की
+    तो बिजली कनेक्शन कट जाएगा।
+- speaker: victim
+  text: ऑनलाइन कैसे भरना है सर?
+- speaker: caller
+  text: दिए गए नंबर पर तुरंत तीन हजार रुपये ट्रांसफर कीजिए, तभी कनेक्शन चालू रहेगा।
+- speaker: victim
+  text: ठीक है सर, मैं पैसे भेज रहा हूँ।

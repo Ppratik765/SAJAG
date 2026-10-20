@@ -1,0 +1,18 @@
+id: legit_cc_en_001
+language: en-IN
+label: legit
+legit_kind: customer_care
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Good afternoon, this is customer support from Tata Power solar rooftop division.
+- speaker: victim
+  text: Hello, yes I had requested a site feasibility survey.
+- speaker: caller
+  text: Our technical engineer is scheduled to inspect your terrace tomorrow at three
+    PM. Is that time suitable?
+- speaker: victim
+  text: Yes, three PM tomorrow works well for me.
+- speaker: caller
+  text: Confirmation details have been emailed to your registered address. Thank you.

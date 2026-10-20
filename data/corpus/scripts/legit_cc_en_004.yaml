@@ -1,0 +1,15 @@
+id: legit_cc_en_004
+language: en-IN
+label: legit
+legit_kind: customer_care
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Zomato Gold customer care follow-up call regarding your dining experience.
+- speaker: victim
+  text: Yes, the dinner reservation went very smoothly.
+- speaker: caller
+  text: We appreciate your feedback madam. Thank you for choosing Zomato dining.
+- speaker: victim
+  text: Thank you, good bye.

@@ -101,8 +101,14 @@ async def transcribe_file(
         form_data["bias_list"] = json.dumps(list(bias_list))
         form_data["bias_score"] = str(bias_score)
 
+    mime = "audio/wav"
+    if filename.lower().endswith(".flac"):
+        mime = "audio/flac"
+    elif filename.lower().endswith(".mp3"):
+        mime = "audio/mpeg"
+
     files = {
-        "audio_file": (filename, audio_bytes, "audio/wav"),
+        "audio_file": (filename, audio_bytes, mime),
     }
 
     backoff_delays = [0.5, 1.5, 4.0]

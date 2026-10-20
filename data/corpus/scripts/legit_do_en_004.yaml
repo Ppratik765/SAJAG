@@ -1,0 +1,17 @@
+id: legit_do_en_004
+language: en-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Flipkart logistics delivery associate. Sir, your sports shoes order has arrived.
+- speaker: victim
+  text: Great, I am at home today.
+- speaker: caller
+  text: Kindly provide the delivery authentication code to complete the handover.
+- speaker: victim
+  text: The code is three zero nine five.
+- speaker: caller
+  text: Authentication successful, thank you sir.

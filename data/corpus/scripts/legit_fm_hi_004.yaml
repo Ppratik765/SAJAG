@@ -1,0 +1,17 @@
+id: legit_fm_hi_004
+language: hi-IN
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: दीदी नमस्ते, कॉलेज का ट्रिप जा रहा है अगले हफ्ते।
+- speaker: victim
+  text: अरे वाह! कहाँ जा रहे हो तुम लोग?
+- speaker: caller
+  text: जयपुर जा रहे हैं दीदी। आठ सौ रुपये कंट्रीब्यूशन देना है, प्लीज भेज दो ना।
+- speaker: victim
+  text: ठीक है छोटे, मैं अभी भेज देती हूँ, अच्छे से घूमना।
+- speaker: caller
+  text: लव यू दीदी, थैंक यू!

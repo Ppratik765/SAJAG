@@ -1,0 +1,17 @@
+id: legit_cc_hien_004
+language: hi-en
+label: legit
+legit_kind: customer_care
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Cult.fit membership desk. Just checking regarding your gym subscription renewal.
+- speaker: victim
+  text: I am currently out of station, will renew next month.
+- speaker: caller
+  text: No problem sir, we can pause your membership for thirty days at zero cost.
+- speaker: victim
+  text: That would be very helpful, please pause it.
+- speaker: caller
+  text: Paused successfully sir. Enjoy your travel.

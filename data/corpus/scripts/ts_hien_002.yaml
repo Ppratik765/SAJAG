@@ -1,0 +1,22 @@
+id: ts_hien_002
+language: hi-en
+label: tech_support_remote
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: 'Android customer support alert: Aapke phone me spyware hai jo screen record
+    kar raha hai.'
+- speaker: victim
+  text: Spyware? But my antivirus didn't show anything.
+- speaker: caller
+  text: Standard antivirus detect nahi karta sir. TeamViewer QuickSupport install
+    karke remote access allow kijiye.
+- speaker: victim
+  text: Will you be able to see my personal photos and banking app?
+- speaker: caller
+  text: Only security scan chalega sir, trust me and share the nine digit connection
+    code immediately.
+- speaker: victim
+  text: I will never grant remote screen share access to unknown caller.

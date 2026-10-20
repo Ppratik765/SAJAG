@@ -1,0 +1,18 @@
+id: legit_do_hi_004
+language: hi-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: स्विगी इंस्टामार्ट राइडर बोल रहा हूँ। आपकी ग्रोसरी लेकर बिल्डिंग के नीचे खड़ा
+    हूँ।
+- speaker: victim
+  text: हाँ भैया, बेल बजा दीजिए।
+- speaker: caller
+  text: ऑर्डर क्लोज करने के लिए फोन पर आया हुआ चार अंकों का कोड बोलिए सर।
+- speaker: victim
+  text: कोड तीन एक चार दो है।
+- speaker: caller
+  text: थैंक यू सर, सामान दे दिया है।

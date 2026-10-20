@@ -1,0 +1,21 @@
+id: bk_hi_001
+language: hi-IN
+label: bank_kyc
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: नमस्कार, मैं भारतीय स्टेट बैंक मुख्य शाखा से सीनियर मैनेजर बात कर रहा हूँ।
+- speaker: victim
+  text: हाँ जी सर, क्या बात है?
+- speaker: caller
+  text: आपका बैंक खाता केवाईसी अपडेट न होने के कारण आज रात बारह बजे हमेशा के लिए ब्लॉक
+    हो जाएगा।
+- speaker: victim
+  text: अरे, खाता बंद मत कीजिए, मेरी पेंशन उसी खाते में आती है।
+- speaker: caller
+  text: परेशान मत होइए, मैं यहीं से ऑनलाइन अपडेट कर देता हूँ। आपके मोबाइल पर छह अंकों
+    का ओटीपी आया होगा, तुरंत बताइए।
+- speaker: victim
+  text: हाँ, मैसेज आया है, मैं अभी देखकर ओटीपी बताता हूँ।

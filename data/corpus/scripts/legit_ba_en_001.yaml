@@ -1,0 +1,20 @@
+id: legit_ba_en_001
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Good morning, this is an automated fraud prevention announcement from Reserve
+    Bank of India.
+- speaker: victim
+  text: Yes, I am listening.
+- speaker: caller
+  text: Citizens are advised that police, CBI, or courts never place citizens under
+    digital arrest over phone calls.
+- speaker: victim
+  text: Thank you, that is an important clarification.
+- speaker: caller
+  text: Hang up immediately on any caller threatening arrest over parcel or identity
+    misuse.

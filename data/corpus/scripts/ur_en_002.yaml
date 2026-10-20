@@ -1,0 +1,22 @@
+id: ur_en_002
+language: en-IN
+label: upi_refund
+legit_kind: null
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: Good morning madam, Amazon marketplace refund executive calling regarding
+    your canceled order.
+- speaker: victim
+  text: Yes, I was waiting for my product refund of fifteen hundred rupees.
+- speaker: caller
+  text: Click on the UPI refund link sent on SMS and enter your four digit UPI PIN
+    to receive the money immediately.
+- speaker: victim
+  text: Amazon always credits directly to original payment source, why PIN?
+- speaker: caller
+  text: This is instant settlement mode madam. Without PIN validation, amount cannot
+    be credited.
+- speaker: victim
+  text: I am hanging up, I will check on the official app.

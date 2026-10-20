@@ -1,0 +1,18 @@
+id: legit_cc_en_003
+language: en-IN
+label: legit
+legit_kind: customer_care
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: HDFC securities investor desk. Calling regarding your dividend payout statement.
+- speaker: victim
+  text: Did the annual company dividend credit to my account?
+- speaker: caller
+  text: Yes sir, annual dividend has been credited directly to your primary bank account
+    yesterday.
+- speaker: victim
+  text: I see it in my bank statement now, thank you for confirming.
+- speaker: caller
+  text: You are welcome sir, have a good day.

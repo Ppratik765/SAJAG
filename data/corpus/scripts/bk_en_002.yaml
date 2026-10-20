@@ -1,0 +1,22 @@
+id: bk_en_002
+language: en-IN
+label: bank_kyc
+legit_kind: null
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: Urgent alert from HDFC Bank security operations. Your netbanking access is
+    suspended.
+- speaker: victim
+  text: Why is my netbanking suspended?
+- speaker: caller
+  text: Your KYC compliance document has lapsed. To unblock immediately, confirm the
+    one time password sent to you.
+- speaker: victim
+  text: Should I not visit the branch tomorrow morning?
+- speaker: caller
+  text: If you wait until tomorrow, bank penalties of five thousand rupees will apply.
+    Provide the OTP right now.
+- speaker: victim
+  text: Fine, the verification code in the SMS is eight zero six four.

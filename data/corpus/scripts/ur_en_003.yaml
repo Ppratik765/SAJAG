@@ -1,0 +1,21 @@
+id: ur_en_003
+language: en-IN
+label: upi_refund
+legit_kind: null
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Sir, I mistakenly transferred ten thousand rupees to your UPI ID instead of
+    my landlord.
+- speaker: victim
+  text: I am checking my balance right now, no money has arrived.
+- speaker: caller
+  text: I generated a bank refund QR code. Scan this QR code and input your UPI PIN
+    to release the money back to me.
+- speaker: victim
+  text: Scanning a QR code and entering PIN is only for sending money, not receiving!
+- speaker: caller
+  text: Please cooperate sir, otherwise I will lodge a police complaint against you.
+- speaker: victim
+  text: Go ahead and complain, I know this is a scam.

@@ -1,0 +1,22 @@
+id: ts_hi_003
+language: hi-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: सैमसंग कस्टमर केयर टेक्निकल ऑफिसर। आपके डिवाइस में मैलवेयर की वजह से बैंक
+    अकाउंट खतरा में है।
+- speaker: victim
+  text: मुझे तो बैंक की तरफ से कोई चेतावनी नहीं मिली।
+- speaker: caller
+  text: बैंक को बाद में पता चलेगा सर। तुरंत रस्टडेस्क एपीके डाउनलोड कीजिए और हमारे
+    इंजीनियर को रिमोट एक्सेस दीजिए।
+- speaker: victim
+  text: एपीके फाइल बाहर से डाउनलोड करना खतरनाक होता है।
+- speaker: caller
+  text: यह ऑफिशियल एंटीवायरस एपीके है सर, तुरंत इंस्टॉल नहीं करेंगे तो फोन लॉक हो
+    जाएगा।
+- speaker: victim
+  text: मैं अपना फोन ऑथराइज्ड सर्विस सेंटर लेकर जाऊँगा।

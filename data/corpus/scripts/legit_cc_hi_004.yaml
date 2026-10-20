@@ -1,0 +1,18 @@
+id: legit_cc_hi_004
+language: hi-IN
+label: legit
+legit_kind: customer_care
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: इंडियन ऑयल इंडेन गैस बुकिंग हेल्पलाइन से कॉल है।
+- speaker: victim
+  text: हाँ, क्या एलपीजी सिलेंडर बुक हो गया?
+- speaker: caller
+  text: जी हाँ, आपका रसोई गैस सिलेंडर कल दोपहर तक डिलीवर हो जाएगा। सब्सिडी आपके आधार
+    लिंक खाते में आ जाएगी।
+- speaker: victim
+  text: बहुत अच्छा, धन्यवाद जानकारी के लिए।
+- speaker: caller
+  text: सुरक्षित रसोई गैस उपयोग करें।

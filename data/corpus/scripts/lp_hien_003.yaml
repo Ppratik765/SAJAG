@@ -1,0 +1,21 @@
+id: lp_hien_003
+language: hi-en
+label: lottery_prize
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: 'Online shopping festive mega lottery alert: You are selected for gold coin
+    and cash voucher prize.'
+- speaker: victim
+  text: What do I need to do to collect it?
+- speaker: caller
+  text: Sir just pay refundable courier and insurance fee of two thousand rupees on
+    UPI to release the gold coin parcel.
+- speaker: victim
+  text: Why refundable fee?
+- speaker: caller
+  text: Delivery boy security rule sir, parcel receive hote hi paise wapas mil jayenge.
+- speaker: victim
+  text: No thank you, cancel my prize.

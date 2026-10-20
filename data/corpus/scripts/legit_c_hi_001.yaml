@@ -1,0 +1,19 @@
+id: legit_c_hi_001
+language: hi-IN
+label: legit
+legit_kind: chitchat
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: अरे भाई! क्या हाल-चाल हैं? बड़े दिनों बाद फोन किया।
+- speaker: victim
+  text: अरे शर्मा जी! बस ऑफिस के काम में फंसा हुआ था। आप सुनाइए, घर में सब कैसे हैं?
+- speaker: caller
+  text: सब बढ़िया हैं भाई। इस रविवार को शाम को चाय पर आइए परिवार के साथ।
+- speaker: victim
+  text: बिल्कुल आएंगे! बच्चे भी आपके बच्चों से मिलने की बात कर रहे थे।
+- speaker: caller
+  text: तो रविवार शाम पांच बजे पक्का रहा।
+- speaker: victim
+  text: हाँ भाई, पांच बजे मिलते हैं।

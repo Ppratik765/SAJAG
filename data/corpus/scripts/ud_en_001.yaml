@@ -1,0 +1,22 @@
+id: ud_en_001
+language: en-IN
+label: utility_disconnect
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Electricity board automated alert. Your power connection will be disconnected
+    tonight due to unpaid dues.
+- speaker: victim
+  text: Hello, I already paid my monthly electricity bill online two days ago.
+- speaker: caller
+  text: The transaction failed on the state electricity gateway. Disconnection order
+    is scheduled for nine PM tonight.
+- speaker: victim
+  text: How can I prevent disconnection? I have elderly patients at home.
+- speaker: caller
+  text: Transfer the pending amount of two thousand rupees immediately to the bill
+    clearing desk link sent on your phone.
+- speaker: victim
+  text: Official electricity departments do not accept payments on personal UPI links!

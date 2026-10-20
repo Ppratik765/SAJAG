@@ -1,0 +1,19 @@
+id: legit_do_hi_001
+language: hi-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: नमस्ते भैया, मैं अमेज़न से डिलीवरी बॉय बोल रहा हूँ। आपका पार्सल लेकर सोसाइटी
+    गेट पर हूँ।
+- speaker: victim
+  text: हाँ भैया, मैं पांच मिनट में नीचे आता हूँ।
+- speaker: caller
+  text: सर पार्सल हैंडओवर करने के लिए आपके फोन पर डिलीवरी कोड आया होगा, प्लीज बता
+    दीजिए।
+- speaker: victim
+  text: हाँ, मैसेज में डिलीवरी कोड चार दो एक आठ लिखा है।
+- speaker: caller
+  text: धन्यवाद सर, पार्सल गार्ड रूम में रख दिया है।

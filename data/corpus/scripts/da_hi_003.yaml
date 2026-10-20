@@ -1,0 +1,22 @@
+id: da_hi_003
+language: hi-IN
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: साइबर सेल हेडक्वार्टर से डीसीपी शर्मा। आपके सिम कार्ड से अवैध गतिविधियां पकड़ी
+    गई हैं।
+- speaker: victim
+  text: सर, यह मेरा पुराना नंबर है, क्या हुआ है?
+- speaker: caller
+  text: ट्राई और पुलिस की संयुक्त जांच में आपके खिलाफ अरेस्ट वारंट जारी हुआ है। आप
+    तुरंत डिजिटल अरेस्ट में हैं।
+- speaker: victim
+  text: डिजिटल अरेस्ट? यह कैसे हो सकता है?
+- speaker: caller
+  text: शांत रहिए और कमरा अंदर से लॉक कर लीजिए। कोई भी बात बाहर नहीं जानी चाहिए, पूरी
+    जांच गोपनीय है।
+- speaker: victim
+  text: जी ठीक है सर, मैं कमरा बंद कर रहा हूँ।

@@ -1,0 +1,18 @@
+id: legit_ba_en_004
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Canara Bank financial vigilance division security reminder.
+- speaker: victim
+  text: Yes, tell me.
+- speaker: caller
+  text: Avoid transferring money to unknown accounts promising guaranteed investment
+    returns or part-time earnings.
+- speaker: victim
+  text: I am aware of such investment traps.
+- speaker: caller
+  text: Always invest through registered SEBI intermediaries only.

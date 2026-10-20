@@ -1,0 +1,22 @@
+id: lp_en_002
+language: en-IN
+label: lottery_prize
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Grand prize notification desk. You have been selected as the grand winner
+    of an international luxury vacation package.
+- speaker: victim
+  text: Is this completely free?
+- speaker: caller
+  text: Yes madam, fully sponsored luxury trip. You only need to pay mandatory administrative
+    registration charges of twelve thousand rupees.
+- speaker: victim
+  text: If it is fully sponsored, why are there administrative charges?
+- speaker: caller
+  text: It covers government stamp duty madam. Transfer the amount today to lock in
+    your reservation.
+- speaker: victim
+  text: I am not interested in this scam package.

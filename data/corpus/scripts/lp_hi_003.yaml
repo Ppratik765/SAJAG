@@ -1,0 +1,22 @@
+id: lp_hi_003
+language: hi-IN
+label: lottery_prize
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: टाटा मोटर्स लकी विनर सेल। आपके सिम कार्ड को पहला इनाम पचास लाख रुपये का जैकपॉट
+    लगा है।
+- speaker: victim
+  text: मुझे यकीन नहीं हो रहा, क्या यह सच है?
+- speaker: caller
+  text: बिल्कुल सच है सर, आरबीआई अप्रूव्ड लॉटरी है। चेक भेजने के लिए बैंक प्रोसेसिंग
+    चार्ज दस हजार रुपये तुरंत ट्रांसफर कीजिए।
+- speaker: victim
+  text: अगर लॉटरी सच है तो पहले मेरे खाते में पैसे डालिए।
+- speaker: caller
+  text: सर नियम के खिलाफ है, एडवांस प्रोसेसिंग फीस जमा करेंगे तभी लॉटरी अमाउंट क्रेडिट
+    होगा।
+- speaker: victim
+  text: यह सरासर फ्रॉड है, मुझे बेवकूफ मत समझो।

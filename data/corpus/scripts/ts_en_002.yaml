@@ -1,0 +1,22 @@
+id: ts_en_002
+language: en-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Google Android security assistance. Critical malware detected accessing your
+    banking applications.
+- speaker: victim
+  text: My banking app has two-factor authentication enabled.
+- speaker: caller
+  text: The malware bypasses security tokens sir. Install TeamViewer QuickSupport
+    immediately to allow our team to purge it.
+- speaker: victim
+  text: Why can't I just restart or factory reset my phone myself?
+- speaker: caller
+  text: Factory reset will brick your device permanently. Authorize remote access
+    immediately or phone will freeze.
+- speaker: victim
+  text: I am disconnecting, this is a textbook tech support scam.

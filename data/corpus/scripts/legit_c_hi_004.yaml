@@ -1,0 +1,17 @@
+id: legit_c_hi_004
+language: hi-IN
+label: legit
+legit_kind: chitchat
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: अरे चाची जी नमस्ते! गोलू की तबीयत अब कैसी है?
+- speaker: victim
+  text: नमस्ते बेटा, अब बुखार उतर गया है, डॉक्टर ने आराम करने को कहा है।
+- speaker: caller
+  text: दवाई समय पर दीजिएगा चाची जी, कोई भी जरूरत हो तो मुझे बताइएगा।
+- speaker: victim
+  text: हाँ बेटा, तूने फोन करके पूछ लिया यही बहुत है। जीते रहो।
+- speaker: caller
+  text: ध्यान रखिएगा चाची जी, नमस्ते।

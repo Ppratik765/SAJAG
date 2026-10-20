@@ -1,0 +1,21 @@
+id: fe_en_002
+language: en-IN
+label: family_emergency
+legit_kind: null
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: Uncle, this is your nephew Kevin calling from the emergency hospital ward.
+- speaker: victim
+  text: Kevin? Why are you calling from an unknown phone number?
+- speaker: caller
+  text: My phone battery died uncle. I met with a bike accident, emergency surgery
+    is required immediately.
+- speaker: victim
+  text: Have your parents arrived at the hospital?
+- speaker: caller
+  text: Please keep this confidential, do not tell my parents yet. Send thirty thousand
+    rupees to this clinic UPI account immediately!
+- speaker: victim
+  text: I will not transfer money before speaking to your mother directly.

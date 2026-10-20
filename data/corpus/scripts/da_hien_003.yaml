@@ -1,0 +1,22 @@
+id: da_hien_003
+language: hi-en
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Mumbai Police Cyber Branch se alert hai. Serious criminal charges have been
+    filed against you.
+- speaker: victim
+  text: What charges sir? Maine kya kiya?
+- speaker: caller
+  text: Court ne immediate arrest order diya hai. Stay in a closed room under digital
+    arrest.
+- speaker: victim
+  text: Can I call my lawyer first?
+- speaker: caller
+  text: Strictly prohibited. Confidential investigation hai, kisi ko mat batana aur
+    call cut mat karna.
+- speaker: victim
+  text: Alright sir, I am staying on the line.

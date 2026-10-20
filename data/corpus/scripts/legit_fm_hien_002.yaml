@@ -1,0 +1,18 @@
+id: legit_fm_hien_002
+language: hi-en
+label: legit
+legit_kind: family_money
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: Mom, college canteen me hu friends ke saath.
+- speaker: victim
+  text: Haan beta, lunch kar liya sabne?
+- speaker: caller
+  text: Yes mom, bill split kiya hai, mera share two hundred fifty rupees hai. Please
+    UPI kar do na.
+- speaker: victim
+  text: Sent beta, dhyan se aana ghar.
+- speaker: caller
+  text: Thanks mom, see you in evening.

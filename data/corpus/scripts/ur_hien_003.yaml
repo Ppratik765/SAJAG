@@ -1,0 +1,21 @@
+id: ur_hien_003
+language: hi-en
+label: upi_refund
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Bhaiya shopkeeper bol raha hu, aapke account me accidentally balance chala
+    gaya hai.
+- speaker: victim
+  text: Mera phone check karta hu, koi credit nahi dikh raha.
+- speaker: caller
+  text: Aap QR code scan karke confirm kar lijiye aur apna security PIN dalke reversal
+    authenticate kijiye.
+- speaker: victim
+  text: QR scan aur PIN se to debit hota hai.
+- speaker: caller
+  text: Nahi bhaiya, merchant reverse mode me PIN dalke paisa wapas aata hai.
+- speaker: victim
+  text: No, I am not going to do that.

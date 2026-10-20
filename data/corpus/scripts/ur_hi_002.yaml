@@ -1,0 +1,21 @@
+id: ur_hi_002
+language: hi-IN
+label: upi_refund
+legit_kind: null
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: सर नमस्कार, पेटीएम कस्टमर केयर से बात कर रहा हूँ। आपके पिछले आर्डर का सात
+    सौ रुपये का कैशबैक रिफंड अप्रूव हुआ है।
+- speaker: victim
+  text: अच्छा, कैशबैक तो काफी दिन से पेंडिंग था।
+- speaker: caller
+  text: हाँ सर, रिफंड कलेक्ट करने के लिए अपने यूपीआई ऐप में जाकर पिन एंटर कीजिए, तुरंत
+    बैंक में क्रेडिट होगा।
+- speaker: victim
+  text: क्या पैसे लेने के लिए भी यूपीआई पिन डालना पड़ता है?
+- speaker: caller
+  text: हाँ सर, यह सरकारी डिजिटल ऑथराइजेशन है, पिन डालेंगे तभी अमाउंट क्रेडिट होगा।
+- speaker: victim
+  text: नहीं भैया, यह मुझे गड़बड़ लग रहा है।

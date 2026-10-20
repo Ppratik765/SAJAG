@@ -1,0 +1,19 @@
+id: legit_a_hi_001
+language: hi-IN
+label: legit
+legit_kind: appointment
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: नमस्ते, मैं मैक्स सुपर स्पेशियलिटी अस्पताल के ओपीडी काउंटर से बोल रही हूँ।
+- speaker: victim
+  text: हाँ जी, क्या डॉक्टर साहब कल बैठेंगे?
+- speaker: caller
+  text: जी हाँ, डॉक्टर गुप्ता के साथ आपका कल शाम पांच बजे का अपॉइंटमेंट कन्फर्म है।
+- speaker: victim
+  text: क्या मुझे पुरानी जांच रिपोर्ट साथ लानी होगी?
+- speaker: caller
+  text: जी बिल्कुल, पुरानी सभी पर्चियां और ब्लड टेस्ट रिपोर्ट साथ लेकर आएं।
+- speaker: victim
+  text: ठीक है, मैं समय पर पहुँच जाऊँगा। धन्यवाद।

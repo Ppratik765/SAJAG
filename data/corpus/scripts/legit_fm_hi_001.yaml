@@ -1,0 +1,18 @@
+id: legit_fm_hi_001
+language: hi-IN
+label: legit
+legit_kind: family_money
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: पापा नमस्ते, कॉलेज की लाइब्रेरी से बोल रहा हूँ।
+- speaker: victim
+  text: नमस्ते बेटा, कैसी चल रही है पढ़ाई?
+- speaker: caller
+  text: अच्छी चल रही है पापा। मुझे सेमेस्टर एग्जाम की किताबों के लिए पांच सौ रुपये
+    चाहिए थे।
+- speaker: victim
+  text: हाँ बेटा, मैं अभी तुम्हारे खाते में गूगल पे कर देता हूँ।
+- speaker: caller
+  text: थैंक यू पापा, पैसे मिलते ही किताब खरीद लूँगा।

@@ -1,0 +1,21 @@
+id: fe_hien_001
+language: hi-en
+label: family_emergency
+legit_kind: null
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: Mummy, mummy please help me, main bohot badi musibat me hu!
+- speaker: victim
+  text: Beta kya hua? Kaha par ho tum? Aawaz clear nahi aa rahi.
+- speaker: caller
+  text: Mummy mera car accident ho gaya hai aur police mujhe arrest kar rahi hai.
+    Urgent paise chahiye bail ke liye.
+- speaker: victim
+  text: Papa ko call kiya tune?
+- speaker: caller
+  text: Nahi mummy, papa ko mat batana please, bohot daantenge. Turant twenty thousand
+    rupees send kar do.
+- speaker: victim
+  text: Wait, let me call your friend first to verify.

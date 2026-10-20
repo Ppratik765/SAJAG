@@ -1,0 +1,21 @@
+id: cp_hi_002
+language: hi-IN
+label: courier_parcel
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: डीएचएल एक्सप्रेस कस्टम्स विभाग से अधिकारी पाटिल। आपके आधार कार्ड से बुक किए
+    गए पार्सल में प्रतिबंधित सामान मिला है।
+- speaker: victim
+  text: मैंने कोई पार्सल बुक नहीं किया सर!
+- speaker: caller
+  text: नारकोटिक्स विभाग और पुलिस अरेस्ट वारंट लेकर तैयार है। अगर आप निर्दोष हैं तो
+    सिक्योर खाते में सिक्योरिटी डिपॉजिट भेजिए।
+- speaker: victim
+  text: सिक्योरिटी डिपॉजिट कितना भेजना होगा?
+- speaker: caller
+  text: पचास हजार रुपये भेजिए, जांच के बाद रिफंड कर दिया जाएगा। किसी को मत बताना।
+- speaker: victim
+  text: मेरे पास इतने पैसे नहीं हैं सर।

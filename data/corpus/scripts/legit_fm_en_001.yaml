@@ -1,0 +1,18 @@
+id: legit_fm_en_001
+language: en-IN
+label: legit
+legit_kind: family_money
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hi dad, I am at the university bookstore right now.
+- speaker: victim
+  text: Hello dear, did you find the required engineering textbooks?
+- speaker: caller
+  text: Yes, the reference handbook is available for six hundred rupees. Could you
+    transfer the amount?
+- speaker: victim
+  text: Certainly dear, I am sending it to your UPI account right now.
+- speaker: caller
+  text: Received the notification dad, thank you!

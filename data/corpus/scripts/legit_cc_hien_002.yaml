@@ -1,0 +1,16 @@
+id: legit_cc_hien_002
+language: hi-en
+label: legit
+legit_kind: customer_care
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: MakeMyTrip customer assistance. Sir your flight booking to Bengaluru is confirmed.
+- speaker: victim
+  text: Are the seat numbers allocated?
+- speaker: caller
+  text: Yes sir, window seats twelve A and twelve B are reserved. Boarding passes
+    sent to email.
+- speaker: victim
+  text: Excellent, thank you for confirming.

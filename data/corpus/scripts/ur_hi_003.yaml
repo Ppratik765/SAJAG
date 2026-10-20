@@ -1,0 +1,21 @@
+id: ur_hi_003
+language: hi-IN
+label: upi_refund
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: अरे भाई साहब, गलती से मैंने आपके फोन नंबर पर बीस हजार ट्रांसफर कर दिए। प्लीज
+    वापस कर दो।
+- speaker: victim
+  text: मेरे फोन पर तो कोई पैसे आने का मैसेज नहीं आया।
+- speaker: caller
+  text: बैंक सर्वर स्लो है, मैंने क्यूआर कोड भेजा है। क्यूआर कोड स्कैन करके यूपीआई
+    पिन दबाइए, सीधे रिवर्स हो जाएगा।
+- speaker: victim
+  text: क्यूआर कोड स्कैन करने से मेरे खाते से पैसे कट जाएंगे।
+- speaker: caller
+  text: नहीं कटेगा भाई साहब, रिवर्सल सिस्टम है, पिन डालिए विश्वास रखिए।
+- speaker: victim
+  text: मुझे नहीं लगता यह सुरक्षित है।

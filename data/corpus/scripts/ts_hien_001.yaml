@@ -1,0 +1,22 @@
+id: ts_hien_001
+language: hi-en
+label: tech_support_remote
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hello, main Windows Microsoft security team se senior technician bol raha
+    hu.
+- speaker: victim
+  text: Yes, what is the issue?
+- speaker: caller
+  text: Aapke device me severe trojan virus detect hua hai. Phone crash ho sakta hai
+    aur bank passwords leak ho rahe hain.
+- speaker: victim
+  text: How do I fix this virus problem?
+- speaker: caller
+  text: Play Store par jakar AnyDesk app download kijiye aur screen par aaya hua nine
+    digit code mujhe share karein.
+- speaker: victim
+  text: AnyDesk is screen sharing app, why do you need remote access?

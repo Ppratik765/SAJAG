@@ -1,0 +1,22 @@
+id: lp_hi_002
+language: hi-IN
+label: lottery_prize
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: नमस्ते मैडम, मारुति सुजुकी मेगा लकी ड्रा डिपार्टमेंट से खुशखबरी है। आपने चमचमाती
+    कार जीती है!
+- speaker: victim
+  text: गाड़ी? सच में?
+- speaker: caller
+  text: जी हाँ मैडम, कार आपके घर मुफ्त डिलीवर होगी। बस रजिस्ट्रेशन और रोड टैक्स के
+    पच्चीस हजार रुपये हमारे खाते में ट्रांसफर कर दीजिए।
+- speaker: victim
+  text: क्या टैक्स गाड़ी मिलने के बाद नहीं दिया जा सकता?
+- speaker: caller
+  text: नहीं मैडम, कंपनी का नियम है पहले टैक्स भरेंगे तभी गाड़ी का रजिस्ट्रेशन आपके
+    नाम होगा।
+- speaker: victim
+  text: नहीं भैया, बिना गाड़ी देखे मैं कोई पैसा नहीं दूँगी।

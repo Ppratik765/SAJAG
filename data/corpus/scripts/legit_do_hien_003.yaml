@@ -1,0 +1,17 @@
+id: legit_do_hien_003
+language: hi-en
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Delhivery courier services. Your electronics parcel is out for delivery today.
+- speaker: victim
+  text: Will you arrive before five PM?
+- speaker: caller
+  text: Yes sir, I am nearby. Please keep the delivery verification code ready.
+- speaker: victim
+  text: The delivery code in SMS is two four eight seven.
+- speaker: caller
+  text: Got it sir, see you in ten minutes.

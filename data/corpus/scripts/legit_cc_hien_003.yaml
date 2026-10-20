@@ -1,0 +1,18 @@
+id: legit_cc_hien_003
+language: hi-en
+label: legit
+legit_kind: customer_care
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Urban Company service desk. Calling regarding your AC servicing booking tomorrow.
+- speaker: victim
+  text: Yes, will the technician arrive on time?
+- speaker: caller
+  text: Technician will reach between eleven AM and twelve PM sir. No advance payment
+    required.
+- speaker: victim
+  text: Understood, payment will be done on the app after work.
+- speaker: caller
+  text: Thank you sir.

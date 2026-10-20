@@ -1,0 +1,22 @@
+id: it_hien_001
+language: hi-en
+label: investment_task
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hello, are you looking for part-time work from home job? Daily earning three
+    thousand rupees.
+- speaker: victim
+  text: Yes, what is the job profile?
+- speaker: caller
+  text: Simple online tasks sir. Like YouTube videos, take screenshots, and submit
+    on Telegram task group.
+- speaker: victim
+  text: Okay, how do I get paid?
+- speaker: caller
+  text: Initial payment is free. For advanced crypto investment task, transfer five
+    thousand to double your money in thirty minutes.
+- speaker: victim
+  text: Double money in 30 minutes? That is a pyramid scam.

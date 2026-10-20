@@ -1,0 +1,19 @@
+id: legit_a_en_001
+language: en-IN
+label: legit
+legit_kind: appointment
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Good morning, this is Narayana Health City appointment desk.
+- speaker: victim
+  text: Hello, calling to confirm consultation with the neurologist.
+- speaker: caller
+  text: Yes madam, your appointment with Dr. Rao is confirmed for Monday at ten AM.
+- speaker: victim
+  text: Is the consultation on the first floor OPD block?
+- speaker: caller
+  text: Yes madam, block B first floor. Please carry your MRI scan films.
+- speaker: victim
+  text: Thank you, I will bring all imaging records.

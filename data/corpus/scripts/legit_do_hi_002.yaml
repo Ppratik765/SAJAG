@@ -1,0 +1,17 @@
+id: legit_do_hi_002
+language: hi-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: फ्लिपकार्ट कूरियर डिलीवरी। मैडम आपका कॉस्मेटिक्स का पैकेट आया है।
+- speaker: victim
+  text: हाँ, मैं घर पर ही हूँ, फ्लैट नंबर तीन सौ दो में आ जाइए।
+- speaker: caller
+  text: मैडम लिफ्ट चालू नहीं है, आप गेट पर आ सकती हैं या डिलीवरी कोड बता देंगी?
+- speaker: victim
+  text: मैं डिलीवरी कोड बता देती हूँ, कोड है नौ पांच सात तीन। पैकेट दरवाजे पर रख दीजिए।
+- speaker: caller
+  text: जी मैडम, रख दिया है। धन्यवाद।

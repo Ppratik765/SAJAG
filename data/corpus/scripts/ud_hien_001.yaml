@@ -1,0 +1,22 @@
+id: ud_hien_001
+language: hi-en
+label: utility_disconnect
+legit_kind: null
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: 'Electricity department head office alert: Your power connection will be cut
+    tonight at nine PM.'
+- speaker: victim
+  text: Why will power be cut? Maine to regular bill bhara hai.
+- speaker: caller
+  text: Server par bill update nahi hua sir. Immediate disconnected hone se bachane
+    ke liye payment link par pay karein.
+- speaker: victim
+  text: Where is the link sent?
+- speaker: caller
+  text: WhatsApp par payment link share kiya hai, open karke turant card ya UPI se
+    payment transfer karein.
+- speaker: victim
+  text: I will pay on the official electricity portal only.

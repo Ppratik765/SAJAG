@@ -1,0 +1,18 @@
+id: legit_c_en_004
+language: en-IN
+label: legit
+legit_kind: chitchat
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Hey Karthik, did you check the itinerary for our upcoming trekking trip?
+- speaker: victim
+  text: Yes, Western Ghats trek looks exciting. Weather forecast is clear for next
+    weekend.
+- speaker: caller
+  text: Make sure everyone packs water bottles and sturdy hiking shoes.
+- speaker: victim
+  text: I have already shared the packing checklist with the group.
+- speaker: caller
+  text: Perfect, see you on Friday evening!

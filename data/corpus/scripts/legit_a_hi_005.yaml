@@ -1,0 +1,18 @@
+id: legit_a_hi_005
+language: hi-IN
+label: legit
+legit_kind: appointment
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: डॉक्टर लाल पैथलैब्स से होम ब्लड कलेक्शन टीम।
+- speaker: victim
+  text: नमस्ते, क्या कल सुबह ब्लड सैंपल लेने आ रहे हैं?
+- speaker: caller
+  text: हाँ सर, कल सुबह सात बजे हमारे तकनीशियन आपके घर पहुंचेंगे। दस घंटे का फास्टिंग
+    जरूरी है।
+- speaker: victim
+  text: जी, मैं रात दस बजे के बाद कुछ नहीं खाऊँगा।
+- speaker: caller
+  text: ठीक है सर, सुबह सात बजे मुलाकात होगी।

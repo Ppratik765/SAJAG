@@ -1,0 +1,22 @@
+id: cp_en_002
+language: en-IN
+label: courier_parcel
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Customs and border protection department alert. Contraband goods seized in
+    an international courier parcel.
+- speaker: victim
+  text: I did not send or receive any international parcel.
+- speaker: caller
+  text: Your Aadhaar and mobile number are attached to the consignment. Immediate
+    arrest warrant is issued by narcotics bureau.
+- speaker: victim
+  text: What can I do to prove my innocence?
+- speaker: caller
+  text: Transfer legal clearance fee into the government escrow account immediately
+    to stay out of jail.
+- speaker: victim
+  text: I am hanging up and filing a cyber crime complaint immediately.

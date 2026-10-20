@@ -1,0 +1,18 @@
+id: legit_cc_hi_003
+language: hi-IN
+label: legit
+legit_kind: customer_care
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: टाटा प्ले डीटीएच सेवा से प्रतिनिधि। आपका मासिक सेट-टॉप बॉक्स पैक समाप्त हो
+    चुका है।
+- speaker: victim
+  text: हाँ, मैं सोच ही रहा था रिचार्ज करने की।
+- speaker: caller
+  text: आप आधिकारिक वेबसाइट या टीवी स्क्रीन पर दिए गए क्यूआर से रिचार्ज कर सकते हैं।
+- speaker: victim
+  text: जी, मैं अपने टीवी पर ही स्कैन करके कर लेता हूँ।
+- speaker: caller
+  text: धन्यवाद सर, आपका दिन शुभ हो।

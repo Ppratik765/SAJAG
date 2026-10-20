@@ -1,0 +1,18 @@
+id: legit_do_en_002
+language: en-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Good morning, Amazon delivery executive at your residence entrance.
+- speaker: victim
+  text: Hello, please leave the cardboard box with the neighbor if possible.
+- speaker: caller
+  text: To register delivery with neighbor, I need the four-digit delivery code from
+    your SMS.
+- speaker: victim
+  text: Yes, the delivery code is seven three four one.
+- speaker: caller
+  text: Perfect, parcel deposited safely with Mr. Sharma next door.

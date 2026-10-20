@@ -1,0 +1,17 @@
+id: legit_do_hi_005
+language: hi-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: ज़ोमैटो डिलीवरी पार्टनर। सर आपका लंच आर्डर आ गया है।
+- speaker: victim
+  text: बहुत बढ़िया भैया, मुझे बहुत भूख लगी थी।
+- speaker: caller
+  text: गेट पास और डिलीवरी कोड बता दीजिए सर, सिक्योरिटी वाले रोक रहे हैं।
+- speaker: victim
+  text: कोड सात दो आठ पांच है भैया।
+- speaker: caller
+  text: थैंक यू सर, मैं ऊपर आ रहा हूँ।

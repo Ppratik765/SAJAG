@@ -1,0 +1,18 @@
+id: legit_cc_en_002
+language: en-IN
+label: legit
+legit_kind: customer_care
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Hello, calling from Shoppers Stop premium customer relationship desk.
+- speaker: victim
+  text: Yes, how can I help you?
+- speaker: caller
+  text: Sir, you have three thousand loyalty reward points expiring this weekend.
+    You can redeem them at any outlet.
+- speaker: victim
+  text: Good to know, I will visit the store this Saturday.
+- speaker: caller
+  text: Have a pleasant shopping experience sir.

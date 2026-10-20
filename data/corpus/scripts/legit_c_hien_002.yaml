@@ -1,0 +1,17 @@
+id: legit_c_hien_002
+language: hi-en
+label: legit
+legit_kind: chitchat
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: Hi Sneha, did you watch the new movie trailer that released today?
+- speaker: victim
+  text: Yes, visual effects look absolutely stunning!
+- speaker: caller
+  text: We should book tickets for first day first show next Friday.
+- speaker: victim
+  text: Count me in, let's book four tickets together.
+- speaker: caller
+  text: Done, booking as soon as window opens.

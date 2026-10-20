@@ -1,0 +1,18 @@
+id: legit_fm_en_002
+language: en-IN
+label: legit
+legit_kind: family_money
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Hello Mom, this is Priya. I am at the railway station ticket counter.
+- speaker: victim
+  text: Hi Priya, are tickets available for the weekend train?
+- speaker: caller
+  text: Yes Mom, ticket fare is eight hundred rupees. Please send it so I can pay
+    the cashier.
+- speaker: victim
+  text: Just transferred eight hundred to your savings account dear.
+- speaker: caller
+  text: Thank you Mom, booking the tickets now.

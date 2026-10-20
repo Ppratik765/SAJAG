@@ -1,0 +1,22 @@
+id: da_en_001
+language: en-IN
+label: digital_arrest
+legit_kind: null
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: Good morning, this is Inspector Rathore calling from Delhi Police Cyber Crime
+    Division.
+- speaker: victim
+  text: Hello inspector, why are you calling my personal number?
+- speaker: caller
+  text: A courier parcel in your name was intercepted containing prohibited narcotics.
+    An arrest warrant is issued.
+- speaker: victim
+  text: Officer, that is impossible, I never booked any parcel.
+- speaker: caller
+  text: You are placed under digital arrest by high court order. Lock your room, turn
+    on video, and do not tell anyone.
+- speaker: victim
+  text: I am very scared officer, I am staying on the line.

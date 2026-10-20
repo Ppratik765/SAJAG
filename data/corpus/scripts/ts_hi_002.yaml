@@ -1,0 +1,21 @@
+id: ts_hi_002
+language: hi-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: माइक्रोसॉफ्ट विंडोज सपोर्ट। आपके कंप्यूटर और मोबाइल का ऑपरेटिंग सिस्टम हैक
+    हो चुका है।
+- speaker: victim
+  text: लेकिन मैं तो फोन बहुत कम इस्तेमाल करता हूँ।
+- speaker: caller
+  text: हैकर्स आपका डेटा चुरा रहे हैं। क्विकसपोर्ट ऐप इंस्टॉल करके स्क्रीन शेयरिंग
+    चालू कीजिए ताकि हम वायरस क्लीन कर सकें।
+- speaker: victim
+  text: स्क्रीन शेयर करने के बाद क्या होगा?
+- speaker: caller
+  text: हम सिक्योरिटी पैच डालेंगे। स्क्रीन पर जो भी कोड आए, तुरंत बोलकर बताइए।
+- speaker: victim
+  text: नहीं सर, रिमोट एक्सेस देना सुरक्षित नहीं है।

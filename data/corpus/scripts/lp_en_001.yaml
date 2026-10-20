@@ -1,0 +1,22 @@
+id: lp_en_001
+language: en-IN
+label: lottery_prize
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Congratulations! This is the National Lottery Commission executive office
+    calling to announce your victory.
+- speaker: victim
+  text: Hello, what victory?
+- speaker: caller
+  text: Your phone number won the first prize in the national annual lottery worth
+    fifty lakh rupees cash!
+- speaker: victim
+  text: I never bought any lottery ticket in my life.
+- speaker: caller
+  text: It is an automated digital subscriber draw sir. To transfer the jackpot money
+    into your account, remit eighteen thousand processing fee.
+- speaker: victim
+  text: Genuine lotteries deduct tax at source, they never ask for upfront payment!

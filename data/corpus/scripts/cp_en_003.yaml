@@ -1,0 +1,22 @@
+id: cp_en_003
+language: en-IN
+label: courier_parcel
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: DHL courier tracking bureau. A parcel addressed to your residence was seized
+    with banned electronic espionage devices.
+- speaker: victim
+  text: Who sent this parcel?
+- speaker: caller
+  text: Sender is unidentified. You are the prime suspect. Police complaint will be
+    withdrawn only if settlement fine is paid.
+- speaker: victim
+  text: Settlement fine over phone? That is illegal.
+- speaker: caller
+  text: If you refuse to transfer money right now, central police will take you into
+    custody within one hour.
+- speaker: victim
+  text: I am not transferring any money. This call is being recorded.

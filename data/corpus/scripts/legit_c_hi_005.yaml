@@ -1,0 +1,17 @@
+id: legit_c_hi_005
+language: hi-IN
+label: legit
+legit_kind: chitchat
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: अरे सुनील, वीकेंड पर क्या प्लान है? कहीं घूमने चलें?
+- speaker: victim
+  text: मौसम तो बहुत बढ़िया है, लोनावला या महाबलेश्वर का एक दिन का ट्रिप बन सकता है।
+- speaker: caller
+  text: बढ़िया आईडिया है, सुबह जल्दी निकलेंगे तो ट्रैफिक भी नहीं मिलेगा।
+- speaker: victim
+  text: डन है भाई, मैं गाड़ी में पेट्रोल फुल करवा लेता हूँ।
+- speaker: caller
+  text: शनिवार सुबह छह बजे मिलते हैं।

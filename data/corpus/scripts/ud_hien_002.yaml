@@ -1,0 +1,22 @@
+id: ud_hien_002
+language: hi-en
+label: utility_disconnect
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: 'Power supply alert: Electricity board officer speaking. Unpaid electricity
+    bill pending for two months.'
+- speaker: victim
+  text: Sir hamare yaha to automatic payment deduct hota hai.
+- speaker: caller
+  text: Failed ho gaya tha sir. Tonight line will be cut. Call this emergency officer
+    number immediately to clear dues.
+- speaker: victim
+  text: Can I check with my local lineman tomorrow morning?
+- speaker: caller
+  text: No, tonight ten PM disconnection team will cut the main wire. Pay processing
+    charge right now.
+- speaker: victim
+  text: This sounds like a fake call.

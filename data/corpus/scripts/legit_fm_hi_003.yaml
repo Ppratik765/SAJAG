@@ -1,0 +1,17 @@
+id: legit_fm_hi_003
+language: hi-IN
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: भैया नमस्ते, मैं हॉस्टल से राहुल बोल रहा हूँ।
+- speaker: victim
+  text: हाँ राहुल, सब ठीक-ठाक है ना वहां?
+- speaker: caller
+  text: हाँ भैया, मेस की फीस जमा करनी थी, पंद्रह सौ रुपये कम पड़ रहे हैं।
+- speaker: victim
+  text: चिंता मत कर, मैं अभी शाम तक तेरे खाते में ट्रांसफर कर दूँगा।
+- speaker: caller
+  text: बहुत-बहुत धन्यवाद भैया।

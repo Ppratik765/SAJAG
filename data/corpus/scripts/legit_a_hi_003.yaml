@@ -1,0 +1,17 @@
+id: legit_a_hi_003
+language: hi-IN
+label: legit
+legit_kind: appointment
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: दृष्टि आई केयर सेंटर से कॉल है। आपके मोतियाबिंद का फॉलो-अप चेकअप पेंडिंग है।
+- speaker: victim
+  text: हाँ, मुझे डॉक्टर साहब को दिखाना था।
+- speaker: caller
+  text: शनिवार सुबह दस बजे का समय तय किया गया है। क्या आप आ पाएंगे?
+- speaker: victim
+  text: हाँ, शनिवार सुबह दस बजे मैं आ जाऊँगा।
+- speaker: caller
+  text: कृपया अपनी चश्मा जांच की पर्ची जरूर लाएं।

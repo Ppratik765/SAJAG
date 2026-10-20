@@ -1,0 +1,22 @@
+id: ts_en_003
+language: en-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: National Cyber Security technical verification officer calling regarding infected
+    device protocol.
+- speaker: victim
+  text: What infected device protocol?
+- speaker: caller
+  text: Your phone IP is transmitting malicious packets. Download RustDesk remote
+    client from our link to avoid cyber cell penalty.
+- speaker: victim
+  text: Cyber cell does not call citizens demanding remote control screen sharing!
+- speaker: caller
+  text: If you do not cooperate with technical audit, your broadband and SIM services
+    will be blocked in one hour.
+- speaker: victim
+  text: Do whatever you want, I am blocking this fraudulent number.

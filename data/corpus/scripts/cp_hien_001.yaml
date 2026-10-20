@@ -1,0 +1,21 @@
+id: cp_hien_001
+language: hi-en
+label: courier_parcel
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: Hello, I am calling from Blue Dart international courier desk.
+- speaker: victim
+  text: Yes, what is the update on courier?
+- speaker: caller
+  text: Sir aapke naam par abroad se parcel aaya tha jisme banned narcotics drugs
+    detect hua hai.
+- speaker: victim
+  text: Maine koi international parcel order nahi kiya hai.
+- speaker: caller
+  text: Customs department ne police FIR lodge ki hai. Case dismiss karne ke liye
+    clearance deposit transfer kijiye.
+- speaker: victim
+  text: Why should I pay money if I didn't order the parcel?

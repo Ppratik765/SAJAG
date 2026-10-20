@@ -1,0 +1,21 @@
+id: ts_hi_001
+language: hi-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: नमस्ते सर, मैं गूगल एंड्रॉयड टेक्निकल टीम से हेड इंजीनियर बात कर रहा हूँ।
+- speaker: victim
+  text: हाँ जी, मेरे फोन में क्या खराबी है?
+- speaker: caller
+  text: आपके मोबाइल में खतरनाक बैंकिंग वायरस घुस गया है जो आपके सारे पैसे चुरा रहा
+    है। तुरंत फोन ठीक करना होगा।
+- speaker: victim
+  text: अरे बाप रे! इसे कैसे ठीक करूँ सर?
+- speaker: caller
+  text: प्ले स्टोर से एनीडेस्क या टीमव्यूअर ऐप डाउनलोड कीजिए और जो नौ अंकों का कोड
+    दिखेगा वह मुझे बताइए।
+- speaker: victim
+  text: क्या रिमोट ऐप से मेरा फोन आपके कंट्रोल में आ जाएगा?

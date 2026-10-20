@@ -1,0 +1,22 @@
+id: bk_en_001
+language: en-IN
+label: bank_kyc
+legit_kind: null
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: Good afternoon sir, this is State Bank of India customer service head office
+    calling.
+- speaker: victim
+  text: Yes, how may I help you?
+- speaker: caller
+  text: Your savings bank account will be blocked tonight at eight PM due to mandatory
+    KYC expiry.
+- speaker: victim
+  text: Oh no, my salary account cannot be blocked! How do I fix it?
+- speaker: caller
+  text: I will update it immediately from the portal. Please share the six-digit verification
+    OTP received on your mobile.
+- speaker: victim
+  text: Let me check the text message. The OTP is four one seven two.

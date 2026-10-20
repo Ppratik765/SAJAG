@@ -1,0 +1,22 @@
+id: fe_hien_003
+language: hi-en
+label: family_emergency
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Papa, mera phone tut gaya hai, ye mere friend ka number hai. Hospital me hu
+    emergency hai.
+- speaker: victim
+  text: Kon beta? Rohan ya Soham?
+- speaker: caller
+  text: Haan papa, doctor bol rahe hain urgent blood surgery ke liye deposit transfer
+    karo fifteen thousand right now.
+- speaker: victim
+  text: Kon se hospital me ho? Main abhi aata hu.
+- speaker: caller
+  text: Aane ka time nahi hai papa, turant UPI transfer kijiye warna doctor operate
+    nahi karenge.
+- speaker: victim
+  text: Main hospital landline par confirm karke hi paise bhejunga.

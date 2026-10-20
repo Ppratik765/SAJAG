@@ -1,0 +1,18 @@
+id: legit_ba_hi_005
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: आईसीआईसीआई बैंक ग्राहक सुरक्षा डेस्क। आवश्यक सूचना।
+- speaker: victim
+  text: नमस्ते, क्या अपडेट है?
+- speaker: caller
+  text: केवाईसी अपडेट के नाम पर आने वाली फर्जी कॉलों से सावधान रहें। केवाईसी केवल
+    बैंक शाखा या आधिकारिक ऐप पर ही कराएं।
+- speaker: victim
+  text: बहुत अच्छा हुआ आपने बता दिया। मैं शाखा में ही जाकर कराऊँगा।
+- speaker: caller
+  text: सुरक्षित रहें, सजग रहें।

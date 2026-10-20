@@ -1,0 +1,18 @@
+id: legit_ba_hi_003
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: बैंक ऑफ बड़ौदा ऑटोमेटेड सतर्कता संदेश। वित्तीय सुरक्षा आपके हाथ में है।
+- speaker: victim
+  text: हाँ, क्या निर्देश हैं?
+- speaker: caller
+  text: अपने फोन में किसी के कहने पर स्क्रीन शेयरिंग या रिमोट एक्सेस ऐप डाउनलोड न
+    करें।
+- speaker: victim
+  text: ठीक है, मैं कभी ऐसा कोई ऐप डाउनलोड नहीं करूँगा।
+- speaker: caller
+  text: अपने बैंक खाते को सुरक्षित रखें और सतर्क रहें।

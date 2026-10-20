@@ -1,0 +1,21 @@
+id: it_hien_003
+language: hi-en
+label: investment_task
+legit_kind: null
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Digital marketing freelance coordinator. Like movie trailers and get instant
+    commission in bank.
+- speaker: victim
+  text: I tried one task and received two hundred rupees.
+- speaker: caller
+  text: Great sir! Now premium merchant task open hua hai. Send ten thousand to upgrade
+    your wallet and earn twenty thousand.
+- speaker: victim
+  text: Why do I need to send ten thousand from my pocket?
+- speaker: caller
+  text: Merchant security deposit sir, mandatory rule hai higher commission ke liye.
+- speaker: victim
+  text: Keep your commission, I am not depositing any money.

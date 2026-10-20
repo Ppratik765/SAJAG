@@ -1,0 +1,18 @@
+id: legit_ba_en_003
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: National Cyber Crime reporting portal security advisory.
+- speaker: victim
+  text: Hello, what is the advisory?
+- speaker: caller
+  text: Never install remote screen access tools such as AnyDesk on the instruction
+    of unknown callers.
+- speaker: victim
+  text: I will keep that in mind, thank you.
+- speaker: caller
+  text: Safeguard your mobile device and personal identity.

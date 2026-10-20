@@ -1,0 +1,19 @@
+id: legit_ba_hien_002
+language: hi-en
+label: legit
+legit_kind: bank_advisory
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: 'State Bank alert: Cyber fraud prevention team se message hai.'
+- speaker: victim
+  text: Yes sir, kya notice hai?
+- speaker: caller
+  text: Lottery, prize ya cashback ke bahane aane wale kisi bhi suspicious call par
+    trust na karein.
+- speaker: victim
+  text: Understood, main hamesha alert rehta hu.
+- speaker: caller
+  text: Report any suspicious transaction immediately on cybercrime helpline nineteen
+    thirty.

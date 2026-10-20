@@ -1,0 +1,18 @@
+id: legit_c_en_003
+language: en-IN
+label: legit
+legit_kind: chitchat
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Good evening Mr. Nair, just calling to inquire about your retirement life
+    in Kerala.
+- speaker: victim
+  text: Good evening Rajiv! Life here is calm and peaceful, surrounded by greenery.
+- speaker: caller
+  text: That sounds wonderful sir. We really miss your guidance at the office.
+- speaker: victim
+  text: Thank you Rajiv, convey my warm regards to the entire team.
+- speaker: caller
+  text: I certainly will sir, take good care of your health.

@@ -1,0 +1,22 @@
+id: it_hien_002
+language: hi-en
+label: investment_task
+legit_kind: null
+difficulty: medium
+split: dev
+turns:
+- speaker: caller
+  text: Global investment task manager. Earn guaranteed profit through international
+    crypto arbitrage.
+- speaker: victim
+  text: How much investment is required initially?
+- speaker: caller
+  text: Start with only two thousand rupees sir. Within one hour aapko four thousand
+    profit withdraw karne milega.
+- speaker: victim
+  text: Can I withdraw my principal amount anytime?
+- speaker: caller
+  text: Yes sir, but higher tier task complete karne ke liye pehle ten thousand deposit
+    transfer karna padega.
+- speaker: victim
+  text: I have read about this Telegram task fraud, don't fool me.

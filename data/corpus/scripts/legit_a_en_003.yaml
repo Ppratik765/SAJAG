@@ -1,0 +1,18 @@
+id: legit_a_en_003
+language: en-IN
+label: legit
+legit_kind: appointment
+difficulty: hard
+split: test
+turns:
+- speaker: caller
+  text: Apollo Diagnostics home collection coordination team.
+- speaker: victim
+  text: Hello, will the phlebotomist arrive tomorrow morning?
+- speaker: caller
+  text: Yes sir, our technician will arrive at your home between six thirty and seven
+    AM for fasting sugar test.
+- speaker: victim
+  text: Thank you, I will be awake and ready.
+- speaker: caller
+  text: Have a good evening sir.

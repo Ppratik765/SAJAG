@@ -1,0 +1,21 @@
+id: ur_hi_001
+language: hi-IN
+label: upi_refund
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+- speaker: caller
+  text: नमस्ते भइया, मैंने गलती से आपके गूगल पे नंबर पर दस हजार रुपये भेज दिए हैं।
+- speaker: victim
+  text: दस हजार? रुकिए मैं बैंक बैलेंस चेक करता हूँ।
+- speaker: caller
+  text: भइया गलती से रॉन्ग ट्रांसफर हो गया, मेरे बच्चे की दवाई के पैसे थे। आप फोनपे
+    खोलकर रिफंड एक्सेप्ट कर लीजिए।
+- speaker: victim
+  text: पैसे वापस कैसे भेजूं? मुझे ज्यादा चलाना नहीं आता।
+- speaker: caller
+  text: मैंने रिक्वेस्ट भेजी है, बस नोटिफिकेशन पर क्लिक करके अपना यूपीआई पिन डाल दीजिए,
+    रिफंड आ जाएगा।
+- speaker: victim
+  text: पिन डालने से तो पैसे कटते हैं ना?

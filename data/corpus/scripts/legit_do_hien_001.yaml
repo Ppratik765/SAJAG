@@ -1,0 +1,18 @@
+id: legit_do_hien_001
+language: hi-en
+label: legit
+legit_kind: delivery_otp
+difficulty: easy
+split: test
+turns:
+- speaker: caller
+  text: Hello sir, Amazon delivery partner here. I am outside your apartment gate.
+- speaker: victim
+  text: Yes, please come up to second floor.
+- speaker: caller
+  text: Sir delivery confirm karne ke liye SMS par four digit delivery OTP aaya hoga,
+    please share.
+- speaker: victim
+  text: Sure, the code is eight one nine four.
+- speaker: caller
+  text: Thank you sir, parcel handed over to security.

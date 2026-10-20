@@ -1,0 +1,17 @@
+id: legit_fm_hi_005
+language: hi-IN
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: अरे बेटा, मैं पापा बोल रहा हूँ। तुम्हारी मम्मी की दवाई लानी है।
+- speaker: victim
+  text: हाँ पापा, मेडिकल स्टोर वाले को कितने पैसे देने हैं?
+- speaker: caller
+  text: छह सौ रुपये का बिल बना है बेटा, तुम ऑनलाइन भेज दो।
+- speaker: victim
+  text: जी पापा, मैं अभी मेडिकल स्टोर के क्यूआर कोड पर पे कर देता हूँ।
+- speaker: caller
+  text: शाबाश बेटा, दवाई लेकर घर आता हूँ।

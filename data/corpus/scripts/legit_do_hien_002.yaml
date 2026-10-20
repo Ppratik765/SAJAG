@@ -1,0 +1,17 @@
+id: legit_do_hien_002
+language: hi-en
+label: legit
+legit_kind: delivery_otp
+difficulty: medium
+split: test
+turns:
+- speaker: caller
+  text: Bhaiya Flipkart parcel delivery boy bol raha hu.
+- speaker: victim
+  text: Haan bhaiya, ghar par koi hai kya receive karne ke liye?
+- speaker: caller
+  text: Haan sir, madam ne gate open kiya hai. Unhone bola aapse delivery PIN puchne.
+- speaker: victim
+  text: Okay, delivery PIN is six three five zero.
+- speaker: caller
+  text: Done sir, package delivered successfully.
