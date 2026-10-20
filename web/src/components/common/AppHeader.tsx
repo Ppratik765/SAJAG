@@ -62,33 +62,28 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-40 bg-[var(--bg)]/90 backdrop-blur-md border-b border-[var(--line)]">
-      <div className="max-w-6xl mx-auto px-2.5 sm:px-6 h-16 flex items-center justify-between gap-1">
+      <div className="max-w-6xl mx-auto px-2.5 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-1">
         {/* Brand: Seal + Wordmark */}
         <Link
           href="/"
-          className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] rounded-lg p-0.5 shrink-0"
+          className="flex items-center gap-2.5 group focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] rounded-lg p-0.5 shrink-0"
           aria-label="Sajag Home"
         >
           <Seal size={30} variant="brand" />
-          <div className="flex flex-col">
-            <span className="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-[var(--ink)] leading-none">
-              {locale === "hi" ? "सजग" : "Sajag"}
-            </span>
-            <span className="hidden sm:inline-block text-[10px] uppercase font-bold tracking-widest text-[var(--ink-muted)]">
-              Scam Shield
-            </span>
-          </div>
+          <span className="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-[var(--ink)] leading-none">
+            {locale === "hi" ? "सजग" : "Sajag"}
+          </span>
         </Link>
 
-        {/* Desktop Nav with hand-drawn underline for active route */}
-        <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-[var(--ink-muted)]">
+        {/* Desktop Nav: single-line, whitespace-nowrap, collapses below 1100px */}
+        <nav className="hidden min-[1100px]:flex items-center gap-5 text-sm font-medium text-[var(--ink-muted)] whitespace-nowrap">
           {navLinks.map((link) => {
             const active = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative py-1 transition-colors hover:text-[var(--ink)] ${
+                className={`relative py-1 transition-colors hover:text-[var(--ink)] whitespace-nowrap ${
                   active ? "text-[var(--stamp)] font-bold" : ""
                 }`}
               >
@@ -155,11 +150,11 @@ export function AppHeader() {
             {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
           </button>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button (below 1100px) */}
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden p-1.5 sm:p-2 rounded-full border border-[var(--line)] bg-[var(--sheet)] text-[var(--ink)]"
+            className="min-[1100px]:hidden p-1.5 sm:p-2 rounded-full border border-[var(--line)] bg-[var(--sheet)] text-[var(--ink)]"
             aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
           >
             {mobileOpen ? <X size={17} /> : <Menu size={17} />}
@@ -167,9 +162,9 @@ export function AppHeader() {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer (below 1100px) */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-[var(--line)] bg-[var(--bg)] px-4 py-4 space-y-2 animate-[penWriteReveal_200ms_ease-out]">
+        <div className="min-[1100px]:hidden border-t border-[var(--line)] bg-[var(--bg)] px-4 py-4 space-y-2 animate-[penWriteReveal_200ms_ease-out]">
           {navLinks.map((link) => {
             const active = pathname === link.href;
             return (

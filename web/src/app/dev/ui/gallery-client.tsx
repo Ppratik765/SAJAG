@@ -43,8 +43,8 @@ export function UiGalleryClient() {
     <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-16">
       {/* Dev Header */}
       <div className="border-b border-[var(--line)] pb-4">
-        <div className="inline-block px-2.5 py-1 rounded bg-[var(--marker)] text-[var(--ink)] text-xs font-bold uppercase mb-2">
-          Dev-Only UI Gallery (Fixture Data)
+        <div className="inline-block px-2.5 py-1 rounded bg-[var(--marker)] text-[var(--ink)] text-xs font-semibold mb-2">
+          Dev-only UI gallery (fixture data)
         </div>
         <h1 className="text-3xl font-display font-extrabold text-[var(--ink)]">
           Signature Components Inventory

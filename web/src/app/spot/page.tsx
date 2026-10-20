@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { AlertTriangle, Share2, RotateCcw, ArrowRight } from "lucide-react";
+import { Share2, RotateCcw, ArrowRight } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import digitalArrestData from "@/data/spot/digital_arrest.json";
 import bankKycData from "@/data/spot/bank_kyc.json";
@@ -13,6 +13,7 @@ interface SpotMark {
   substring: string;
   category: string;
   explanation: string;
+  plainNote?: string;
 }
 
 interface SpotLine {
@@ -121,8 +122,8 @@ export default function SpotGamePage() {
     <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8" aria-label="Spot the Red Flags Game">
       {/* Title & Rules */}
       <div className="space-y-3 text-center sm:text-left">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--marker)] text-[var(--ink)] font-bold text-xs uppercase tracking-wider">
-          <span>{locale === "hi" ? "शैक्षणिक खेल" : "Interactive Training Game"}</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--marker)] text-[var(--ink)] font-semibold text-xs">
+          <span>{locale === "hi" ? "शैक्षणिक खेल" : "Interactive training game"}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-display font-extrabold text-[var(--ink)] tracking-tight">
           {locale === "hi" ? "धोखा पहचानें: लाल निशान खोजें" : "Spot the Red Flags"}
@@ -174,7 +175,7 @@ export default function SpotGamePage() {
         {/* Sheet Header */}
         <div className="border-b border-[var(--line)] pb-3 flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[var(--ink)] block">
+            <span className="text-xs sm:text-sm font-bold text-[var(--ink)] block">
               {activeCall.title[locale === "hi" ? "hi" : "en"]}
             </span>
             <span className="text-xs text-[var(--ink-muted)]">
@@ -192,71 +193,187 @@ export default function SpotGamePage() {
           </div>
         </div>
 
-        {/* Transcript Interactive Word Tokens */}
-        <div className="space-y-4">
+        {/* Transcript Interactive Lines with merged continuous phrases */}
+        <div className="space-y-3.5">
           {activeCall.lines.map((line) => {
             const words = line.text.split(" ");
+
+            // Grouping logic for unverified state: group consecutive words with identical isSelected status
+            const unverifiedRuns: { isSelected: boolean; words: { text: string; id: string }[] }[] = [];
+            for (let wIdx = 0; wIdx < words.length; wIdx++) {
+              const wId = `spot-${line.index}-${wIdx}`;
+              const isSel = selectedWordIds.has(wId);
+              const last = unverifiedRuns[unverifiedRuns.length - 1];
+              if (last && last.isSelected === isSel) {
+                last.words.push({ text: words[wIdx], id: wId });
+              } else {
+                unverifiedRuns.push({ isSelected: isSel, words: [{ text: words[wIdx], id: wId }] });
+              }
+            }
+
+            // Matching logic for verified state: continuous highlight or circle per trueMark
+            interface MarkMatch {
+              mark: SpotMark;
+              start: number;
+              end: number;
+              isFound: boolean;
+            }
+            const matches: MarkMatch[] = [];
+            if (isChecked && line.trueMarks.length > 0) {
+              for (const tm of line.trueMarks) {
+                const idx = line.text.indexOf(tm.substring);
+                if (idx !== -1) {
+                  const markWords = tm.substring.split(" ");
+                  const isFound = markWords.some((mw) =>
+                    words.some((w, wIdx) => {
+                      const wId = `spot-${line.index}-${wIdx}`;
+                      return selectedWordIds.has(wId) && w.toLowerCase().includes(mw.toLowerCase());
+                    })
+                  );
+                  matches.push({
+                    mark: tm,
+                    start: idx,
+                    end: idx + tm.substring.length,
+                    isFound,
+                  });
+                }
+              }
+              matches.sort((a, b) => a.start - b.start);
+            }
 
             return (
               <div
                 key={line.index}
-                className="flex items-start gap-3 py-1.5 border-b border-[var(--line)]/40 last:border-b-0"
+                className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4 py-2 border-b border-[var(--line)]/40 last:border-b-0"
               >
+                {/* Timestamp */}
                 <div className="w-10 shrink-0 text-[11px] font-semibold text-[var(--ink-muted)] tabular-nums pt-1 select-none">
                   0:{(line.index * 6).toString().padStart(2, "0")}
                 </div>
 
+                {/* Main Transcript Text with Continuous Highlights/Circles */}
                 <div className="flex-1 text-[15px] sm:text-[17px] text-[var(--ink)] leading-relaxed select-none">
-                  {words.map((word, wIdx) => {
-                    const wordId = `spot-${line.index}-${wIdx}`;
-                    const isSelected = selectedWordIds.has(wordId);
-
-                    // Check if this word belongs to a true mark
-                    const matchingTrueMark = isChecked
-                      ? line.trueMarks.find((tm) =>
-                          tm.substring.toLowerCase().includes(word.toLowerCase())
-                        )
-                      : null;
-
-                    let highlightClass = "";
-                    if (isChecked) {
-                      if (matchingTrueMark && isSelected) {
-                        highlightClass = "bg-[var(--safe)]/25 text-[var(--safe-text)] font-bold border-b-2 border-[var(--safe)]";
-                      } else if (matchingTrueMark && !isSelected) {
-                        highlightClass = "bg-[var(--alarm)]/20 text-[var(--alarm-text)] font-bold border-b-2 border-[var(--alarm)]";
-                      } else if (!matchingTrueMark && isSelected) {
-                        highlightClass = "bg-[var(--line)] text-[var(--ink-muted)] line-through";
+                  {!isChecked ? (
+                    <span>
+                      {unverifiedRuns.map((run, rIdx) => {
+                        if (run.isSelected) {
+                          return (
+                            <mark
+                              key={rIdx}
+                              className="bg-[var(--marker)] text-[var(--ink)] font-semibold rounded px-1.5 py-0.5 inline transition-colors"
+                            >
+                              {run.words.map((w, i) => (
+                                <span
+                                  key={w.id}
+                                  onClick={() => toggleWordSelection(w.id)}
+                                  className="cursor-pointer hover:opacity-80"
+                                >
+                                  {w.text}
+                                  {i < run.words.length - 1 ? " " : ""}
+                                </span>
+                              ))}
+                              {" "}
+                            </mark>
+                          );
+                        }
+                        return (
+                          <span key={rIdx}>
+                            {run.words.map((w) => (
+                              <span
+                                key={w.id}
+                                onClick={() => toggleWordSelection(w.id)}
+                                className="cursor-pointer hover:bg-[var(--marker)]/40 rounded-xs transition-colors"
+                              >
+                                {w.text}{" "}
+                              </span>
+                            ))}
+                          </span>
+                        );
+                      })}
+                    </span>
+                  ) : matches.length > 0 ? (
+                    (() => {
+                      const elements: React.ReactNode[] = [];
+                      let lastPos = 0;
+                      for (let mIdx = 0; mIdx < matches.length; mIdx++) {
+                        const m = matches[mIdx];
+                        if (m.start > lastPos) {
+                          elements.push(
+                            <span key={`text-${lastPos}`}>
+                              {line.text.slice(lastPos, m.start)}
+                            </span>
+                          );
+                        }
+                        if (m.isFound) {
+                          elements.push(
+                            <mark
+                              key={`mark-${mIdx}`}
+                              className="bg-[var(--safe)]/20 text-[var(--safe-text)] border-b-2 border-[var(--safe)] font-semibold px-1.5 py-0.5 rounded-sm inline"
+                            >
+                              {m.mark.substring}
+                            </mark>
+                          );
+                        } else {
+                          elements.push(
+                            <mark
+                              key={`mark-${mIdx}`}
+                              className="border-2 border-[var(--alarm)] bg-[var(--alarm)]/10 text-[var(--alarm-text)] font-semibold px-1.5 py-0.5 rounded-md inline"
+                            >
+                              {m.mark.substring}
+                            </mark>
+                          );
+                        }
+                        lastPos = m.end;
                       }
-                    } else if (isSelected) {
-                      highlightClass = "bg-[var(--marker)] text-[var(--ink)] font-semibold";
-                    }
-
-                    return (
-                      <span
-                        key={wIdx}
-                        onClick={() => toggleWordSelection(wordId)}
-                        className={`inline-block mx-0.5 px-1 py-0.5 rounded cursor-pointer transition-colors duration-150 hover:bg-[var(--marker)]/50 ${highlightClass}`}
-                      >
-                        {word}{" "}
-                      </span>
-                    );
-                  })}
-
-                  {/* If checked, show explanation notes below line */}
-                  {isChecked && line.trueMarks.length > 0 && (
-                    <div className="mt-2 space-y-1">
-                      {line.trueMarks.map((tm, mIdx) => (
-                        <div
-                          key={mIdx}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[var(--alarm)]/10 text-[var(--alarm-text)] text-xs font-semibold mr-2"
-                        >
-                          <AlertTriangle size={13} />
-                          <span>{tm.category.replace(/_/g, " ")}: {tm.explanation}</span>
-                        </div>
-                      ))}
-                    </div>
+                      if (lastPos < line.text.length) {
+                        elements.push(
+                          <span key={`text-${lastPos}`}>
+                            {line.text.slice(lastPos)}
+                          </span>
+                        );
+                      }
+                      return <span>{elements}</span>;
+                    })()
+                  ) : (
+                    <span>
+                      {unverifiedRuns.map((run, rIdx) => {
+                        if (run.isSelected) {
+                          return (
+                            <mark
+                              key={rIdx}
+                              className="bg-[var(--line)] text-[var(--ink-muted)] line-through px-1.5 py-0.5 rounded inline"
+                            >
+                              {run.words.map((w) => w.text).join(" ")}{" "}
+                            </mark>
+                          );
+                        }
+                        return (
+                          <span key={rIdx}>
+                            {run.words.map((w) => w.text).join(" ")}{" "}
+                          </span>
+                        );
+                      })}
+                    </span>
                   )}
                 </div>
+
+                {/* Reveal Kalam margin notes in plain words */}
+                {isChecked && line.trueMarks.length > 0 && (
+                  <div className="sm:w-44 lg:w-48 shrink-0 pl-1 sm:pl-2 pt-0.5 self-start space-y-1 select-none animate-[penWriteReveal_350ms_ease-out]">
+                    {line.trueMarks.map((tm, mIdx) => (
+                      <aside
+                        key={mIdx}
+                        className="inline-flex items-start gap-1 font-hand text-sm text-[var(--alarm-text)]"
+                        style={{ transform: "rotate(-1deg)" }}
+                      >
+                        <span className="opacity-75 mt-0.5 shrink-0">←</span>
+                        <span className="leading-snug break-words">
+                          {tm.plainNote || tm.explanation}
+                        </span>
+                      </aside>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
@@ -287,7 +404,7 @@ export default function SpotGamePage() {
               {/* Score Results Card */}
               <div className="p-4 sm:p-6 rounded-xl bg-[var(--sheet)] border-2 border-[var(--stamp)] flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="space-y-1 text-center sm:text-left">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[var(--stamp)]">
+                  <span className="text-xs font-semibold text-[var(--stamp)]">
                     {locale === "hi" ? "परिणाम" : "Results"}
                   </span>
                   <h3 className="text-2xl font-bold font-display text-[var(--ink)]">

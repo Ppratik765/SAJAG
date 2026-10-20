@@ -246,149 +246,151 @@ export function LivingHero() {
   return (
     <section
       ref={heroRef}
-      className="max-w-6xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8 pb-16 space-y-10 sm:space-y-12"
+      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-12"
       aria-label="Sajag Hero: Is this call a scam?"
     >
-      {/* 1. Huge Display Headline (full width, cycling languages) */}
-      <div
-        className="w-full text-center space-y-4"
-        onMouseEnter={() => setIsHeadlinePaused(true)}
-        onMouseLeave={() => setIsHeadlinePaused(false)}
-        onFocus={() => setIsHeadlinePaused(true)}
-        onBlur={() => setIsHeadlinePaused(false)}
-      >
-        {/* Screen-reader static sentence */}
-        <h1 className="sr-only">
-          {locale === "hi" ? "क्या यह कॉल ठगी है?" : "Is this call a scam?"}
-        </h1>
-
-        {/* Display headline: clamp 56px to 120px desktop, 44px mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        {/* Left Column: Cycling headline, quiet pills, subline, 2 CTA buttons, parent link */}
         <div
-          aria-hidden="true"
-          className="font-display font-extrabold tracking-tight text-[var(--ink)] leading-[1.08] select-none text-[40px] sm:text-[64px] md:text-[84px] lg:text-[104px] min-h-[1.25em] flex items-center justify-center"
+          className="lg:col-span-5 flex flex-col space-y-2 sm:space-y-3 pt-0.5 sm:pt-2 text-left"
+          onMouseEnter={() => setIsHeadlinePaused(true)}
+          onMouseLeave={() => setIsHeadlinePaused(false)}
+          onFocus={() => setIsHeadlinePaused(true)}
+          onBlur={() => setIsHeadlinePaused(false)}
         >
-          <span
-            className="inline-block transition-all duration-300 transform-gpu"
-            style={{
-              fontFamily: activeFontFamily,
-              clipPath: isWiping
-                ? "inset(0 100% 0 0)"
-                : "inset(0 0 0 0)",
-              transition: isWiping
-                ? "clip-path 260ms cubic-bezier(0.4, 0, 0.2, 1)"
-                : "clip-path 350ms cubic-bezier(0.16, 1, 0.3, 1)",
-            }}
+          {/* Screen-reader static sentence */}
+          <h1 className="sr-only">
+            {locale === "hi" ? "क्या यह कॉल ठगी है?" : "Is this call a scam?"}
+          </h1>
+
+          {/* Visible cycling display headline: clamp(48px, 7vw, 112px) desktop, 40px mobile */}
+          <div
+            aria-hidden="true"
+            className="hero-cycling-headline min-h-[1.15em] flex items-center"
           >
-            {shouldReduceMotion
-              ? locale === "hi"
-                ? "क्या यह कॉल ठगी है?"
-                : "Is this call a scam?"
-              : currentCycleEntry.text}
-          </span>
-        </div>
-
-        {/* Language quick switcher pills (P0-5) */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-1">
-          {HEADLINE_CYCLE.map((entry, idx) => {
-            const isCurrent = cycleIndex === idx;
-            return (
-              <button
-                key={entry.code}
-                type="button"
-                onMouseEnter={() => {
-                  setCycleIndex(idx);
-                  setIsHeadlinePaused(true);
-                }}
-                onClick={() => {
-                  setCycleIndex(idx);
-                  setIsHeadlinePaused(true);
-                }}
-                className={`px-2.5 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all ${
-                  isCurrent
-                    ? "bg-[var(--stamp)] text-white shadow-xs scale-105"
-                    : "bg-[var(--sheet)] border border-[var(--line)] text-[var(--ink-muted)] hover:text-[var(--ink)] hover:border-[var(--stamp)]"
-                }`}
-                aria-label={`View headline in ${entry.name}`}
-              >
-                {entry.name}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Subtitle & Value Proposition */}
-        <p className="text-base sm:text-xl text-[var(--ink-muted)] max-w-2xl mx-auto leading-relaxed pt-1">
-          {t("hero.description")}
-        </p>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2">
-          <Link
-            href="/demo"
-            className="btn-stamp w-full sm:w-auto inline-flex items-center justify-center h-[50px] px-8 rounded-full bg-[var(--stamp)] text-white font-bold text-base hover:opacity-95 shadow-sm"
-          >
-            <span>{t("hero.cta_watch_demo")}</span>
-            <ArrowRight size={18} className="ml-2" />
-          </Link>
-          <Link
-            href="/spot"
-            className="btn-stamp w-full sm:w-auto inline-flex items-center justify-center h-[50px] px-7 rounded-full bg-[var(--marker)] text-[var(--ink)] font-bold text-base hover:opacity-90 shadow-sm border border-[var(--line)]"
-          >
-            <span>{t("hero.cta_spot_game")}</span>
-          </Link>
-          <Link
-            href="/parent"
-            className="btn-stamp w-full sm:w-auto inline-flex items-center justify-center h-[50px] px-7 rounded-full border-2 border-[var(--stamp)] text-[var(--stamp)] font-bold text-base hover:bg-[var(--stamp)]/5"
-          >
-            <span>{t("hero.cta_parent_mode")}</span>
-          </Link>
-        </div>
-      </div>
-
-      {/* 2. The Living Paper Call Sheet (P0-1) */}
-      <div className="max-w-4xl mx-auto w-full space-y-4">
-        {/* Label banner per honesty rules (single language, no dots) */}
-        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--ink-muted)] px-2">
-          <span className="font-semibold px-2.5 py-1 rounded bg-[var(--line)]/40 text-[var(--ink)]">
-            {t("hero.example_label")}
-          </span>
-          <span className="text-xs opacity-80">
-            {t("hero.interactive_preview")}
-          </span>
-        </div>
-
-        {/* LevelStrip live needle */}
-        <LevelStrip level={currentLevel} score={currentScore} />
-
-        {/* Paper Sheet Container with pointer marker and border flash */}
-        <div
-          ref={sheetRef}
-          tabIndex={0}
-          onKeyDown={handleSheetKeyDown}
-          aria-label="Living Call Sheet demonstration. Press Space to play or pause, left and right arrows to scrub."
-          className={`cursor-marker paper-sheet paper-folded p-4 sm:p-8 w-full transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] ${
-            isBorderFlashing ? "animate-[vermilionFlash_900ms_ease-out]" : ""
-          } ${isSheetShifting ? "animate-[sheetShift_240ms_ease-in-out]" : ""}`}
-        >
-          <div className="paper-dog-ear" />
-
-          {/* Sheet Header */}
-          <div className="border-b border-[var(--line)] pb-3 mb-5 flex items-center justify-between gap-3">
-            <div>
-              <span className="text-[12px] font-bold uppercase tracking-wider text-[var(--ink)] block">
-                {locale === "hi" ? "बातचीत का विवरण" : "Transcript Call Sheet"}
-              </span>
-              <span className="text-xs text-[var(--ink-muted)]">
-                {locale === "hi"
-                  ? "दूसरी डिवाइस से रिकॉर्ड किया गया"
-                  : "Recorded via second device"}
-              </span>
-            </div>
-            <div className="text-xs font-semibold text-[var(--ink-muted)] tabular-nums">
-              {visibleSteps.length} / {scriptData.steps.length}{" "}
-              {locale === "hi" ? "पंक्तियाँ" : "lines"}
-            </div>
+            <span
+              className="inline-block transition-all duration-300 transform-gpu"
+              style={{
+                fontFamily: activeFontFamily,
+                clipPath: isWiping
+                  ? "inset(0 100% 0 0)"
+                  : "inset(0 0 0 0)",
+                transition: isWiping
+                  ? "clip-path 260ms cubic-bezier(0.4, 0, 0.2, 1)"
+                  : "clip-path 350ms cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+            >
+              {shouldReduceMotion
+                ? locale === "hi"
+                  ? "क्या यह कॉल ठगी है?"
+                  : "Is this call a scam?"
+                : currentCycleEntry.text}
+            </span>
           </div>
+
+          {/* Language quick switcher pills: small, quiet, secondary 14px muted pills placed UNDER headline */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full whitespace-nowrap sm:flex-wrap">
+            {HEADLINE_CYCLE.map((entry, idx) => {
+              const isCurrent = cycleIndex === idx;
+              return (
+                <button
+                  key={entry.code}
+                  type="button"
+                  onMouseEnter={() => {
+                    setCycleIndex(idx);
+                    setIsHeadlinePaused(true);
+                  }}
+                  onClick={() => {
+                    setCycleIndex(idx);
+                    setIsHeadlinePaused(true);
+                  }}
+                  className={`px-2.5 py-0.5 rounded-full text-xs sm:text-[14px] transition-colors shrink-0 ${
+                    isCurrent
+                      ? "bg-[var(--stamp)]/10 text-[var(--stamp)] font-semibold border border-[var(--stamp)]/40"
+                      : "bg-[var(--sheet)] border border-[var(--line)] text-[var(--ink-muted)] hover:text-[var(--ink)]"
+                  }`}
+                  aria-label={`View headline in ${entry.name}`}
+                >
+                  {entry.name}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Short subline */}
+          <p className="text-xs sm:text-base text-[var(--ink-muted)] max-w-xl leading-snug pt-0.5">
+            {t("hero.description")}
+          </p>
+
+          {/* TWO buttons max */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 pt-0.5">
+            <Link
+              href="/demo"
+              className="btn-stamp inline-flex items-center justify-center min-h-[52px] h-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-full bg-[var(--stamp)] text-white font-bold text-xs sm:text-base text-center whitespace-normal sm:whitespace-nowrap hover:opacity-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] leading-tight"
+            >
+              <span>{t("hero.cta_watch_demo")}</span>
+              <ArrowRight size={16} className="ml-1.5 sm:ml-2 shrink-0" />
+            </Link>
+            <Link
+              href="/spot"
+              className="btn-stamp inline-flex items-center justify-center min-h-[52px] h-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-full bg-[var(--marker)] text-[var(--ink)] font-bold text-xs sm:text-base text-center whitespace-normal sm:whitespace-nowrap hover:opacity-90 shadow-sm border border-[var(--line)] focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] leading-tight"
+            >
+              <span>{t("hero.cta_spot_game")}</span>
+            </Link>
+          </div>
+
+          {/* "Set up for my parents" as a small text link */}
+          <div className="pt-0.5">
+            <Link
+              href="/parent"
+              className="inline-flex items-center text-xs sm:text-sm font-semibold text-[var(--ink-muted)] hover:text-[var(--stamp)] underline underline-offset-4 decoration-[var(--line)] hover:decoration-[var(--stamp)] transition-colors"
+            >
+              <span>{t("hero.cta_parent_mode")}</span>
+              <ArrowRight size={14} className="ml-1 shrink-0" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Right Column: Call Sheet & Scrubber (Desktop side-by-side, mobile directly below buttons) */}
+        <div className="lg:col-span-7 w-full space-y-2 pt-0.5 lg:pt-0">
+          {/* LevelStrip live ruler needle */}
+          <LevelStrip level={currentLevel} score={currentScore} />
+
+          {/* Call Sheet Container: slightly rotated, overlapping grid edge on desktop */}
+          <div
+            ref={sheetRef}
+            tabIndex={0}
+            onKeyDown={handleSheetKeyDown}
+            aria-label="Living Call Sheet demonstration. Press Space to play or pause, left and right arrows to scrub."
+            className={`cursor-marker paper-sheet paper-folded p-4 sm:p-6 w-full relative transition-all duration-300 lg:rotate-[-0.75deg] lg:translate-x-1 shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] ${
+              isBorderFlashing ? "animate-[vermilionFlash_900ms_ease-out]" : ""
+            } ${isSheetShifting ? "animate-[sheetShift_240ms_ease-in-out]" : ""}`}
+          >
+            <div className="paper-dog-ear" />
+
+            {/* Sheet Header: sentence-case with attached normal-case "Example, written by us" label */}
+            <div className="border-b border-[var(--line)] pb-2.5 mb-4 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                <div>
+                  <span className="text-xs sm:text-sm font-bold text-[var(--ink)] block">
+                    {locale === "hi" ? "बातचीत का विवरण" : "Transcript call sheet"}
+                  </span>
+                  <span className="text-[11px] text-[var(--ink-muted)]">
+                    {locale === "hi"
+                      ? "दूसरी डिवाइस से रिकॉर्ड किया गया"
+                      : "Recorded via second device"}
+                  </span>
+                </div>
+                <span className="text-[11px] font-normal text-[var(--ink-muted)] bg-[var(--line)]/40 rounded px-2 py-0.5 whitespace-nowrap">
+                  {t("hero.example_label")}
+                </span>
+              </div>
+
+              <div className="text-xs font-semibold text-[var(--ink-muted)] tabular-nums shrink-0">
+                {visibleSteps.length} / {scriptData.steps.length}{" "}
+                {locale === "hi" ? "पंक्तियाँ" : "lines"}
+              </div>
+            </div>
 
           {/* Transcript Lines landing one-by-one */}
           <div className="space-y-4 min-h-[220px]">
@@ -553,7 +555,8 @@ export function LivingHero() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
   );
 }
 

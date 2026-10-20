@@ -26,6 +26,16 @@
   --safe-text: #3DDC84;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+*, *::before, *::after {
+  max-height: 999999px;
+}
+
 body {
   background-color: var(--bg);
   color: var(--ink);
@@ -37,8 +47,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-:lang(hi) {
-  font-size: 1.06em;
+html:lang(hi) {
+  font-size: 106%;
   line-height: 1.72;
 }
 
@@ -52,6 +62,32 @@ body {
 
 .font-hand {
   font-family: var(--font-hand), cursive;
+}
+
+/* Hero cycling headline sizing */
+.hero-cycling-headline {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  font-size: 40px;
+  line-height: 1.04;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .hero-cycling-headline {
+    font-size: clamp(48px, 7vw, 112px);
+    line-height: 1.04;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Paper sheet shadow peek effects */

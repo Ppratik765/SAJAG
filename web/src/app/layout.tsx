@@ -1,7 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { fontDisplay, fontBody, fontHand } from "@/lib/fonts";
 import { AppShell } from "@/components/common/AppShell";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata: Metadata = {
   title: "Sajag — Scam-call shield for Indian families",

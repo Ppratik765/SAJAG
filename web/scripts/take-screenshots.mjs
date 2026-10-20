@@ -1,5 +1,5 @@
 import { chromium } from "@playwright/test";
-import { spawn } from "child_process";
+import { spawn, execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import http from "http";
@@ -85,7 +85,7 @@ async function main() {
   try {
     const viewports = {
       desktop: { width: 1440, height: 900 },
-      mobile: { width: 360, height: 800 },
+      mobile: { width: 390, height: 844 },
       compact: { width: 320, height: 600 }, // for checking 320px horizontal overflow
     };
 
@@ -137,6 +137,7 @@ async function main() {
         const ctx = await browser.newContext({
           viewport: viewports[vpName],
           colorScheme: theme,
+          isMobile: vpName === "mobile",
         });
         const page = await ctx.newPage();
         await page.goto(`${BASE_URL}/`, { waitUntil: "domcontentloaded" });
@@ -317,24 +318,23 @@ async function main() {
       await ctx.close();
     }
 
-    // 5. Hero WebM Video Recording (~12 seconds, < 5MB)
-    console.log("\n5. Recording landing hero video (~12s) to docs/screens/motion/landing-hero.webm...");
+    // 5. Desktop Hero WebM Video Recording (~12s, 1440x900)
+    console.log("\n5. Recording desktop landing hero video (~12s, 1440x900)...");
     {
       const videoCtx = await browser.newContext({
-        viewport: { width: 1280, height: 800 },
+        viewport: { width: 1440, height: 900 },
         recordVideo: {
           dir: MOTION_DIR,
-          size: { width: 1280, height: 800 },
+          size: { width: 1440, height: 900 },
         },
       });
       const page = await videoCtx.newPage();
       await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
       await page.evaluate(() => document.fonts.ready);
 
-      // Let the hero play through its ~9s timeline + controls interaction
-      await page.waitForTimeout(11500);
+      // Play through hero playback (~12 seconds)
+      await page.waitForTimeout(12000);
 
-      // Close page to flush video
       const video = page.video();
       await page.close();
       await videoCtx.close();
@@ -348,11 +348,130 @@ async function main() {
         fs.renameSync(rawVideoPath, destPath);
         const stats = fs.statSync(destPath);
         const sizeMb = (stats.size / (1024 * 1024)).toFixed(2);
-        console.log(`Saved video: landing-hero.webm (${sizeMb} MB)`);
+        console.log(`Saved desktop video: landing-hero.webm (${sizeMb} MB)`);
       }
     }
 
-    console.log("\nAll M0.6 motion frames & video successfully captured!");
+    // 6. Mobile Hero WebM Video Recording (~12s, 390x844)
+    console.log("\n6. Recording mobile landing hero video (~12s, 390x844)...");
+    {
+      const videoCtx = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        isMobile: true,
+        recordVideo: {
+          dir: MOTION_DIR,
+          size: { width: 390, height: 844 },
+        },
+      });
+      const page = await videoCtx.newPage();
+      await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
+      await page.evaluate(() => document.fonts.ready);
+
+      // Play through hero playback (~12 seconds)
+      await page.waitForTimeout(12000);
+
+      const video = page.video();
+      await page.close();
+      await videoCtx.close();
+
+      if (video) {
+        const rawVideoPath = await video.path();
+        const destPath = path.join(MOTION_DIR, "landing-hero-mobile.webm");
+        if (fs.existsSync(destPath)) {
+          fs.unlinkSync(destPath);
+        }
+        fs.renameSync(rawVideoPath, destPath);
+        const stats = fs.statSync(destPath);
+        const sizeMb = (stats.size / (1024 * 1024)).toFixed(2);
+        console.log(`Saved mobile video: landing-hero-mobile.webm (${sizeMb} MB)`);
+      }
+    }
+
+    // 7. First Viewport captures for evidence verification
+    console.log("\n7. Capturing first-viewport evidence frames...");
+    {
+      const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+      const page = await ctx.newPage();
+      await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
+      await page.evaluate(() => document.fonts.ready);
+      await page.screenshot({ path: path.join(MOTION_DIR, "hero-desktop-1440x900-viewport.png"), fullPage: false });
+      console.log("Captured: hero-desktop-1440x900-viewport.png");
+      await ctx.close();
+    }
+
+    {
+      const ctx = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        isMobile: true,
+      });
+      const page = await ctx.newPage();
+      await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
+      await page.evaluate(() => document.fonts.ready);
+      const heroLayout = await page.evaluate(() => {
+        const headline = document.querySelector(".hero-cycling-headline")?.getBoundingClientRect();
+        const pills = document.querySelector(".hero-cycling-headline + div")?.getBoundingClientRect();
+        const subline = document.querySelector("p")?.getBoundingClientRect();
+        const buttons = document.querySelector(".btn-stamp")?.getBoundingClientRect();
+        const levelStrip = document.querySelector('[role="progressbar"]')?.getBoundingClientRect();
+        const sheet = document.querySelector(".paper-sheet")?.getBoundingClientRect();
+        const sublineEl = document.querySelector("p");
+        const btnEl = document.querySelector(".btn-stamp");
+        const headlineEl = document.querySelector(".hero-cycling-headline");
+        const matchedRules = [];
+        for (const sheet of document.styleSheets) {
+          try {
+            for (const rule of sheet.cssRules) {
+              if (rule.selectorText && sublineEl?.matches(rule.selectorText)) {
+                matchedRules.push({ selector: rule.selectorText, css: rule.cssText });
+              }
+            }
+          } catch {
+            // cross-origin stylesheets may throw
+          }
+        }
+        return {
+          headline: headline ? { top: Math.round(headline.top), height: Math.round(headline.height), bottom: Math.round(headline.bottom), fontSize: headlineEl ? window.getComputedStyle(headlineEl).fontSize : null } : null,
+          pills: pills ? { top: Math.round(pills.top), height: Math.round(pills.height), bottom: Math.round(pills.bottom) } : null,
+          subline: subline ? { top: Math.round(subline.top), height: Math.round(subline.height), bottom: Math.round(subline.bottom), fontSize: sublineEl ? window.getComputedStyle(sublineEl).fontSize : null, text: sublineEl?.innerText, matchedRules } : null,
+          buttons: buttons ? { top: Math.round(buttons.top), height: Math.round(buttons.height), bottom: Math.round(buttons.bottom), fontSize: btnEl ? window.getComputedStyle(btnEl).fontSize : null } : null,
+          levelStrip: levelStrip ? { top: Math.round(levelStrip.top), height: Math.round(levelStrip.height), bottom: Math.round(levelStrip.bottom) } : null,
+          sheet: sheet ? { top: Math.round(sheet.top), height: Math.round(sheet.height), bottom: Math.round(sheet.bottom) } : null,
+        };
+      });
+      console.log("Mobile Hero layout bounding boxes:", JSON.stringify(heroLayout, null, 2));
+      await page.screenshot({ path: path.join(MOTION_DIR, "hero-mobile-390x844-viewport.png"), fullPage: false });
+      console.log("Captured: hero-mobile-390x844-viewport.png");
+      await ctx.close();
+    }
+
+    // 8. Header below 1100px collapse verification
+    {
+      const ctx = await browser.newContext({ viewport: { width: 1024, height: 768 } });
+      const page = await ctx.newPage();
+      await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
+      await page.screenshot({ path: path.join(MOTION_DIR, "header-collapsed-1024.png"), clip: { x: 0, y: 0, width: 1024, height: 75 } });
+      console.log("Captured: header-collapsed-1024.png");
+      await ctx.close();
+    }
+
+    // 9. Generate ffmpeg contact sheets from the videos
+    console.log("\n9. Generating contact sheets from videos using ffmpeg...");
+    try {
+      execSync(
+        `ffmpeg -y -i "${path.join(MOTION_DIR, "landing-hero.webm")}" -vf "fps=1,scale=480:-1,tile=4x3" -frames:v 1 "${path.join(MOTION_DIR, "landing-hero-contact-sheet.png")}"`,
+        { stdio: "pipe" }
+      );
+      console.log("Generated: landing-hero-contact-sheet.png");
+      execSync(
+        `ffmpeg -y -i "${path.join(MOTION_DIR, "landing-hero-mobile.webm")}" -vf "fps=1,scale=240:-1,tile=4x3" -frames:v 1 "${path.join(MOTION_DIR, "landing-hero-mobile-contact-sheet.png")}"`,
+        { stdio: "pipe" }
+      );
+      console.log("Generated: landing-hero-mobile-contact-sheet.png");
+    } catch (e) {
+      console.warn("Ffmpeg contact sheet generation warning:", e.message);
+    }
+
+    console.log("\nAll M0.6b motion frames, videos & contact sheets successfully captured!");
   } finally {
     await browser.close();
     if (serverProcess) {

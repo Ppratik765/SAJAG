@@ -78,7 +78,7 @@ export function Mark({
     >
       <div className="flex items-center justify-between gap-1 border-b border-[var(--line)] pb-1 mb-1.5">
         <span
-          className="text-[11px] font-bold uppercase tracking-wider"
+          className="text-xs font-semibold"
           style={{ color: isHard ? "var(--alarm-text)" : "var(--stamp)" }}
         >
           {readableCategory}

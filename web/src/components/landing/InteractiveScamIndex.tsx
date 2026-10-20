@@ -18,6 +18,45 @@ const SCAM_KEYS = [
   "investment_task",
 ] as const;
 
+const SCAM_KEY_PHRASES: Record<string, { en: string; hi: string }> = {
+  digital_arrest: {
+    en: "digital arrest",
+    hi: "डिजिटल अरेस्ट",
+  },
+  bank_kyc: {
+    en: "Share the 6-digit OTP",
+    hi: "6 अंकों का ओटीपी बताएं",
+  },
+  upi_refund: {
+    en: "Enter your UPI PIN",
+    hi: "अपना यूपीआई पिन दर्ज करें",
+  },
+  utility_disconnect: {
+    en: "power cuts at 9 PM",
+    hi: "रात 9 बजे बिजली कट जाएगी",
+  },
+  courier_parcel: {
+    en: "illegal passports and MDMA drugs",
+    hi: "जाली पासपोर्ट और नशीली दवाएं",
+  },
+  tech_support_remote: {
+    en: "install QuickSupport",
+    hi: "क्विक-सपोर्ट ऐप इंस्टॉल करें",
+  },
+  family_emergency: {
+    en: "detained in a police raid",
+    hi: "पुलिस रेड में पकड़ा गया",
+  },
+  lottery_prize: {
+    en: "Deposit 12,500 rupees GST",
+    hi: "12,500 रुपये जीएसटी जमा करें",
+  },
+  investment_task: {
+    en: "Deposit 5,000 for VIP task",
+    hi: "5,000 जमा करें",
+  },
+};
+
 export function InteractiveScamIndex() {
   const { t, locale } = useI18n();
   const [openKey, setOpenKey] = useState<string | null>("digital_arrest");
@@ -91,23 +130,42 @@ export function InteractiveScamIndex() {
                 >
                   <div className="p-4 sm:p-5 rounded-xl border border-[var(--line)] bg-[var(--bg)] flex flex-col sm:flex-row items-start justify-between gap-4">
                     {/* Transcript Quote */}
-                    <div className="flex-1">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)] block mb-1">
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs font-semibold text-[var(--ink-muted)] block mb-1.5">
                         {locale === "hi"
-                          ? "कॉल का उदाहरण (सजग द्वारा मार्क किया गया)"
-                          : "Call Excerpt (Marked by Sajag)"}
+                          ? "कॉल का उदाहरण (सजग द्वारा चिह्नित)"
+                          : "Call excerpt, marked by Sajag"}
                       </span>
-                      <div className="text-[15px] sm:text-[16px] text-[var(--ink)] font-medium leading-relaxed">
-                        &ldquo;
-                        <Mark category="THREAT_ARREST" kind="circle" weight={3}>
-                          {sample}
-                        </Mark>
-                        &rdquo;
-                      </div>
+                      {(() => {
+                        const targetPhrase =
+                          (locale === "hi"
+                            ? SCAM_KEY_PHRASES[key]?.hi
+                            : SCAM_KEY_PHRASES[key]?.en) || "";
+                        const hasTarget = targetPhrase && sample.includes(targetPhrase);
+                        if (!hasTarget) {
+                          return (
+                            <div className="text-[15px] sm:text-[16px] text-[var(--ink)] leading-relaxed">
+                              &ldquo;{sample}&rdquo;
+                            </div>
+                          );
+                        }
+                        const parts = sample.split(targetPhrase);
+                        return (
+                          <div className="text-[15px] sm:text-[16px] text-[var(--ink)] leading-relaxed font-normal">
+                            &ldquo;
+                            <span>{parts[0]}</span>
+                            <Mark category="THREAT_ARREST" kind="circle" weight={3}>
+                              {targetPhrase}
+                            </Mark>
+                            <span>{parts.slice(1).join(targetPhrase)}</span>
+                            &rdquo;
+                          </div>
+                        );
+                      })()}
                     </div>
 
-                    {/* Kalam Margin Note */}
-                    <div className="sm:w-52 shrink-0 pt-1">
+                    {/* Kalam Margin Note (small) */}
+                    <div className="sm:w-44 shrink-0 pt-0.5 self-start">
                       <MarginNote text={note} category="SCAM_TRAP" />
                     </div>
                   </div>

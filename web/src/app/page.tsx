@@ -122,8 +122,8 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="p-6 sm:p-10 rounded-2xl bg-[var(--sheet)] border-2 border-[var(--stamp)] text-left flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
           <div className="space-y-2.5 max-w-xl">
-            <span className="px-2.5 py-0.5 rounded-full bg-[var(--stamp)]/10 text-[var(--stamp)] font-bold text-xs uppercase tracking-wider">
-              Parent Mode
+            <span className="px-2.5 py-0.5 rounded-full bg-[var(--stamp)]/10 text-[var(--stamp)] font-semibold text-xs">
+              Parent mode
             </span>
             <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-[var(--ink)]">
               {t("parent_band.title")}
@@ -135,7 +135,7 @@ export default function HomePage() {
 
           <Link
             href="/parent"
-            className="btn-stamp shrink-0 h-[52px] px-8 rounded-full bg-[var(--stamp)] text-white font-bold text-base flex items-center gap-2 hover:opacity-95"
+            className="btn-stamp shrink-0 min-h-[52px] h-auto py-3 px-8 rounded-full bg-[var(--stamp)] text-white font-bold text-base flex items-center justify-center gap-2 hover:opacity-95 text-center whitespace-normal sm:whitespace-nowrap leading-tight"
           >
             <span>{t("parent_band.cta")}</span>
             <ArrowRight size={18} />

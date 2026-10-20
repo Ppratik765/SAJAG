@@ -17,7 +17,8 @@
         {
           "substring": "Sub-Inspector Rathore from Sector 18 station",
           "category": "AUTHORITY_CLAIM",
-          "explanation": "Posing as local police sub-inspector"
+          "explanation": "Posing as local police sub-inspector",
+          "plainNote": "poses as police officer"
         }
       ]
     },
@@ -28,7 +29,8 @@
         {
           "substring": "apprehended in a major contraband raid",
           "category": "EMERGENCY_PANIC",
-          "explanation": "Manufacturing acute family panic"
+          "explanation": "Manufacturing acute family panic",
+          "plainNote": "claims relative arrested in raid"
         }
       ]
     },
@@ -39,7 +41,8 @@
         {
           "substring": "writing the official FIR diary",
           "category": "URGENCY",
-          "explanation": "Time pressure before legal records finalize"
+          "explanation": "Time pressure before legal records finalize",
+          "plainNote": "creates urgency before FIR"
         }
       ]
     },
@@ -50,7 +53,8 @@
         {
           "substring": "career and future will be destroyed",
           "category": "EMOTIONAL_COERCION",
-          "explanation": "Leveraging family reputation fear"
+          "explanation": "Leveraging family reputation fear",
+          "plainNote": "threatens relative's future"
         }
       ]
     },
@@ -61,7 +65,8 @@
         {
           "substring": "Do not call his parents",
           "category": "SECRECY",
-          "explanation": "Cutting off communication with actual family"
+          "explanation": "Cutting off communication with actual family",
+          "plainNote": "tells you not to call parents"
         }
       ]
     },
@@ -72,7 +77,8 @@
         {
           "substring": "Send seventy thousand rupees right now via UPI",
           "category": "MONEY_TRANSFER",
-          "explanation": "Direct financial extortion under panic"
+          "explanation": "Direct financial extortion under panic",
+          "plainNote": "demands urgent UPI payment"
         }
       ]
     }

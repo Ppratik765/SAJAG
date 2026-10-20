@@ -34,19 +34,19 @@ export function LevelStrip({ level, score = 0, className = "" }: LevelStripProps
       aria-valuemax={15}
       aria-label={`Risk level indicator: current status is ${level.replace(/_/g, " ")}, score ${score}`}
     >
-      {/* Zone labels */}
-      <div className="flex justify-between text-[11px] font-semibold text-[var(--ink-muted)] mb-1 px-1">
-        <span className={level === "safe" ? "text-[var(--safe-text)] font-bold" : ""}>
+      {/* Zone labels: aligned with ruler zones, names only */}
+      <div className="grid grid-cols-4 text-[10px] sm:text-xs font-semibold text-[var(--ink-muted)] mb-1 px-1 select-none">
+        <span className={`text-left ${level === "safe" ? "text-[var(--safe-text)] font-bold" : ""}`}>
           Safe
         </span>
-        <span className={level === "suspicious" ? "text-[var(--stamp)] font-bold" : ""}>
-          Suspicious (3+)
+        <span className={`text-center ${level === "suspicious" ? "text-[var(--stamp)] font-bold" : ""}`}>
+          Suspicious
         </span>
-        <span className={level === "likely_scam" ? "text-[var(--alarm-text)] font-bold" : ""}>
-          Likely scam (7+)
+        <span className={`text-center ${level === "likely_scam" ? "text-[var(--alarm-text)] font-bold" : ""}`}>
+          Likely scam
         </span>
-        <span className={level === "scam" ? "text-[var(--alarm-text)] font-bold" : ""}>
-          Scam (11+)
+        <span className={`text-right ${level === "scam" ? "text-[var(--alarm-text)] font-bold" : ""}`}>
+          Scam
         </span>
       </div>
 

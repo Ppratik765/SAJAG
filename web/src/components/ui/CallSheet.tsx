@@ -153,7 +153,7 @@ export function CallSheet({
       {/* Sheet Header: Ruled Paper Title (Single Language) */}
       <div className="border-b border-[var(--line)] pb-3 mb-5 flex items-center justify-between gap-3">
         <div>
-          <span className="text-[12px] font-bold uppercase tracking-wider text-[var(--ink)] block">
+          <span className="text-xs sm:text-sm font-bold text-[var(--ink)] block">
             {headerTitle}
           </span>
           <span className="text-xs text-[var(--ink-muted)]">

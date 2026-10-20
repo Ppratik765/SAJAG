@@ -17,7 +17,8 @@
         {
           "substring": "Delhi Cyber Crime Cell",
           "category": "AUTHORITY_CLAIM",
-          "explanation": "Claims police cyber authority without verification"
+          "explanation": "Claims police cyber authority without verification",
+          "plainNote": "claims police authority"
         }
       ]
     },
@@ -28,7 +29,8 @@
         {
           "substring": "Aadhaar identity was discovered linked",
           "category": "IDENTITY_EXPLOITATION",
-          "explanation": "Weaponizing fear of identity theft"
+          "explanation": "Weaponizing fear of identity theft",
+          "plainNote": "weaponizes identity theft fear"
         }
       ]
     },
@@ -39,7 +41,8 @@
         {
           "substring": "non-bailable money laundering warrant",
           "category": "THREAT_ARREST",
-          "explanation": "Immediate threat of criminal arrest"
+          "explanation": "Immediate threat of criminal arrest",
+          "plainNote": "threatens arrest"
         }
       ]
     },
@@ -50,7 +53,8 @@
         {
           "substring": "immediate digital arrest",
           "category": "ISOLATION",
-          "explanation": "Fictitious legal concept used to isolate victims"
+          "explanation": "Fictitious legal concept used to isolate victims",
+          "plainNote": "claims fake digital arrest"
         }
       ]
     },
@@ -61,12 +65,14 @@
         {
           "substring": "remain on continuous video call",
           "category": "ISOLATION",
-          "explanation": "Forced surveillance preventing victim from seeking help"
+          "explanation": "Forced surveillance preventing victim from seeking help",
+          "plainNote": "wants you to stay on the call"
         },
         {
           "substring": "tell absolutely nobody in your family",
           "category": "SECRECY",
-          "explanation": "Strict secrecy command"
+          "explanation": "Strict secrecy command",
+          "plainNote": "tells you to hide call from family"
         }
       ]
     },
@@ -77,7 +83,8 @@
         {
           "substring": "transfer funds to RBI verified safe treasury",
           "category": "MONEY_TRANSFER",
-          "explanation": "Demand to transfer money to a fake safe account"
+          "explanation": "Demand to transfer money to a fake safe account",
+          "plainNote": "demands safe account transfer"
         }
       ]
     },
@@ -88,7 +95,8 @@
         {
           "substring": "twenty minutes will result in local police raid",
           "category": "URGENCY",
-          "explanation": "Artificial urgent deadline paired with threat of raid"
+          "explanation": "Artificial urgent deadline paired with threat of raid",
+          "plainNote": "threatens raid in 20 minutes"
         }
       ]
     }

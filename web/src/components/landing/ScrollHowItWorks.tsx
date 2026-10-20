@@ -83,23 +83,14 @@ export function ScrollHowItWorks() {
       {shouldReduceMotion ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="p-6 rounded-xl bg-[var(--sheet)] border border-[var(--line)] space-y-3">
-            <span className="font-bold text-xs uppercase px-2 py-0.5 rounded bg-[var(--stamp)]/10 text-[var(--stamp)]">
-              Step 1
-            </span>
             <h3 className="text-xl font-bold text-[var(--ink)]">{t("steps.step1_title")}</h3>
             <p className="text-sm text-[var(--ink-muted)]">{t("steps.step1_desc")}</p>
           </div>
           <div className="p-6 rounded-xl bg-[var(--sheet)] border border-[var(--line)] space-y-3">
-            <span className="font-bold text-xs uppercase px-2 py-0.5 rounded bg-[var(--marker)]/40 text-[var(--ink)]">
-              Step 2
-            </span>
             <h3 className="text-xl font-bold text-[var(--ink)]">{t("steps.step2_title")}</h3>
             <p className="text-sm text-[var(--ink-muted)]">{t("steps.step2_desc")}</p>
           </div>
           <div className="p-6 rounded-xl bg-[var(--sheet)] border border-[var(--line)] space-y-3">
-            <span className="font-bold text-xs uppercase px-2 py-0.5 rounded bg-[var(--alarm)]/15 text-[var(--alarm-text)]">
-              Step 3
-            </span>
             <h3 className="text-xl font-bold text-[var(--ink)]">{t("steps.step3_title")}</h3>
             <p className="text-sm text-[var(--ink-muted)]">{t("steps.step3_desc")}</p>
           </div>
@@ -132,23 +123,23 @@ export function ScrollHowItWorks() {
             <div className="paper-sheet paper-folded p-4 sm:p-6 w-full shadow-md transition-all duration-300">
               <div className="paper-dog-ear" />
 
-              {/* Sheet header */}
+              {/* Sheet header: clean sentence-case title and state */}
               <div className="border-b border-[var(--line)] pb-2.5 mb-4 flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">
-                  {locale === "hi" ? "सजग विश्लेषण पत्र" : "Sajag Call Analysis"}
+                <span className="text-xs sm:text-sm font-bold text-[var(--ink)]">
+                  {locale === "hi" ? "बातचीत का विवरण" : "Transcript call sheet"}
                 </span>
-                <span className="text-[11px] font-semibold text-[var(--ink-muted)]">
+                <span className="text-xs font-semibold text-[var(--ink-muted)]">
                   {activeStep === 1
                     ? locale === "hi"
-                      ? "1. सुनना चालू..."
-                      : "1. Listening..."
+                      ? "सुनना जारी..."
+                      : "Listening..."
                     : activeStep === 2
                     ? locale === "hi"
-                      ? "2. निशान लगाए गए"
-                      : "2. Marks applied"
+                      ? "निशान लगाए गए"
+                      : "Marks applied"
                     : locale === "hi"
-                    ? "3. ठगी की पुष्टि!"
-                    : "3. Confirmed scam!"}
+                    ? "चेतावनी जारी"
+                    : "Warning issued"}
                 </span>
               </div>
 
@@ -227,10 +218,7 @@ export function ScrollHowItWorks() {
               <div className="w-12 h-12 rounded-xl bg-[var(--stamp)]/10 text-[var(--stamp)] flex items-center justify-center mb-4">
                 <Radio size={24} />
               </div>
-              <span className="font-bold text-xs uppercase tracking-wider text-[var(--stamp)]">
-                {locale === "hi" ? "चरण 1" : "Step 1"}
-              </span>
-              <h3 className="text-2xl font-bold font-display text-[var(--ink)] mt-1">
+              <h3 className="text-2xl font-bold font-display text-[var(--ink)]">
                 {t("steps.step1_title")}
               </h3>
               <p className="text-base text-[var(--ink-muted)] mt-2 leading-relaxed">
@@ -262,10 +250,7 @@ export function ScrollHowItWorks() {
                   <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                 </svg>
               </div>
-              <span className="font-bold text-xs uppercase tracking-wider text-[var(--alarm-text)]">
-                {locale === "hi" ? "चरण 2" : "Step 2"}
-              </span>
-              <h3 className="text-2xl font-bold font-display text-[var(--ink)] mt-1">
+              <h3 className="text-2xl font-bold font-display text-[var(--ink)]">
                 {t("steps.step2_title")}
               </h3>
               <p className="text-base text-[var(--ink-muted)] mt-2 leading-relaxed">
@@ -285,10 +270,7 @@ export function ScrollHowItWorks() {
               <div className="w-12 h-12 rounded-xl bg-[var(--safe)]/10 text-[var(--safe-text)] flex items-center justify-center mb-4">
                 <CheckCircle2 size={24} />
               </div>
-              <span className="font-bold text-xs uppercase tracking-wider text-[var(--safe-text)]">
-                {locale === "hi" ? "चरण 3" : "Step 3"}
-              </span>
-              <h3 className="text-2xl font-bold font-display text-[var(--ink)] mt-1">
+              <h3 className="text-2xl font-bold font-display text-[var(--ink)]">
                 {t("steps.step3_title")}
               </h3>
               <p className="text-base text-[var(--ink-muted)] mt-2 leading-relaxed">
