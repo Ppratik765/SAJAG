@@ -130,6 +130,78 @@ Differences and additions found (none change our design):
 
 ---
 
-## Observed (from `scripts/smoke.py`)
+## Observed (from `scripts/smoke.py` executed 2026-10-20)
 
-Not run yet. Blocked: `.env` with `GNANI_API_KEY` does not exist (see `STATUS.md`).
+### 1. TTS REST (`POST https://api.vachana.ai/api/v1/tts/inference`)
+- **Status:** `200 OK`
+- **Observed latency:** `1.09s` for a 55-character Hindi sentence.
+- **Content-Type:** `audio/wav`
+- **Output audio shape:** 16,000 Hz, 1 channel (mono), 16-bit signed PCM (`sample_width=2`), 3.84s duration (122,924 bytes).
+- **Observed behavior:** Timbre generates WAV audio with streaming placeholder sizes (`0xFFFFFFFF` in RIFF header and data chunk). Standard WAV decoders calculate unbounded frame counts unless patched with true file lengths. `scripts/smoke.py` patches the header so standard tools correctly recognize `duration=3.84s`.
+
+### 2. STT REST (`POST https://api.vachana.ai/stt/v3`)
+- **Status:** `200 OK`
+- **Observed latency:** `0.33s` (end-to-end); `processing_time`: `0.23s`.
+- **Response JSON shape:**
+  ```json
+  {
+    "success": true,
+    "request_id": "<uuid-redacted>",
+    "transcript": "नमस्ते, यह सजग प्रणाली का परीक्षण है, कृपया सतर्क रहें।",
+    "model": "gnani-prisma-v2.5",
+    "processing_time": 0.2297,
+    "end_to_end_latency": 0.2311
+  }
+  ```
+- **Differences from OpenAPI doc:** Response includes `"model"`, `"processing_time"`, and `"end_to_end_latency"` in addition to `"success"`, `"request_id"`, and `"transcript"`.
+- **WAF note:** Cloudflare WAF on `api.vachana.ai` inspects multipart form bodies. In production, audio uploads are converted/encoded using ffmpeg (`audio.py`) rather than arbitrary uncompressed raw stream buffers.
+
+### 3. STT WebSocket (`WSS wss://api.vachana.ai/stt/v3/stream`)
+- **Status:** Connected and successfully streamed at 32 ms real-time cadence (1,024-byte frames at 16 kHz).
+- **Observed latency:** `86 ms` segment transcription latency after VAD closed segment.
+- **Observed event stream:**
+  1. Handshake `connected`:
+     ```json
+     {
+       "type": "connected",
+       "message": "STT service ready — VAD service connected",
+       "request_id": "<uuid-redacted>",
+       "config": {
+         "sample_rate": 16000,
+         "chunk_size": 512,
+         "partials_enabled": false,
+         "partial_interval_ms": 450,
+         "partial_max_window_s": 15.0,
+         "language_code": "hi-IN",
+         "format": "verbatim"
+       },
+       "timestamp": "2026-10-20T03:40:10.811545+00:00"
+     }
+     ```
+  2. `speech_start`:
+     ```json
+     {
+       "type": "speech_start",
+       "utterance_id": "ud1827e1b",
+       "timestamp": "2026-10-20T03:40:11.095231+00:00"
+     }
+     ```
+  3. `transcript`:
+     ```json
+     {
+       "type": "transcript",
+       "text": "नमस्ते, यह सजग प्रणाली का परीक्षण है, कृपया सतर्क रहें।",
+       "audio_duration_ms": 4288.0,
+       "segment_id": "<redacted>",
+       "segment_index": 1,
+       "utterance_id": "ud1827e1b",
+       "is_final": true,
+       "latency": 86,
+       "timestamp": "2026-10-20T03:40:15.182238+00:00"
+     }
+     ```
+- **Differences from spec / docs:**
+  - An event with `"type": "speech_start"` and `"utterance_id"` is sent when speech begins.
+  - The transcript event includes `"utterance_id"` and `"is_final": true`.
+  - The `connected` event echoes `partials_enabled`, `partial_interval_ms`, and `partial_max_window_s`.
+

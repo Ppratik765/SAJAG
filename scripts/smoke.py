@@ -18,6 +18,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import struct
 import sys
 import time
 import wave
@@ -31,7 +32,7 @@ OUT_DIR = REPO_ROOT / "scripts" / "out"  # git-ignored
 BASE_URL = "https://api.vachana.ai"
 WS_URL = "wss://api.vachana.ai/stt/v3/stream"
 
-TTS_TEXT = "नमस्ते, यह सजग की जाँच है। कृपया किसी को भी अपना कोड न बताएं।"
+TTS_TEXT = "नमस्ते, यह सजग प्रणाली का परीक्षण है। कृपया सतर्क रहें।"
 TTS_MODEL = "timbre-v2.5"
 TTS_VOICE = "Chitra"
 LANG = "hi-IN"
@@ -94,11 +95,19 @@ def step_tts(client: httpx.Client, key: str) -> Path:
     if resp.status_code != 200:
         raise RuntimeError(f"TTS failed after {dt:.2f}s: {describe_error(resp)}")
     out = OUT_DIR / "smoke_tts_hi.wav"
-    out.write_bytes(resp.content)
+    raw_content = bytearray(resp.content)
+    # Timbre emits streaming WAV headers with 0xFFFFFFFF sizes; fix sizes for standard WAV parsers.
+    if len(raw_content) >= 44 and raw_content[:4] == b"RIFF":
+        struct.pack_into("<I", raw_content, 4, len(raw_content) - 8)
+        data_idx = raw_content.find(b"data")
+        if data_idx != -1:
+            struct.pack_into("<I", raw_content, data_idx + 4, len(raw_content) - (data_idx + 8))
+    out.write_bytes(bytes(raw_content))
     with wave.open(str(out), "rb") as w:
         rate, ch, width, frames = w.getframerate(), w.getnchannels(), w.getsampwidth(), w.getnframes()
-    print(f"status=200 latency={dt:.2f}s content-type={resp.headers.get('content-type')} bytes={len(resp.content)}")
-    print(f"wav: rate={rate} channels={ch} sample_width={width} duration={frames / rate:.2f}s -> {out.relative_to(REPO_ROOT)}")
+    duration = frames / rate
+    print(f"status=200 latency={dt:.2f}s content-type={resp.headers.get('content-type')} bytes={len(raw_content)}")
+    print(f"wav: rate={rate} channels={ch} sample_width={width} duration={duration:.2f}s -> {out.relative_to(REPO_ROOT)}")
     if (rate, ch, width) != (SAMPLE_RATE, 1, 2):
         raise RuntimeError("TTS WAV is not 16 kHz mono 16-bit; cannot stream it as-is.")
     return out
@@ -126,7 +135,7 @@ def step_stt_rest(client: httpx.Client, key: str, wav_path: Path) -> None:
     data = resp.json()
     shape = {k: type(v).__name__ for k, v in data.items()}
     print(f"status=200 latency={dt:.2f}s keys={shape}")
-    print(f"success={data.get('success')} transcript={data.get('transcript')!r}")
+    print(f"success={data.get('success')} model={data.get('model')} transcript={data.get('transcript')!r}")
 
 
 async def step_stt_ws(key: str, wav_path: Path) -> None:
@@ -194,6 +203,13 @@ async def step_stt_ws(key: str, wav_path: Path) -> None:
 
 
 def main() -> int:
+    # Ensure stdout handles UTF-8 on Windows
+    if sys.stdout.encoding.lower() != "utf-8":
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except AttributeError:
+            pass
+
     key = load_api_key()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     ok = True
