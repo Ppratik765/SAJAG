@@ -21,6 +21,7 @@ web/next-env.d.ts
 
 # Generated audio and eval output
 data/corpus/audio/
+eval/.cache/
 eval/results/*.json
 !eval/results/latest.json
 scripts/out/

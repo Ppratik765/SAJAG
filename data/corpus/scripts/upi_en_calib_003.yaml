@@ -1,0 +1,19 @@
+id: upi_en_calib_003
+language: en-IN
+label: upi_refund
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+  - speaker: caller
+    text: "Hello sir, by mistake I sent five thousand rupees to your Google Pay number."
+  - speaker: victim
+    text: "Wait, let me check my phone. I didn't see any message."
+  - speaker: caller
+    text: "Sir it was an accidental payment. Please open your UPI app right now and accept the refund."
+  - speaker: victim
+    text: "Okay, but how do I send it back to you?"
+  - speaker: caller
+    text: "Just click on the notification and enter your secret UPI PIN to receive the cashback refund."
+  - speaker: victim
+    text: "Entering UPI PIN to receive money? That sounds suspicious."

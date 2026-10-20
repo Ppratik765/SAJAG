@@ -7,6 +7,7 @@ categories:
     patterns:
       - {text: "cbi", lang: any, reviewed: true}
       - {text: "सीबीआई", lang: hi, reviewed: true}
+      - {text: "सी बी आई", lang: hi, reviewed: true}
       - {text: "police", lang: any, reviewed: true}
       - {text: "पुलिस", lang: hi, reviewed: true}
       - {text: "crime branch", lang: any, reviewed: true}
@@ -105,6 +106,7 @@ categories:
     patterns:
       - {text: "otp", lang: any, reviewed: true}
       - {text: "ओटीपी", lang: hi, reviewed: true}
+      - {text: "ओ टी पी", lang: hi, reviewed: true}
       - {text: "one time password", lang: any, reviewed: true}
       - {text: "upi pin", lang: any, reviewed: true}
       - {text: "यूपीआई पिन", lang: hi, reviewed: true}
@@ -171,11 +173,13 @@ categories:
     patterns:
       - {text: "account block", lang: any, reviewed: true}
       - {text: "खाता बंद", lang: hi, reviewed: true}
+      - {text: "खाता ब्लॉक", lang: hi, reviewed: true}
       - {text: "अकाउंट ब्लॉक", lang: hi, reviewed: true}
       - {text: "account suspend", lang: any, reviewed: true}
       - {text: "kyc update", lang: any, reviewed: true}
       - {text: "kyc expired", lang: any, reviewed: true}
       - {text: "केवाईसी", lang: hi, reviewed: true}
+      - {text: "के वाई सी", lang: hi, reviewed: true}
       - {text: "sim block", lang: any, reviewed: true}
       - {text: "सिम ब्लॉक", lang: hi, reviewed: true}
       - {text: "sim deactivate", lang: any, reviewed: true}

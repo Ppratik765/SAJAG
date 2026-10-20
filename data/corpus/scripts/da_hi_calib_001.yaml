@@ -1,0 +1,19 @@
+id: da_hi_calib_001
+language: hi-IN
+label: digital_arrest
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+  - speaker: caller
+    text: "नमस्ते, मैं दिल्ली पुलिस क्राइम ब्रांच से इंस्पेक्टर शर्मा बात कर रहा हूँ।"
+  - speaker: victim
+    text: "हाँ जी, क्या बात है? पुलिस ने क्यों फोन किया?"
+  - speaker: caller
+    text: "आपके आधार नंबर पर एक गैरकानूनी पार्सल मिला है। आपको डिजिटल अरेस्ट में रखा गया है।"
+  - speaker: victim
+    text: "डिजिटल अरेस्ट? यह क्या होता है?"
+  - speaker: caller
+    text: "आप तुरंत कमरा बंद कर लीजिए और किसी को मत बताना। वीडियो कॉल पर रहिए, कॉल काटना मना है।"
+  - speaker: victim
+    text: "अरे, मुझे बहुत डर लग रहा है।"

@@ -1,0 +1,17 @@
+id: deliv_hi_calib_004
+language: hi-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: easy
+split: dev
+turns:
+  - speaker: caller
+    text: "भैया नमस्ते, मैं ब्लू डार्ट कूरियर डिलीवरी वाला बोल रहा हूँ। आपका अमेज़न पार्सल लेकर गेट पर खड़ा हूँ।"
+  - speaker: victim
+    text: "हाँ भैया, मैं घर पर ही हूँ। बस दो मिनट में बाहर आता हूँ।"
+  - speaker: caller
+    text: "पार्सल हैंडओवर करने के लिए आपके फोन पर डिलीवरी कोड ओटीपी आया होगा, कृपया बता दीजिए।"
+  - speaker: victim
+    text: "हाँ, मैसेज में चार सात आठ दो लिखा है। सामान गेट पर रख दीजिए।"
+  - speaker: caller
+    text: "धन्यवाद सर, पार्सल दे दिया है।"

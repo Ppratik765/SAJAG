@@ -1,0 +1,19 @@
+id: kyc_hi_calib_002
+language: hi-IN
+label: bank_kyc
+legit_kind: null
+difficulty: easy
+split: dev
+turns:
+  - speaker: caller
+    text: "नमस्कार सर, मैं स्टेट बैंक मुख्य शाखा से मैनेजर वर्मा बात कर रहा हूँ।"
+  - speaker: victim
+    text: "नमस्ते वर्मा जी, बताइए क्या काम है?"
+  - speaker: caller
+    text: "आपका बैंक खाता केवाईसी अपडेट न होने के कारण आज रात को ब्लॉक हो जाएगा।"
+  - speaker: victim
+    text: "अरे, खाता ब्लॉक मत कीजिए, मुझे बहुत जरूरी काम है।"
+  - speaker: caller
+    text: "चिंता मत कीजिए, आपके मोबाइल पर छह अंकों का ओटीपी आया है। तुरंत वह ओटीपी मुझे बताइए।"
+  - speaker: victim
+    text: "जी ठीक है, मैं अभी देखकर बताता हूँ।"

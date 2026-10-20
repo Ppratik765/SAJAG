@@ -1,0 +1,17 @@
+id: bank_advisory_en_calib_005
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: easy
+split: dev
+turns:
+  - speaker: caller
+    text: "Dear customer, this is an automated security awareness message from State Bank."
+  - speaker: victim
+    text: "Yes, I am listening."
+  - speaker: caller
+    text: "Please note that our bank officials never call you asking for passwords, OTP, CVV, or card details."
+  - speaker: victim
+    text: "Thank you for the security warning."
+  - speaker: caller
+    text: "Never share confidential codes with anyone. Stay alert against cyber fraud."
