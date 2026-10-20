@@ -21,19 +21,26 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | null>(null);
 
-let currentLocale: Locale = "hi";
-const localeListeners = new Set<() => void>();
-
-if (typeof window !== "undefined") {
+function detectDefaultLocale(): Locale {
+  if (typeof window === "undefined") return "en";
   try {
     const saved = localStorage.getItem("sajag_locale") as Locale | null;
     if (saved === "en" || saved === "hi") {
-      currentLocale = saved;
+      return saved;
     }
+    const navLangs =
+      typeof navigator !== "undefined" && navigator.languages && navigator.languages.length > 0
+        ? navigator.languages
+        : [typeof navigator !== "undefined" ? navigator.language : "en"];
+    const hasHindi = navLangs.some((l) => l && l.toLowerCase().startsWith("hi"));
+    return hasHindi ? "hi" : "en";
   } catch {
-    // ignore
+    return "en";
   }
 }
+
+let currentLocale: Locale = detectDefaultLocale();
+const localeListeners = new Set<() => void>();
 
 function subscribeLocale(listener: () => void) {
   localeListeners.add(listener);
@@ -47,7 +54,7 @@ function getLocaleSnapshot(): Locale {
 }
 
 function getServerLocaleSnapshot(): Locale {
-  return "hi";
+  return "en";
 }
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {

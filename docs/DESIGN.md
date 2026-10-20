@@ -136,3 +136,14 @@ All fonts loaded via `next/font/google` (`display: swap`):
 - **`prefers-reduced-motion`**: Instant marks, stamp appears without scaling thump, no loop animations.
 - **Screen Reader Announcements**: Level transitions announced via `<div aria-live="polite" role="status">`.
 - **Haptic Feedback**: `navigator.vibrate([200, 100, 200])` triggered when session escalates to `likely_scam` (feature-detected).
+
+---
+
+## 8. M0.6 Alive Additions & Audio Decision
+
+- **Living Hero**: Display scale headline (40–104px) cycling 11 Indian languages with pen-wipe transition. Scripted CallSheet playback (~9s) with typing lines, highlighter swipes, vermilion circles, Kalam margin note writing reveal, LevelStrip needle slide, vermilion border flash, animated speech waveform, and VerdictStamp slam with ink splatter.
+- **Scroll-Driven How It Works**: Sticky paper sheet pinned on one side while 3 steps scroll on the other, driving sheet marks and stamps in both directions.
+- **Interactive Scam Index**: Large typographic rows expanding to show marked quotes and margin notes.
+- **Spot the Red Flags Game**: Interactive token-level phrase selection and scoring (`/spot`).
+- **Sound Decision**: Ink-slam sound was deliberately omitted because no verified public-domain or user-generated non-copyrighted audio sample is currently bundled. Visual feedback (vermilion border flash, animated waveform, ink splatter) and haptic vibration (`navigator.vibrate([200, 100, 200])`) provide rich multi-sensory feedback without licensing risk.
+

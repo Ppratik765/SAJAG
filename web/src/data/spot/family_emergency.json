@@ -1,0 +1,80 @@
+{
+  "id": "family_emergency",
+  "title": {
+    "en": "Family Emergency Extortion Call",
+    "hi": "पारिवारिक आपातकाल जबरन वसूली कॉल"
+  },
+  "isGenuine": false,
+  "description": {
+    "en": "Caller creates intense emotional distress claiming a young relative is arrested.",
+    "hi": "कॉलर रिश्तेदार के जेल में होने का डर दिखाकर तुरंत पैसे मांगता है।"
+  },
+  "lines": [
+    {
+      "index": 0,
+      "text": "Hello Uncle, please listen calmly, this is Sub-Inspector Rathore from Sector 18 station.",
+      "trueMarks": [
+        {
+          "substring": "Sub-Inspector Rathore from Sector 18 station",
+          "category": "AUTHORITY_CLAIM",
+          "explanation": "Posing as local police sub-inspector"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "text": "Your nephew Rohit was just apprehended in a major contraband raid outside college.",
+      "trueMarks": [
+        {
+          "substring": "apprehended in a major contraband raid",
+          "category": "EMERGENCY_PANIC",
+          "explanation": "Manufacturing acute family panic"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "text": "The senior inspector is writing the official FIR diary as we speak right now.",
+      "trueMarks": [
+        {
+          "substring": "writing the official FIR diary",
+          "category": "URGENCY",
+          "explanation": "Time pressure before legal records finalize"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "text": "Once entered into the national police portal, his career and future will be destroyed.",
+      "trueMarks": [
+        {
+          "substring": "career and future will be destroyed",
+          "category": "EMOTIONAL_COERCION",
+          "explanation": "Leveraging family reputation fear"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "text": "Do not call his parents or Rohit will face immediate lockup torture.",
+      "trueMarks": [
+        {
+          "substring": "Do not call his parents",
+          "category": "SECRECY",
+          "explanation": "Cutting off communication with actual family"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "text": "Send seventy thousand rupees right now via UPI to settle medical release before filing.",
+      "trueMarks": [
+        {
+          "substring": "Send seventy thousand rupees right now via UPI",
+          "category": "MONEY_TRANSFER",
+          "explanation": "Direct financial extortion under panic"
+        }
+      ]
+    }
+  ]
+}

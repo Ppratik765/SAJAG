@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import { Mark, HARD_CATEGORIES } from "./Mark";
 import { MarginNote } from "./MarginNote";
 import { VerdictStamp, RiskLevel } from "./VerdictStamp";
+import { useI18n, Locale } from "@/lib/i18n/context";
 
 export interface CallSegment {
   index: number;
@@ -31,7 +32,7 @@ interface CallSheetProps {
   signals?: CallSignal[];
   marginNotes?: CallMarginNoteItem[];
   level: RiskLevel;
-  lang?: string;
+  lang?: Locale | string;
   className?: string;
   showStamp?: boolean;
 }
@@ -41,11 +42,13 @@ export function CallSheet({
   signals = [],
   marginNotes = [],
   level,
-  lang = "hi",
+  lang,
   className = "",
   showStamp = true,
 }: CallSheetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { locale: contextLocale } = useI18n();
+  const activeLang = (lang === "en" || lang === "hi" ? lang : contextLocale) as "en" | "hi";
 
   // Group signals by segment index
   const signalsBySegment = signals.reduce<Record<number, CallSignal[]>>((acc, sig) => {
@@ -76,7 +79,6 @@ export function CallSheet({
     const parts: React.ReactNode[] = [];
     let lastIndex = 0;
 
-    // Collect occurrences
     interface MatchOccur {
       start: number;
       end: number;
@@ -96,7 +98,6 @@ export function CallSheet({
       }
     }
 
-    // Sort by start position
     occurrences.sort((a, b) => a.start - b.start);
 
     for (const occ of occurrences) {
@@ -126,34 +127,49 @@ export function CallSheet({
     return <>{parts}</>;
   };
 
+  const headerTitle =
+    activeLang === "hi" ? "बातचीत का विवरण" : "Transcript Call Sheet";
+  const headerSubtitle =
+    activeLang === "hi"
+      ? "दूसरी डिवाइस से रिकॉर्ड किया गया"
+      : "Recorded via second device";
+  const lineCountLabel =
+    activeLang === "hi"
+      ? `${segments.length} ${segments.length === 1 ? "पंक्ति" : "पंक्तियाँ"}`
+      : `${segments.length} ${segments.length === 1 ? "line" : "lines"}`;
+  const emptyStateText =
+    activeLang === "hi"
+      ? "अभी कोई बातचीत रिकॉर्ड नहीं हुई है।"
+      : "No call speech recorded yet.";
+
   return (
     <div
       ref={containerRef}
-      className={`paper-sheet paper-folded p-3.5 sm:p-8 w-full max-w-3xl mx-auto my-4 transition-colors ${className}`}
-      lang={lang}
+      className={`paper-sheet paper-folded p-4 sm:p-7 w-full max-w-3xl mx-auto my-2 sm:my-4 transition-colors ${className}`}
+      lang={activeLang}
     >
       <div className="paper-dog-ear" />
 
-      {/* Sheet Header: Ruled Paper Title */}
-      <div className="border-b border-[var(--line)] pb-3 mb-6 flex items-center justify-between">
+      {/* Sheet Header: Ruled Paper Title (Single Language) */}
+      <div className="border-b border-[var(--line)] pb-3 mb-5 flex items-center justify-between gap-3">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)] block">
-            Transcript Call Sheet • बातचीत का विवरण
+          <span className="text-[12px] font-bold uppercase tracking-wider text-[var(--ink)] block">
+            {headerTitle}
           </span>
           <span className="text-xs text-[var(--ink-muted)]">
-            Recorded via second device • दूसरी डिवाइस से रिकॉर्डेड
+            {headerSubtitle}
           </span>
         </div>
-        <div className="text-xs font-semibold text-[var(--ink-muted)] tabular-nums">
-          {segments.length} {segments.length === 1 ? "line" : "lines"}
+        <div className="text-xs font-semibold text-[var(--ink-muted)] tabular-nums shrink-0">
+          {lineCountLabel}
         </div>
       </div>
 
       {/* Transcript Lines */}
       <div className="space-y-4">
         {segments.length === 0 ? (
-          <p className="text-center py-12 text-[var(--ink-muted)] italic text-sm">
-            No call speech recorded yet. • अभी कोई बातचीत रिकॉर्ड नहीं हुई है।
+          <p className="text-center py-10 text-[var(--ink-muted)] italic text-sm">
+            {emptyStateText}
           </p>
         ) : (
           segments.map((seg) => {
@@ -162,29 +178,31 @@ export function CallSheet({
               <div
                 key={seg.index}
                 id={`call-seg-${seg.index}`}
-                className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 items-start py-1.5 border-b border-[var(--line)]/50 last:border-b-0"
+                className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 py-2 border-b border-[var(--line)]/50 last:border-b-0"
               >
                 {/* Left Gutter: Tabular Timestamp */}
-                <div className="md:col-span-2 text-[12px] font-semibold text-[var(--ink-muted)] tabular-nums pt-0.5 select-none">
+                <div className="w-12 sm:w-14 shrink-0 text-[12px] font-semibold text-[var(--ink-muted)] tabular-nums pt-0.5 select-none">
                   {seg.time || `0:${(seg.index * 6).toString().padStart(2, "0")}`}
                 </div>
 
                 {/* Main Content: Spoken Text with Marks */}
-                <div className="md:col-span-7 text-[16px] sm:text-[17px] text-[var(--ink)] leading-relaxed">
+                <div className="flex-1 min-w-0 text-[15px] sm:text-[16px] text-[var(--ink)] leading-relaxed">
                   {renderAnnotatedText(seg)}
                 </div>
 
-                {/* Right Gutter: Margin Note (Desktop) or Below Line (Mobile) */}
-                <div className="md:col-span-3 pt-0.5">
-                  {notes.map((n, i) => (
-                    <MarginNote
-                      key={i}
-                      text={n.text}
-                      category={n.category}
-                      className="block mb-1"
-                    />
-                  ))}
-                </div>
+                {/* Right Gutter: Margin Note (Desktop) or Indented Below (Mobile) */}
+                {notes.length > 0 && (
+                  <div className="sm:w-44 lg:w-48 shrink-0 pl-1 sm:pl-2 pt-0.5 self-start">
+                    {notes.map((n, i) => (
+                      <MarginNote
+                        key={i}
+                        text={n.text}
+                        category={n.category}
+                        className="block mb-1"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })
@@ -193,8 +211,8 @@ export function CallSheet({
 
       {/* Bottom Verdict Stamp if prominent */}
       {showStamp && level !== "safe" && (
-        <div className="mt-8 pt-4 border-t border-[var(--line)] flex justify-end">
-          <VerdictStamp level={level} size="md" />
+        <div className="mt-6 pt-4 border-t border-[var(--line)] flex justify-end">
+          <VerdictStamp level={level} size="md" lang={activeLang} />
         </div>
       )}
     </div>

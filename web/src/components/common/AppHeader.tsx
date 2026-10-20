@@ -18,11 +18,47 @@ export function AppHeader() {
     { href: "/live", label: t("nav.live") },
     { href: "/check", label: t("nav.check") },
     { href: "/paste", label: t("nav.paste") },
+    { href: "/spot", label: t("nav.spot") },
     { href: "/parent", label: t("nav.parent") },
     { href: "/demo", label: t("nav.demo") },
     { href: "/accuracy", label: t("nav.accuracy") },
     { href: "/about", label: t("nav.about") },
   ];
+
+  const handleThemeToggle = (e: React.MouseEvent) => {
+    if (typeof document !== "undefined" && "startViewTransition" in document) {
+      const x = e.clientX;
+      const y = e.clientY;
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      const transition = (document as unknown as { startViewTransition: (cb: () => void) => { ready: Promise<void> } }).startViewTransition(() => {
+        toggleTheme();
+      });
+
+      transition.ready
+        .then(() => {
+          document.documentElement.animate(
+            {
+              clipPath: [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`,
+              ],
+            },
+            {
+              duration: 350,
+              easing: "ease-in-out",
+              pseudoElement: "::view-transition-new(root)",
+            }
+          );
+        })
+        .catch(() => {});
+    } else {
+      toggleTheme();
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-[var(--bg)]/90 backdrop-blur-md border-b border-[var(--line)]">
@@ -44,7 +80,7 @@ export function AppHeader() {
           </div>
         </Link>
 
-        {/* Desktop Nav */}
+        {/* Desktop Nav with hand-drawn underline for active route */}
         <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-[var(--ink-muted)]">
           {navLinks.map((link) => {
             const active = pathname === link.href;
@@ -52,11 +88,27 @@ export function AppHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`transition-colors hover:text-[var(--ink)] ${
+                className={`relative py-1 transition-colors hover:text-[var(--ink)] ${
                   active ? "text-[var(--stamp)] font-bold" : ""
                 }`}
               >
-                {link.label}
+                <span>{link.label}</span>
+                {active && (
+                  <svg
+                    className="absolute -bottom-0.5 left-0 right-0 w-full h-[5px] text-[var(--stamp)] pointer-events-none animate-[penWriteReveal_250ms_ease-out]"
+                    viewBox="0 0 40 5"
+                    fill="none"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M 1,3 Q 20,1 39,3"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                )}
               </Link>
             );
           })}
@@ -92,10 +144,10 @@ export function AppHeader() {
             </button>
           </div>
 
-          {/* Theme Toggle */}
+          {/* Theme Toggle (circular reveal) */}
           <button
             type="button"
-            onClick={toggleTheme}
+            onClick={handleThemeToggle}
             className="p-1.5 sm:p-2 rounded-full border border-[var(--line)] bg-[var(--sheet)] text-[var(--ink)] hover:bg-[var(--line)]/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--stamp)]"
             aria-label={theme === "light" ? "Switch to dark night ink" : "Switch to light paper"}
             title={theme === "light" ? "Night ink mode" : "Light paper mode"}
@@ -108,35 +160,33 @@ export function AppHeader() {
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
             className="lg:hidden p-1.5 sm:p-2 rounded-full border border-[var(--line)] bg-[var(--sheet)] text-[var(--ink)]"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
           >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileOpen ? <X size={17} /> : <Menu size={17} />}
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="lg:hidden border-b border-[var(--line)] bg-[var(--sheet)] px-4 py-4 space-y-2">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className="block px-3 py-2 rounded-lg text-sm font-semibold text-[var(--ink)] hover:bg-[var(--line)]/10"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div className="pt-2 border-t border-[var(--line)]">
-            <Link
-              href="/dev/ui"
-              onClick={() => setMobileOpen(false)}
-              className="block px-3 py-1.5 text-xs text-[var(--ink-muted)] italic"
-            >
-              Component Gallery (/dev/ui)
-            </Link>
-          </div>
+        <div className="lg:hidden border-t border-[var(--line)] bg-[var(--bg)] px-4 py-4 space-y-2 animate-[penWriteReveal_200ms_ease-out]">
+          {navLinks.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className={`block py-2 text-sm font-semibold rounded-md px-3 transition-colors ${
+                  active
+                    ? "bg-[var(--stamp)] text-white"
+                    : "text-[var(--ink)] hover:bg-[var(--line)]/20"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
       )}
     </header>

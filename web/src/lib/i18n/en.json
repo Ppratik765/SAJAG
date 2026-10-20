@@ -7,6 +7,7 @@
     "live": "Live call",
     "check": "Check recording",
     "paste": "Paste message",
+    "spot": "Spot red flags",
     "parent": "Parent mode",
     "demo": "Demo replay",
     "accuracy": "Accuracy",
@@ -14,12 +15,16 @@
   },
   "hero": {
     "title_primary": "Is this call a scam?",
-    "title_secondary": "क्या यह कॉल ठगी है?",
-    "description": "Sajag listens on your speakerphone, marks warning signs on a live call sheet, and speaks a warning aloud in your language when to hang up.",
+    "title_secondary": "Live paper call shield for Indian families",
+    "description": "Sajag listens on your speakerphone, marks warning signs on a live paper call sheet, and speaks a warning aloud in your language when to hang up.",
     "cta_watch_demo": "Watch Sajag catch a scam",
     "cta_parent_mode": "Set up for my parents",
+    "cta_spot_game": "Play: Spot the red flags",
     "cta_check_recording": "Check a recording",
-    "disclaimer": "Sajag is a helper, not a guarantee."
+    "disclaimer": "Sajag is a helper, not a guarantee.",
+    "example_label": "Example, written by us",
+    "interactive_preview": "Interactive call demonstration",
+    "hang_up_alert": "Hang up now — do not send money"
   },
   "modes": {
     "title": "Three ways to protect your family",
@@ -46,42 +51,60 @@
   },
   "scams": {
     "title": "Scams Sajag knows",
-    "subtitle": "Common traps identified by pattern, authority claims, urgency, and money requests.",
+    "subtitle": "Common traps identified by pattern, authority claims, urgency, and money requests. Tap any scam to see how Sajag marks it.",
     "digital_arrest": {
       "title": "Digital arrest",
-      "desc": "Claims to be police, CBI, or customs, threatens a court case or arrest, and orders you to stay on a video call."
+      "desc": "Claims to be police, CBI, or customs, threatens a court case or arrest, and orders you to stay on a video call.",
+      "sample": "Supreme Court order: you are under digital arrest. Transfer funds to safe account.",
+      "note": "False CBI authority claim"
     },
     "bank_kyc": {
       "title": "Fake bank KYC",
-      "desc": "Warns your account, SIM, or card will be blocked tonight unless you update details and share an OTP."
+      "desc": "Warns your account, SIM, or card will be blocked tonight unless you update details and share an OTP.",
+      "sample": "Your SBI debit card will be blocked by midnight. Share the 6-digit OTP to verify.",
+      "note": "Urgent OTP demand"
     },
     "upi_refund": {
       "title": "Refund or wrong payment",
-      "desc": "Claims money was sent by mistake, asks you to scan a QR code or enter your UPI PIN to 'receive' money."
+      "desc": "Claims money was sent by mistake, asks you to scan a QR code or enter your UPI PIN to receive money.",
+      "sample": "Madam, I sent twenty thousand by mistake. Enter your UPI PIN to approve the refund.",
+      "note": "PIN entered = money deducted"
     },
     "utility_disconnect": {
       "title": "Electricity / utility cut",
-      "desc": "Urgent SMS or call claiming power will be cut in 30 minutes unless a bill is paid to a private number."
+      "desc": "Urgent SMS or call claiming power will be cut in 30 minutes unless a bill is paid to a private number.",
+      "sample": "Electricity officer speaking. Pay unpaid bill of 1,480 rupees now or power cuts at 9 PM.",
+      "note": "Fake disconnect threat"
     },
     "courier_parcel": {
       "title": "Courier and customs",
-      "desc": "Alleges a parcel in your name contains narcotics or contraband, demanding immediate money to clear it."
+      "desc": "Alleges a parcel in your name contains narcotics or contraband, demanding immediate money to clear it.",
+      "sample": "FedEx Mumbai: your parcel to Taiwan contains illegal passports and MDMA drugs.",
+      "note": "Narcotics parcel extortion"
     },
     "tech_support_remote": {
       "title": "Remote access apps",
-      "desc": "Instructs you to install AnyDesk, TeamViewer, or an APK so they can 'assist' you."
+      "desc": "Instructs you to install AnyDesk, TeamViewer, or an APK so they can assist you.",
+      "sample": "To fix your banking app error, install QuickSupport from this link and read the 9 digits.",
+      "note": "Remote screen capture app"
     },
     "family_emergency": {
       "title": "Family emergency",
-      "desc": "Claims your child or relative was arrested or injured, asking for urgent money and strict secrecy."
+      "desc": "Claims your child or relative was arrested or injured, asking for urgent money and strict secrecy.",
+      "sample": "Uncle, your nephew was detained in a police raid. Send fifty thousand for bail immediately.",
+      "note": "Panic-driven extortion"
     },
     "lottery_prize": {
       "title": "Lottery & prizes",
-      "desc": "Tells you that you won a lottery or reward, but demands an upfront processing fee."
+      "desc": "Tells you that you won a lottery or reward, but demands an upfront processing fee.",
+      "sample": "Congratulations! You won 25 lakh rupees in KBC lottery. Deposit 12,500 rupees GST first.",
+      "note": "Advance-fee fraud"
     },
     "investment_task": {
       "title": "Part-time task & investment",
-      "desc": "Promises guaranteed returns for liking videos or joining Telegram investment groups."
+      "desc": "Promises guaranteed returns for liking videos or joining Telegram investment groups.",
+      "sample": "Earn 3,000 rupees daily just liking YouTube hotel videos. Deposit 5,000 for VIP task.",
+      "note": "Ponzi task trap"
     }
   },
   "parent_band": {
@@ -93,16 +116,6 @@
     "title": "Honest limits",
     "body": "Sajag is a helper, not an official guarantee. Same-phone live call recording is restricted by phone operating systems, so Sajag uses a second device, uploaded recordings, or pasted text. No blocking, no official police authority.",
     "link": "Read our full privacy and limitations policy"
-  },
-  "stamps": {
-    "safe": "NO SIGNS FOUND",
-    "safe_sub": "कोई संकेत नहीं",
-    "suspicious": "BE CAREFUL",
-    "suspicious_sub": "सावधान रहें",
-    "likely_scam": "LIKELY SCAM",
-    "likely_scam_sub": "ठगी की आशंका",
-    "scam": "SCAM — HANG UP",
-    "scam_sub": "ठगी — अभी फोन काटें"
   },
   "footer": {
     "credits": "Speech recognition and voice by Gnani Prisma and Timbre",

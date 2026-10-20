@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useReducedMotion } from "framer-motion";
 
 export type MarkKind = "highlight" | "circle";
@@ -12,6 +12,7 @@ export const HARD_CATEGORIES = new Set([
   "ISOLATION",
   "SECRECY",
   "THREAT_ARREST",
+  "AUTHORITY_CLAIM",
 ]);
 
 interface MarkProps {
@@ -31,20 +32,86 @@ export function Mark({
 }: MarkProps) {
   const isHard = kind ? kind === "circle" : HARD_CATEGORIES.has(category);
   const shouldReduceMotion = useReducedMotion();
+  const [showTooltip, setShowTooltip] = useState(false);
+  const markRef = useRef<HTMLSpanElement>(null);
 
-  const accessibleLabel = `${category.replace(/_/g, " ")}${
+  const readableCategory = category
+    .toLowerCase()
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+
+  const accessibleLabel = `${readableCategory}${
     explanation ? `: ${explanation}` : ""
   } (Weight: ${weight})`;
+
+  // Close tooltip on outside click or Escape
+  useEffect(() => {
+    if (!showTooltip) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowTooltip(false);
+    };
+    const handleClickOutside = (e: MouseEvent) => {
+      if (markRef.current && !markRef.current.contains(e.target as Node)) {
+        setShowTooltip(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("click", handleClickOutside);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [showTooltip]);
+
+  const toggleTooltip = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.stopPropagation();
+    setShowTooltip((prev) => !prev);
+  };
+
+  const tooltipElement = showTooltip && (
+    <div
+      role="tooltip"
+      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-2.5 rounded bg-[var(--sheet)] border border-[var(--line)] shadow-lg z-50 text-left pointer-events-auto"
+      style={{
+        boxShadow: "0 6px 20px -2px rgba(20, 22, 58, 0.15)",
+      }}
+    >
+      <div className="flex items-center justify-between gap-1 border-b border-[var(--line)] pb-1 mb-1.5">
+        <span
+          className="text-[11px] font-bold uppercase tracking-wider"
+          style={{ color: isHard ? "var(--alarm-text)" : "var(--stamp)" }}
+        >
+          {readableCategory}
+        </span>
+        <span className="text-[10px] font-semibold text-[var(--ink-muted)]">
+          Risk +{weight}
+        </span>
+      </div>
+      <p className="text-xs text-[var(--ink)] leading-snug">
+        {explanation || "Identified red flag pattern in this conversation."}
+      </p>
+      {/* Tooltip triangle tail */}
+      <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-4 border-transparent border-t-[var(--sheet)]" />
+    </div>
+  );
 
   if (isHard) {
     // Hard category: hand-drawn vermilion irregular circle
     return (
       <span
+        ref={markRef}
         tabIndex={0}
         role="mark"
         aria-label={accessibleLabel}
-        title={accessibleLabel}
-        className="relative inline mx-1 px-1.5 py-0.5 rounded cursor-help font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--alarm)]"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        onClick={toggleTooltip}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            toggleTooltip(e);
+          }
+        }}
+        className="relative inline-block mx-0.5 px-1.5 py-0.5 rounded cursor-pointer font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--alarm)] select-text"
         style={{ color: "var(--alarm-text)" }}
       >
         <span className="relative z-10">{children}</span>
@@ -69,27 +136,36 @@ export function Mark({
             }}
           />
         </svg>
+
+        {tooltipElement}
       </span>
     );
   }
 
-  // Soft category: marker stroke highlighter
+  // Soft category: marker stroke highlighter swipe
   return (
     <mark
+      ref={markRef as unknown as React.RefObject<HTMLElement>}
       tabIndex={0}
       aria-label={accessibleLabel}
-      title={accessibleLabel}
-      className="relative inline-block mx-0.5 px-1 py-0.5 rounded-sm font-medium focus:outline-none focus:ring-2 focus:ring-[var(--stamp)]"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+      onClick={toggleTooltip}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          toggleTooltip(e);
+        }
+      }}
+      className="relative inline-block mx-0.5 px-1 py-0.5 rounded-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] select-text"
       style={{
         backgroundColor: "var(--marker)",
         color: "var(--ink)",
         boxDecorationBreak: "clone",
         WebkitBoxDecorationBreak: "clone",
-        backgroundPosition: "left bottom",
-        backgroundRepeat: "no-repeat",
       }}
     >
       {children}
+      {tooltipElement}
     </mark>
   );
 }

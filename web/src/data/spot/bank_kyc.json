@@ -1,0 +1,85 @@
+{
+  "id": "bank_kyc",
+  "title": {
+    "en": "Fake Bank KYC Suspension Call",
+    "hi": "नकली बैंक केवाईसी निलंबन कॉल"
+  },
+  "isGenuine": false,
+  "description": {
+    "en": "Caller poses as a bank manager demanding urgent verification to prevent account freeze.",
+    "hi": "कॉलर बैंक अधिकारी बनकर खाता ब्लॉक होने की धमकी देता है।"
+  },
+  "lines": [
+    {
+      "index": 0,
+      "text": "Good afternoon, I am Senior Manager Sharma calling from SBI Central Card Division.",
+      "trueMarks": [
+        {
+          "substring": "SBI Central Card Division",
+          "category": "AUTHORITY_CLAIM",
+          "explanation": "Posing as senior bank official"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "text": "Our automated compliance scan found that your mandatory KYC expired yesterday.",
+      "trueMarks": [
+        {
+          "substring": "mandatory KYC expired",
+          "category": "URGENCY",
+          "explanation": "Fabricating sudden compliance expiration"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "text": "Your debit card and net banking services will be permanently suspended at midnight.",
+      "trueMarks": [
+        {
+          "substring": "permanently suspended at midnight",
+          "category": "DEADLINE_THREAT",
+          "explanation": "Creating panic with imminent service termination"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "text": "To prevent immediate card blockage, we are performing expedited over-the-phone e-KYC.",
+      "trueMarks": [
+        {
+          "substring": "over-the-phone e-KYC",
+          "category": "SUSPICIOUS_PROCESS",
+          "explanation": "Banks never perform full biometric KYC over voice calls"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "text": "I have just sent a six-digit verification code to your registered mobile number.",
+      "trueMarks": []
+    },
+    {
+      "index": 5,
+      "text": "Please read out that six-digit code to me right now so I can unfreeze your profile.",
+      "trueMarks": [
+        {
+          "substring": "read out that six-digit code to me right now",
+          "category": "CREDENTIAL_THEFT",
+          "explanation": "Attempt to steal one-time password (OTP)"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "text": "If you disconnect this call, your account will remain frozen for thirty business days.",
+      "trueMarks": [
+        {
+          "substring": "disconnect this call, your account will remain frozen",
+          "category": "ISOLATION",
+          "explanation": "Coercing victim to not end call and verify with branch"
+        }
+      ]
+    }
+  ]
+}

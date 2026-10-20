@@ -15,7 +15,7 @@ export function MarginNote({
 }: MarginNoteProps) {
   return (
     <aside
-      className={`inline-flex items-center gap-1.5 font-hand text-[1.12rem] text-[var(--ink-muted)] select-none ${className}`}
+      className={`inline-flex items-start gap-1.5 font-hand text-[1.05rem] text-[var(--ink-muted)] select-none max-w-full ${className}`}
       style={{
         transform: `rotate(${rotation}deg)`,
       }}
@@ -23,7 +23,7 @@ export function MarginNote({
     >
       {/* Thin hand-drawn pointer arrow */}
       <svg
-        width="22"
+        width="20"
         height="14"
         viewBox="0 0 24 16"
         fill="none"
@@ -31,13 +31,13 @@ export function MarginNote({
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="shrink-0 opacity-70"
+        className="shrink-0 mt-1 opacity-75"
         aria-hidden="true"
       >
         <path d="M 22,8 C 16,7 10,9 3,8" />
         <path d="M 8,3 L 2,8 L 8,13" />
       </svg>
-      <span className="font-medium tracking-wide leading-tight">
+      <span className="font-medium tracking-wide leading-snug break-words">
         {text}
       </span>
     </aside>

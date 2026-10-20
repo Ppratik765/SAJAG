@@ -1,0 +1,96 @@
+{
+  "id": "digital_arrest",
+  "title": {
+    "en": "Digital Arrest Scam Call",
+    "hi": "डिजिटल अरेस्ट फर्जी कॉल"
+  },
+  "isGenuine": false,
+  "description": {
+    "en": "Caller poses as a law enforcement official threatening imminent arrest.",
+    "hi": "कॉलर पुलिस अधिकारी बनकर तुरंत गिरफ्तारी की धमकी देता है।"
+  },
+  "lines": [
+    {
+      "index": 0,
+      "text": "Hello, I am ACP Ramesh Verma speaking from Delhi Cyber Crime Cell.",
+      "trueMarks": [
+        {
+          "substring": "Delhi Cyber Crime Cell",
+          "category": "AUTHORITY_CLAIM",
+          "explanation": "Claims police cyber authority without verification"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "text": "Your Aadhaar identity was discovered linked to sixteen illegal bank accounts in Mumbai.",
+      "trueMarks": [
+        {
+          "substring": "Aadhaar identity was discovered linked",
+          "category": "IDENTITY_EXPLOITATION",
+          "explanation": "Weaponizing fear of identity theft"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "text": "A non-bailable money laundering warrant is issued against your name right now.",
+      "trueMarks": [
+        {
+          "substring": "non-bailable money laundering warrant",
+          "category": "THREAT_ARREST",
+          "explanation": "Immediate threat of criminal arrest"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "text": "Under Supreme Court guidelines, you are placed under immediate digital arrest.",
+      "trueMarks": [
+        {
+          "substring": "immediate digital arrest",
+          "category": "ISOLATION",
+          "explanation": "Fictitious legal concept used to isolate victims"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "text": "You must remain on continuous video call and tell absolutely nobody in your family.",
+      "trueMarks": [
+        {
+          "substring": "remain on continuous video call",
+          "category": "ISOLATION",
+          "explanation": "Forced surveillance preventing victim from seeking help"
+        },
+        {
+          "substring": "tell absolutely nobody in your family",
+          "category": "SECRECY",
+          "explanation": "Strict secrecy command"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "text": "To clear your name during judicial inquiry, transfer funds to RBI verified safe treasury.",
+      "trueMarks": [
+        {
+          "substring": "transfer funds to RBI verified safe treasury",
+          "category": "MONEY_TRANSFER",
+          "explanation": "Demand to transfer money to a fake safe account"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "text": "Failure to comply in twenty minutes will result in local police raid at your home.",
+      "trueMarks": [
+        {
+          "substring": "twenty minutes will result in local police raid",
+          "category": "URGENCY",
+          "explanation": "Artificial urgent deadline paired with threat of raid"
+        }
+      ]
+    }
+  ]
+}

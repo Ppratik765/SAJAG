@@ -1,0 +1,44 @@
+{
+  "id": "genuine_bank_advisory",
+  "title": {
+    "en": "Official Bank Advisory (Genuine)",
+    "hi": "बैंक सुरक्षा परामर्श (सुरक्षित कॉल)"
+  },
+  "isGenuine": true,
+  "description": {
+    "en": "A real educational advisory from a bank reminding customers never to disclose credentials.",
+    "hi": "बैंक का वास्तविक परामर्श जो ग्राहकों को ओटीपी कभी साझा न करने की सलाह देता है।"
+  },
+  "lines": [
+    {
+      "index": 0,
+      "text": "Dear customer, this is an automated security advisory from State Bank of India.",
+      "trueMarks": []
+    },
+    {
+      "index": 1,
+      "text": "Cyber fraudsters are currently making fraudulent calls impersonating police and customs.",
+      "trueMarks": []
+    },
+    {
+      "index": 2,
+      "text": "Please remember that bank employees will never ask for your card PIN, CVV, or OTP.",
+      "trueMarks": []
+    },
+    {
+      "index": 3,
+      "text": "Never transfer money to any unknown third-party account under pressure or urgency.",
+      "trueMarks": []
+    },
+    {
+      "index": 4,
+      "text": "If you suspect any fraudulent activity, immediately report it to cybercrime helpline 1930.",
+      "trueMarks": []
+    },
+    {
+      "index": 5,
+      "text": "Stay vigilant, keep your banking credentials confidential, and have a safe day.",
+      "trueMarks": []
+    }
+  ]
+}

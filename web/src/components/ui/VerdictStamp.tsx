@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useI18n, Locale } from "@/lib/i18n/context";
 
 export type RiskLevel = "safe" | "suspicious" | "likely_scam" | "scam";
 
@@ -9,82 +10,89 @@ interface VerdictStampProps {
   level: RiskLevel;
   className?: string;
   size?: "sm" | "md" | "lg" | "giant";
+  lang?: Locale | string;
+  showSplatter?: boolean;
 }
 
-const STAMP_CONFIG: Record<
-  RiskLevel,
-  {
-    en: string;
-    hi: string;
-    color: string;
-    borderDash: string;
-    rotation: number;
-    subtext: string;
-  }
-> = {
+interface StampLangContent {
+  word: string;
+  sub: string;
+}
+
+interface StampConfigItem {
+  en: StampLangContent;
+  hi: StampLangContent;
+  color: string;
+  borderDash: string;
+  rotation: number;
+}
+
+// Define properly typed config
+const FULL_STAMP_CONFIG: Record<RiskLevel, StampConfigItem> = {
   safe: {
-    en: "NO SIGNS FOUND",
-    hi: "कोई संकेत नहीं",
+    en: { word: "CLEAR", sub: "No warning signs" },
+    hi: { word: "सुरक्षित", sub: "कोई संकेत नहीं" },
     color: "var(--safe)",
     borderDash: "6 3",
-    rotation: -4,
-    subtext: "ALL CLEAR • सुरक्षित",
+    rotation: -3.5,
   },
   suspicious: {
-    en: "BE CAREFUL",
-    hi: "सावधान रहें",
+    en: { word: "CAUTION", sub: "Stay vigilant" },
+    hi: { word: "सतर्क", sub: "सावधान रहें" },
     color: "var(--stamp)",
     borderDash: "8 2 2 2",
-    rotation: -6,
-    subtext: "STAY ALERT • सतर्क रहें",
+    rotation: -5.5,
   },
   likely_scam: {
-    en: "LIKELY SCAM",
-    hi: "ठगी की आशंका",
+    en: { word: "SUSPECTED", sub: "Do not pay" },
+    hi: { word: "आशंका", sub: "पैसे न भेजें" },
     color: "var(--alarm)",
-    borderDash: "12 2",
-    rotation: -7.5,
-    subtext: "DO NOT PAY • पैसे न दें",
+    borderDash: "10 2",
+    rotation: -7,
   },
   scam: {
-    en: "SCAM — HANG UP",
-    hi: "ठगी — फोन काटें",
+    en: { word: "SCAM", sub: "Hang up now" },
+    hi: { word: "ठगी", sub: "तुरंत फोन काटें" },
     color: "var(--alarm)",
     borderDash: "none",
     rotation: -8,
-    subtext: "STOP CALL NOW • तुरंत काटें",
   },
 };
 
-export function VerdictStamp({ level, className = "", size = "md" }: VerdictStampProps) {
-  const cfg = STAMP_CONFIG[level];
+export function VerdictStamp({
+  level,
+  className = "",
+  size = "md",
+  lang,
+  showSplatter = true,
+}: VerdictStampProps) {
+  const { locale: contextLocale } = useI18n();
+  const activeLang = (lang === "en" || lang === "hi" ? lang : contextLocale) as "en" | "hi";
+  const cfg = FULL_STAMP_CONFIG[level];
+  const text = cfg[activeLang] || cfg.en;
   const shouldReduceMotion = useReducedMotion();
 
   const sizeClasses = {
-    sm: "px-3 py-1.5 text-xs min-w-[130px]",
-    md: "px-4 py-2.5 text-sm min-w-[180px]",
-    lg: "px-6 py-3.5 text-base min-w-[240px]",
-    giant: "px-8 py-5 text-xl min-w-[300px]",
+    sm: "px-3 py-1.5 text-xs min-w-[120px]",
+    md: "px-5 py-2.5 text-sm min-w-[170px]",
+    lg: "px-7 py-3.5 text-base min-w-[220px]",
+    giant: "px-9 py-5 text-xl min-w-[280px]",
   }[size];
 
   // Animation: thump down once per level change
-  const animProps: {
-    initial: { scale: number; opacity: number } | boolean;
-    animate: { scale: number; opacity: number };
-    transition?: { type: "spring"; stiffness: number; damping: number; duration: number };
-  } = shouldReduceMotion
+  const animProps = shouldReduceMotion
     ? { initial: false, animate: { scale: 1, opacity: 1 } }
     : {
-        initial: { scale: 1.35, opacity: 0.8 },
+        initial: { scale: 1.5, opacity: 0.85 },
         animate: { scale: 1, opacity: 1 },
-        transition: { type: "spring", stiffness: 450, damping: 24, duration: 0.18 },
+        transition: { type: "spring" as const, stiffness: 480, damping: 22, duration: 0.18 },
       };
 
   return (
     <motion.div
-      key={level}
+      key={`${level}-${activeLang}`}
       {...animProps}
-      className={`inline-flex flex-col items-center justify-center select-none text-center rounded border-4 uppercase font-display tracking-wider font-extrabold shadow-sm ${sizeClasses} ${className}`}
+      className={`relative inline-flex flex-col items-center justify-center select-none text-center rounded border-4 uppercase font-display tracking-wider font-extrabold shadow-sm ${sizeClasses} ${className}`}
       style={{
         color: cfg.color,
         borderColor: cfg.color,
@@ -94,17 +102,32 @@ export function VerdictStamp({ level, className = "", size = "md" }: VerdictStam
       role="status"
       aria-live="polite"
     >
-      {/* Top Hindi label */}
-      <span className="text-[0.88em] leading-tight font-extrabold opacity-95">
-        {cfg.hi}
+      {/* Ink splatter spreading out from stamp edges on slam */}
+      {showSplatter && !shouldReduceMotion && (
+        <svg
+          className="absolute -inset-3.5 pointer-events-none w-[calc(100%+28px)] h-[calc(100%+28px)]"
+          viewBox="0 0 100 60"
+          fill={cfg.color}
+          aria-hidden="true"
+        >
+          <circle cx="4" cy="8" r="1.5" opacity="0.65" />
+          <circle cx="8" cy="3" r="1.0" opacity="0.5" />
+          <circle cx="2" cy="18" r="0.8" opacity="0.7" />
+          <circle cx="96" cy="52" r="1.4" opacity="0.6" />
+          <circle cx="98" cy="42" r="1.1" opacity="0.75" />
+          <circle cx="94" cy="56" r="0.7" opacity="0.5" />
+          <circle cx="70" cy="58" r="1.2" opacity="0.6" />
+          <circle cx="28" cy="2" r="1.1" opacity="0.65" />
+        </svg>
+      )}
+
+      {/* One big primary word in the active language */}
+      <span className="text-[1.35em] leading-none tracking-widest font-extrabold">
+        {text.word}
       </span>
-      {/* Primary English Stamp */}
-      <span className="text-[1.12em] leading-tight tracking-wider font-extrabold mt-0.5">
-        {cfg.en}
-      </span>
-      {/* Subtext margin line */}
-      <span className="text-[0.62em] tracking-widest opacity-80 border-t border-current pt-0.5 mt-1 w-full">
-        {cfg.subtext}
+      {/* One short subtext line */}
+      <span className="text-[0.62em] tracking-widest opacity-85 border-t border-current pt-0.5 mt-1 w-full normal-case sm:uppercase">
+        {text.sub}
       </span>
     </motion.div>
   );
