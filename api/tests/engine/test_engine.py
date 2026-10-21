@@ -595,6 +595,54 @@ TEST_CASES = [
         "scam",
         "upi_refund",
     ),
+    (
+        "scam_secrecy_do_not_share",
+        "This is CBI officer. An arrest warrant is active against you. Do not share this with anyone and stay on the call.",
+        "en-IN",
+        "likely_scam",
+        "scam",
+        "digital_arrest",
+    ),
+    (
+        "scam_secrecy_dont_tell_family",
+        "This is narcotics customs department. Non bailable arrest warrant issued against your Aadhaar. Don't tell your family about this investigation.",
+        "en-IN",
+        "likely_scam",
+        "scam",
+        "digital_arrest",
+    ),
+    (
+        "scam_secrecy_do_not_discuss",
+        "High court bench has issued digital arrest order. Do not discuss this with anyone until legal verification is complete.",
+        "en-IN",
+        "likely_scam",
+        "scam",
+        "digital_arrest",
+    ),
+    (
+        "scam_secrecy_hi_share_mat_karna",
+        "यह पुलिस साइबर सेल से कॉल है। आप पर गैर जमानती अरेस्ट वारंट है। किसी के साथ शेयर मत करना और कमरे में रहिए।",
+        "hi-IN",
+        "likely_scam",
+        "scam",
+        "digital_arrest",
+    ),
+    (
+        "scam_secrecy_hi_charcha_mat_karna",
+        "सीबीआई अफसर बोल रहा हूँ। आप पर मनी लॉन्ड्रिंग का केस दर्ज है और अरेस्ट वारंट निकला है। किसी से चर्चा मत करना।",
+        "hi-IN",
+        "likely_scam",
+        "scam",
+        "digital_arrest",
+    ),
+    (
+        "scam_secrecy_hi_parivar",
+        "कस्टम्स अफसर बात कर रहा हूँ। परिवार को मत बताना, यह गोपनीय जांच है और डिजिटल अरेस्ट ऑर्डर है।",
+        "hi-IN",
+        "likely_scam",
+        "scam",
+        "digital_arrest",
+    ),
 ]
 
 
@@ -676,3 +724,45 @@ def test_unreviewed_pattern_cap():
     )
     # Total score is 8 (>=7 normally likely_scam), but since all are unreviewed, must cap at suspicious
     assert level == "suspicious"
+
+
+def test_advisory_sentences_suppressed():
+    """M3.1b: Advisory sentences ('never share your OTP with anyone') must not trigger SECRECY or OTP_PIN_REQUEST demands."""
+    test_advisories = [
+        ("Bank advisory: Never share your OTP with anyone.", "en-IN"),
+        ("Never share your OTP with anyone.", "en-IN"),
+        ("Security notice: Do not share your OTP or PIN with anyone.", "en-IN"),
+        ("State Bank advisory: Never share your confidential codes with anyone.", "en-IN"),
+        ("Reserve Bank of India awareness: Never share your passwords, OTP, CVV with anyone.", "en-IN"),
+        ("सतर्कता संदेश: अपना ओटीपी या पासवर्ड किसी के साथ शेयर मत करना।", "hi-IN"),
+        ("बैंक परामर्श: अपना गोपनीय पिन या ओटीपी किसी से शेयर मत करना।", "hi-IN"),
+        ("पुलिस एडवाइजरी: साइबर फ्रॉड से बचें और 1930 पर तुरंत रिपोर्ट करें।", "hi-IN"),
+    ]
+    for adv_text, lang in test_advisories:
+        res = analyze_text(adv_text, language_code=lang)
+        assert res.level == "safe", (
+            f"Advisory '{adv_text}' scored level '{res.level}' (score {res.score}). "
+            f"Signals: {[(s.category, s.evidence) for s in res.signals]}"
+        )
+        fired_cats = {s.category for s in res.signals}
+        assert "SECRECY" not in fired_cats, f"SECRECY fired on advisory: '{adv_text}'"
+        assert "OTP_PIN_REQUEST" not in fired_cats, f"OTP_PIN_REQUEST fired on advisory: '{adv_text}'"
+
+
+def test_generic_authority_advisory_rule():
+    """M3.1b: Authority inside a sentence with an advisory frame must not score AUTHORITY_CLAIM, THREAT_ARREST, or MONEY_TRANSFER."""
+    test_cases = [
+        "Public awareness bulletin: Police and CBI never place people under digital arrest or demand money transfer.",
+        "Cyber cell advisory: Beware of fake police officers threatening arrest over Skype video calls.",
+        "State bank awareness message: Bank officials never call asking for passwords or money transfer.",
+        "पुलिस साइबर सेल एडवाइजरी: पुलिस या सी बी आई कभी भी वीडियो कॉल पर डिजिटल अरेस्ट नहीं करती और न ही पैसे ट्रांसफर करने को कहती है।",
+        "आरबीआई जागरूकता संदेश: नकली सीबीआई अफसर बनकर धमकाने वाली कॉल की शिकायत तुरंत 1930 पर दर्ज करवाएं।",
+    ]
+    for text in test_cases:
+        res = analyze_text(text)
+        fired_cats = {s.category for s in res.signals}
+        assert "AUTHORITY_CLAIM" not in fired_cats, f"AUTHORITY_CLAIM fired for: '{text}'"
+        assert "THREAT_ARREST" not in fired_cats, f"THREAT_ARREST fired for: '{text}'"
+        assert "MONEY_TRANSFER" not in fired_cats, f"MONEY_TRANSFER fired for: '{text}'"
+        assert res.level == "safe"
+

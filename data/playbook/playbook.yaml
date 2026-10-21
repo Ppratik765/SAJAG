@@ -24,6 +24,7 @@ categories:
       - {text: "cyber cell", lang: any, reviewed: true}
       - {text: "साइबर सेल", lang: hi, reviewed: true}
       - {text: "supreme court", lang: any, reviewed: true}
+      - {text: "high court", lang: any, reviewed: true}
       - {text: "हाई कोर्ट", lang: hi, reviewed: true}
       - {text: "court order", lang: any, reviewed: true}
       - {text: "कोर्ट", lang: hi, reviewed: true}
@@ -105,6 +106,20 @@ categories:
       - {text: "गुप्त जांच", lang: hi, reviewed: true}
       - {text: "family ko mat batana", lang: hinglish, reviewed: true}
       - {text: "घर वालों को मत बताना", lang: hi, reviewed: true}
+      - {text: "do not share this with anyone", lang: any, reviewed: true}
+      - {text: "don't share this with anyone", lang: any, reviewed: true}
+      - {text: "don't tell your family", lang: any, reviewed: true}
+      - {text: "do not tell your family", lang: any, reviewed: true}
+      - {text: "do not discuss this with anyone", lang: any, reviewed: true}
+      - {text: "don't discuss this with anyone", lang: any, reviewed: true}
+      - {text: "किसी के साथ शेयर मत करना", lang: hi, reviewed: true}
+      - {text: "किसी से चर्चा मत करना", lang: hi, reviewed: true}
+      - {text: "किसी से शेयर मत करना", lang: hi, reviewed: true}
+      - {text: "परिवार को मत बताना", lang: hi, reviewed: true}
+      - {text: "परिवार को नहीं बताना", lang: hi, reviewed: true}
+      - {text: "kisi ke saath share mat karna", lang: hinglish, reviewed: true}
+      - {text: "kisi se charcha mat karna", lang: hinglish, reviewed: true}
+      - {text: "parivar ko mat batana", lang: hinglish, reviewed: true}
 
   OTP_PIN_REQUEST:
     weight: 4
@@ -394,3 +409,187 @@ types:
   investment_task:
     all_of: [INVESTMENT]
     any_of: [MONEY_TRANSFER, PRIZE_REFUND]
+
+# Generic Advisory & Awareness Data (M3.1b)
+# Single deduplicated list of advisory phrases
+advisory_phrases:
+  - "never share"
+  - "never disclose"
+  - "never give"
+  - "never tell"
+  - "never ask"
+  - "never ask for"
+  - "never call"
+  - "never call asking"
+  - "never call asking for"
+  - "never call you asking"
+  - "never call you asking for"
+  - "never enter"
+  - "never transfer"
+  - "never send"
+  - "never place"
+  - "do not share"
+  - "don't share"
+  - "do not disclose"
+  - "don't disclose"
+  - "do not give"
+  - "don't give"
+  - "do not enter"
+  - "don't enter"
+  - "do not transfer"
+  - "don't transfer"
+  - "do not send"
+  - "don't send"
+  - "police never"
+  - "police and courts never"
+  - "courts never"
+  - "court never"
+  - "cbi never"
+  - "bank never"
+  - "banks never"
+  - "bank will never"
+  - "officers never"
+  - "bank officials never"
+  - "officials never"
+  - "stay vigilant"
+  - "be vigilant"
+  - "remain vigilant"
+  - "stay alert"
+  - "be alert"
+  - "public awareness"
+  - "awareness bulletin"
+  - "awareness message"
+  - "awareness announcement"
+  - "fraud awareness"
+  - "fraud prevention"
+  - "security advisory"
+  - "customer advisory"
+  - "advisory bulletin"
+  - "security reminder"
+  - "prevention announcement"
+  - "report to"
+  - "report on"
+  - "report immediately"
+  - "report immediately to"
+  - "cyber crime portal"
+  - "cybercrime portal"
+  - "helpline 1930"
+  - "helpline one nine three zero"
+  - "helpline number"
+  - "1930 helpline"
+  - "helpline"
+  - "साझा न करें"
+  - "साझा मत करें"
+  - "शेयर न करें"
+  - "शेयर मत करें"
+  - "कभी साझा"
+  - "कभी शेयर"
+  - "कभी न दें"
+  - "मत दें"
+  - "कभी मत दें"
+  - "न दें"
+  - "कभी नहीं मांगता"
+  - "कभी नहीं मांगते"
+  - "कभी नहीं मांगती"
+  - "कभी नहीं मांगते हैं"
+  - "कभी नहीं"
+  - "कभी भी नहीं"
+  - "पुलिस कभी नहीं"
+  - "पुलिस कभी"
+  - "बैंक कभी नहीं"
+  - "बैंक कभी"
+  - "कोर्ट कभी नहीं"
+  - "अदालत कभी नहीं"
+  - "सतर्क रहें"
+  - "सतर्कता"
+  - "सतर्कता संदेश"
+  - "सावधान रहें"
+  - "सावधानी"
+  - "सचेत रहें"
+  - "जागरूकता"
+  - "जागरूकता संदेश"
+  - "सुरक्षा जागरूकता"
+  - "वित्तीय जागरूकता"
+  - "सुरक्षा संदेश"
+  - "एडवाइजरी"
+  - "परामर्श"
+  - "सुरक्षा परामर्श"
+  - "बचाव"
+  - "रिपोर्ट करें"
+  - "साइबर क्राइम"
+  - "साइबर क्राइम पोर्टल"
+  - "शिकायत तुरंत"
+  - "शिकायत"
+
+helpline_numbers:
+  - "1930"
+  - "one nine three zero"
+  - "nineteen thirty"
+  - "unnis tees"
+  - "उन्नीस तीस"
+  - "१९३०"
+  - "100"
+  - "112"
+  - "one one two"
+  - "one zero zero"
+
+advisory_authorities:
+  - "police"
+  - "cbi"
+  - "cyber cell"
+  - "cyber crime"
+  - "bank"
+  - "banks"
+  - "state bank"
+  - "rbi"
+  - "trai"
+  - "court"
+  - "courts"
+  - "high court"
+  - "supreme court"
+  - "customs"
+  - "narcotics"
+  - "crime branch"
+  - "law enforcement"
+  - "officer"
+  - "officers"
+  - "officials"
+  - "dsp"
+  - "dcp"
+  - "inspector"
+  - "पुलिस"
+  - "साइबर सेल"
+  - "साइबर क्राइम"
+  - "सी बी आई"
+  - "सीबीआई"
+  - "बैंक"
+  - "आरबीआई"
+  - "ट्राई"
+  - "कोर्ट"
+  - "अदालत"
+  - "कस्टम्स"
+  - "कस्टम"
+  - "क्राइम ब्रांच"
+  - "अफसर"
+  - "इन्स्पेक्टर"
+
+advisory_frame_keywords:
+  - "fake"
+  - "नकली"
+  - "सावधान"
+  - "सावधानी"
+  - "never"
+  - "कभी नहीं"
+  - "कभी भी नहीं"
+  - "advisory"
+  - "परामर्श"
+  - "awareness"
+  - "जागरूकता"
+  - "report"
+  - "शिकायत"
+  - "beware"
+  - "vigilant"
+  - "सतर्क"
+  - "सचेत"
+  - "prevention"
+

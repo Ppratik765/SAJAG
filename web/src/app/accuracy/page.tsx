@@ -191,7 +191,7 @@ export default function AccuracyPage() {
           <div className="mb-4">
             <h2 className="text-lg font-display font-semibold">Performance by Dataset Split • डेटासेट विभाजन के अनुसार</h2>
             <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>
-              Dev (used for pattern tuning), Test (unseen partition), Holdout (contaminated after M3.1 review), Fresh Holdout (6 new untouched advisory scripts)
+              Dev (used for pattern tuning), Test (unseen partition), Holdout (contaminated after M3.1 review), Fresh Holdout (seen after M3.1b)
             </p>
           </div>
           <div className="overflow-x-auto">
@@ -213,7 +213,7 @@ export default function AccuracyPage() {
                     splitName === "holdout"
                       ? "HOLDOUT (CONTAMINATED AFTER M3.1)"
                       : splitName === "fresh_holdout"
-                      ? "FRESH HOLDOUT (UNTOUCHED)"
+                      ? "FRESH HOLDOUT (SEEN AFTER M3.1B)"
                       : splitName === "test"
                       ? "TEST"
                       : "DEV";

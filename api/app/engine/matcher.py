@@ -48,38 +48,6 @@ EXCLUDED_NEGATION_COMBOS: Set[str] = {
     "मत काटना",
 }
 
-ADVISORY_PHRASES: Set[str] = {
-    # Warning actions (English)
-    "never share", "never disclose", "never give", "never tell", "never ask",
-    "never enter", "never transfer", "never send", "never place",
-    "do not share", "don't share", "do not disclose", "don't disclose",
-    "do not give", "don't give", "do not enter", "don't enter",
-    "do not transfer", "don't transfer", "do not send", "don't send",
-    "police never", "police and courts never", "courts never", "court never", "cbi never",
-    "bank never", "banks never", "bank will never", "officers never",
-    "stay vigilant", "be vigilant", "remain vigilant", "stay alert", "be alert",
-    "public awareness", "awareness bulletin", "awareness message", "awareness announcement",
-    "fraud awareness", "fraud prevention", "security advisory", "customer advisory",
-    "advisory bulletin", "security reminder", "prevention announcement", "awareness announcement",
-    "report to", "report on", "report immediately", "report immediately to",
-    "cyber crime portal", "cybercrime portal", "helpline 1930", "helpline one nine three zero",
-    "helpline number", "1930 helpline", "helpline",
-    # Warning actions (Hindi / Hinglish)
-    "साझा न करें", "साझा मत करें", "शेयर न करें", "शेयर मत करें", "कभी साझा", "कभी शेयर",
-    "कभी न दें", "मत दें", "न दें", "मत बताइए", "मत बताएं", "न बताएं",
-    "कभी नहीं मांगता", "कभी नहीं मांगते", "कभी नहीं मांगती",
-    "पुलिस कभी नहीं", "पुलिस कभी", "बैंक कभी नहीं", "बैंक कभी", "कोर्ट कभी नहीं", "अदालत कभी नहीं",
-    "सतर्क रहें", "सावधान रहें", "सावधानी", "सचेत रहें",
-    "जागरूकता", "जागरूकता संदेश", "सुरक्षा जागरूकता", "वित्तीय जागरूकता", "सुरक्षा संदेश",
-    "एडवाइजरी", "परामर्श", "बचाव",
-    "रिपोर्ट करें", "हेल्पलाइन", "1930", "साइबर क्राइम",
-}
-
-HELPLINE_NUMBERS: Set[str] = {
-    "1930", "one nine three zero", "nineteen thirty", "unnis tees", "उन्नीस तीस", "१९३०",
-    "100", "112", "one one two", "one zero zero",
-}
-
 REQUEST_VERBS: Set[str] = {
     "bataiye",
     "batao",
@@ -174,6 +142,10 @@ class Matcher:
         self.playbook = playbook_data
         self.categories_config = playbook_data.get("categories", {})
         self.types_config = playbook_data.get("types", {})
+        self.advisory_phrases: List[str] = playbook_data.get("advisory_phrases", [])
+        self.helpline_numbers: Set[str] = set(playbook_data.get("helpline_numbers", []))
+        self.advisory_authorities: Set[str] = set(playbook_data.get("advisory_authorities", []))
+        self.advisory_frame_keywords: Set[str] = set(playbook_data.get("advisory_frame_keywords", []))
 
         # Pre-normalize patterns and index them
         self._compiled_patterns = []
@@ -199,6 +171,99 @@ class Matcher:
                         "reviewed": reviewed,
                         "pattern_tokens": norm_pat.split(),
                     })
+
+    def _get_sentence_tokens(
+        self, tokens: List[Dict[str, Any]], tok_start: int, tok_end: int, num_tokens: int
+    ) -> List[Dict[str, Any]]:
+        current_sentence = tokens[tok_start]["sentence_idx"]
+        has_multiple_sentences = (tokens[-1]["sentence_idx"] != tokens[0]["sentence_idx"])
+        if has_multiple_sentences:
+            return [t for t in tokens if t["sentence_idx"] == current_sentence]
+
+        # In an unpunctuated stream, find sentence/clause bounds around match.
+        # Delimit by double space (turn boundary) or window of up to 25 tokens.
+        s_start = tok_start
+        while s_start > 0 and (tok_start - s_start) < 25:
+            if tokens[s_start]["raw_start"] - tokens[s_start - 1]["raw_end"] >= 2:
+                break
+            s_start -= 1
+
+        s_end = tok_end
+        while s_end < num_tokens - 1 and (s_end - tok_end) < 25:
+            if tokens[s_end + 1]["raw_start"] - tokens[s_end]["raw_end"] >= 2:
+                break
+            s_end += 1
+
+        return tokens[s_start : s_end + 1]
+
+    def _is_authority_advisory_sentence(
+        self, sentence_tokens: List[Dict[str, Any]], is_authority_claim: bool = False
+    ) -> bool:
+        sent_words = [t["text"] for t in sentence_tokens]
+        sent_str = " " + " ".join(sent_words) + " "
+
+        # Check for advisory frame
+        def _check_advisory_frame() -> bool:
+            # 1. Advisory phrases from playbook
+            for adv in self.advisory_phrases:
+                if adv in sent_str:
+                    return True
+
+            # 2. Advisory frame keywords with semantic checks
+            # "fake" / "नकली"
+            if " fake " in sent_str or " नकली " in sent_str:
+                is_contraband = any(cb in sent_str for cb in [
+                    "fake passport", "fake debit", "fake credit", "fake currency",
+                    "fake notes", "fake note", "fake id", "fake account", "fake sim",
+                    "नकली पासपोर्ट", "नकली नोट", "नकली करेंसी"
+                ])
+                is_advisory = any(at in sent_str for at in [
+                    "fake call", "fake calls", "fake notice", "fake officer", "fake threatening",
+                    "fake warrant", "fake arrest", "fake threat", "नकली कॉल", "नकली अफसर", "नकली वारंट", "धमकाने वाली"
+                ])
+                if is_advisory or not is_contraband:
+                    return True
+
+            # "never" / "कभी नहीं" / "कभी भी ... नहीं"
+            has_hindi_never = (" कभी " in sent_str or " कभी भी " in sent_str) and (" नहीं " in sent_str or " न " in sent_str)
+            if " never " in sent_str or " कभी नहीं " in sent_str or " कभी भी नहीं " in sent_str or has_hindi_never:
+                if "i have never" in sent_str or "i never" in sent_str or "maine kabhi" in sent_str:
+                    if any(ia in sent_str for ia in ["police never", "courts never", "bank will never", "never transfer", "never share", "कभी भी नहीं करती"]):
+                        return True
+                else:
+                    return True
+
+            # "report" / "शिकायत"
+            if " report " in sent_str or " शिकायत " in sent_str:
+                if any(rw in sent_str for rw in [
+                    "report to", "report on", "report immediately", "report fraud", "report fake",
+                    "report threatening", "report call", "cyber crime portal", "cybercrime", "helpline", "1930",
+                    "रिपोर्ट करें", "शिकायत तुरंत", "शिकायत दर्ज", "पोर्टल पर"
+                ]):
+                    return True
+
+            # "advisory", "awareness", "सावधान", "जागरूकता", "परामर्श", "सतर्क", "prevention", "beware"
+            for kw in ["advisory", "awareness", "सावधान", "सावधानी", "जागरूकता", "परामर्श", "सतर्क", "prevention", "beware"]:
+                if f" {kw} " in sent_str:
+                    return True
+
+            return False
+
+        has_advisory_frame = _check_advisory_frame()
+        if not has_advisory_frame:
+            return False
+
+        # Check authority
+        if is_authority_claim:
+            has_authority = True
+        else:
+            has_authority = any(
+                f" {au} " in sent_str for au in self.advisory_authorities
+            ) or any(
+                au in sent_str for au in self.advisory_authorities
+            )
+
+        return has_advisory_frame and has_authority
 
     def match_text(
         self, norm: NormalizedText, segment_index: int = 0
@@ -263,25 +328,8 @@ class Matcher:
 
                     has_negation = False
 
-                    # Check English & Hindi advisory phrases preceding the pattern
-                    ADVISORY_BEFORE = [
-                        "never share", "never disclose", "never give", "never tell", "never ask",
-                        "never enter", "never transfer", "never send", "never place",
-                        "do not share", "don't share", "do not disclose", "don't disclose",
-                        "do not give", "don't give", "do not enter", "don't enter",
-                        "do not transfer", "don't transfer", "do not send", "don't send",
-                        "police never", "police and courts never", "courts never", "court never", "cbi never",
-                        "bank never", "banks never", "bank will never", "officers never",
-                        "stay vigilant", "be vigilant", "remain vigilant", "stay alert", "be alert",
-                        "public awareness", "awareness bulletin", "fraud awareness", "fraud prevention",
-                        "security advisory", "customer advisory", "advisory bulletin",
-                        "साझा न करें", "साझा मत करें", "शेयर न करें", "शेयर मत करें", "कभी साझा", "कभी शेयर",
-                        "कभी न दें", "मत दें", "कभी मत दें", "न दें", "मत बताएं", "न बताएं",
-                        "पुलिस कभी नहीं", "पुलिस कभी", "बैंक कभी नहीं", "बैंक कभी", "कोर्ट कभी नहीं", "अदालत कभी नहीं",
-                        "सतर्क रहें", "सावधान रहें", "जागरूकता संदेश", "सुरक्षा जागरूकता", "वित्तीय जागरूकता",
-                    ]
-
-                    for adv in ADVISORY_BEFORE:
+                    # Check English & Hindi advisory phrases preceding the pattern (from playbook)
+                    for adv in self.advisory_phrases:
                         if adv in before_str:
                             adv_norm = adv.split()
                             adv_len = len(adv_norm)
@@ -297,6 +345,11 @@ class Matcher:
                                         break
                             if has_negation:
                                 break
+
+                    # For SECRECY: if sharing/telling relates to credentials, it is a credential security advisory
+                    if not has_negation and pat["category"] == "SECRECY":
+                        if any(w in before_str for w in ["otp", "pin", "password", "cvv", "ओटीपी", "पिन", "पासवर्ड", "कोड"]):
+                            has_negation = True
 
                     # Check Hindi warning verbs immediately following credential / coordinate list
                     if not has_negation and pat["category"] in {"OTP_PIN_REQUEST", "MONEY_TRANSFER"}:
@@ -362,6 +415,15 @@ class Matcher:
                                     break
 
                     if has_negation:
+                        continue
+
+                # Generic Rule (M3.1b): An authority name inside a sentence that contains an advisory frame
+                # must not score AUTHORITY_CLAIM, THREAT_ARREST or MONEY_TRANSFER for that sentence.
+                if pat["category"] in {"AUTHORITY_CLAIM", "THREAT_ARREST", "MONEY_TRANSFER"}:
+                    sent_tokens = self._get_sentence_tokens(tokens, tok_start, tok_end, num_tokens)
+                    if self._is_authority_advisory_sentence(
+                        sent_tokens, is_authority_claim=(pat["category"] == "AUTHORITY_CLAIM")
+                    ):
                         continue
 
                 # Context Rule: Authority Claims inside advisory frames
@@ -448,7 +510,7 @@ class Matcher:
                         
                         # Check if this digit sequence is a helpline number (like 1930) or near helpline/report
                         norm_seq = " ".join(tokens[k]["text"] for k in range(idx_tok, j))
-                        is_helpline = norm_seq in HELPLINE_NUMBERS or any(hn in norm_seq for hn in ["1930", "one nine three zero", "nineteen thirty", "उन्नीस तीस"])
+                        is_helpline = norm_seq in self.helpline_numbers or any(hn in norm_seq for hn in self.helpline_numbers)
                         nearby_words = [tokens[k]["text"] for k in range(max(0, idx_tok - 4), min(num_tokens, j + 4))]
                         if any(w in {"helpline", "report", "portal", "cybercrime", "crime", "हेल्पलाइन", "रिपोर्ट", "पोर्टल"} for w in nearby_words):
                             is_helpline = True
@@ -478,6 +540,10 @@ class Matcher:
                     if tokens[wi]["text"] in AMOUNT_KEYWORDS:
                         start_tok = min(ti, wi)
                         end_tok = max(ti, wi)
+                        # Check generic authority advisory rule for MONEY_TRANSFER
+                        sent_tokens = self._get_sentence_tokens(tokens, start_tok, end_tok, num_tokens)
+                        if self._is_authority_advisory_sentence(sent_tokens, is_authority_claim=False):
+                            break
                         ev_text, r_start, r_end = norm.get_raw_substring(
                             tokens[start_tok]["norm_start"], tokens[end_tok]["norm_end"]
                         )
