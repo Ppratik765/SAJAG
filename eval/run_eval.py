@@ -253,6 +253,15 @@ async def evaluate_clip(
         "primary_type": final_result.primary_type,
         "score": final_result.score,
         "signals_count": len(final_result.signals),
+        "signals": [
+            {
+                "id": sig.id,
+                "category": sig.category,
+                "evidence": sig.evidence,
+                "weight": sig.weight,
+            }
+            for sig in final_result.signals
+        ],
         "transcript": full_transcript,
         "audio_duration_seconds": round(audio_duration, 2),
         "cer": cer,
@@ -401,7 +410,7 @@ async def main() -> None:
     parser = argparse.ArgumentParser(description="Run Sajag corpus evaluation harness")
     parser.add_argument("--script-id", help="Single script ID to evaluate")
     parser.add_argument("--script-ids", nargs="+", help="Explicit list of script IDs to evaluate")
-    parser.add_argument("--split", choices=["dev", "test", "holdout", "all"], default="all", help="Dataset split (default: all)")
+    parser.add_argument("--split", choices=["dev", "test", "holdout", "fresh_holdout", "all"], default="all", help="Dataset split (default: all)")
     parser.add_argument("--label", choices=["scam", "legit", "all"], default="all", help="Filter by label (scam, legit, all)")
     parser.add_argument("--variants", nargs="+", default=["clean"], help="Variants to evaluate: clean, tel, tel_noise15, tel_noise5")
     parser.add_argument("--calibration-only", action="store_true", help="Run only on calibration scripts")

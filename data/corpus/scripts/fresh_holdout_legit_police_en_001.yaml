@@ -1,0 +1,17 @@
+id: fresh_holdout_legit_police_en_001
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: fresh_holdout
+turns:
+- speaker: caller
+  text: Hello, this is a public safety advisory broadcast from the Cyber Crime Prevention Cell.
+- speaker: victim
+  text: Go ahead, what is this regarding?
+- speaker: caller
+  text: Please be aware that law enforcement agencies and court officers never place people under digital arrest or conduct interrogations over WhatsApp or Skype. There is no provision for digital arrest under Indian criminal law.
+- speaker: victim
+  text: Understood, that is very important to know.
+- speaker: caller
+  text: Never transfer money to unknown accounts for clearance or bail. Report fake threatening calls right now on the National Cyber Crime Portal.

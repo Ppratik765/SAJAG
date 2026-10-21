@@ -1,0 +1,17 @@
+id: fresh_holdout_legit_telecom_en_001
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: fresh_holdout
+turns:
+- speaker: caller
+  text: Greetings from the Department of Telecommunications public awareness service.
+- speaker: victim
+  text: Yes, what is the notice?
+- speaker: caller
+  text: Telecom authorities never call subscribers threatening mobile number deactivation or SIM block within two hours. Do not panic and do not share any personal identification documents with unknown callers.
+- speaker: victim
+  text: Thank you, I will keep this in mind.
+- speaker: caller
+  text: Verify all mobile connections on the official Sanchar Saathi portal and report fraudulent communications on the Chakshu facility or helpline 1930.

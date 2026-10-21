@@ -48,6 +48,38 @@ EXCLUDED_NEGATION_COMBOS: Set[str] = {
     "मत काटना",
 }
 
+ADVISORY_PHRASES: Set[str] = {
+    # Warning actions (English)
+    "never share", "never disclose", "never give", "never tell", "never ask",
+    "never enter", "never transfer", "never send", "never place",
+    "do not share", "don't share", "do not disclose", "don't disclose",
+    "do not give", "don't give", "do not enter", "don't enter",
+    "do not transfer", "don't transfer", "do not send", "don't send",
+    "police never", "police and courts never", "courts never", "court never", "cbi never",
+    "bank never", "banks never", "bank will never", "officers never",
+    "stay vigilant", "be vigilant", "remain vigilant", "stay alert", "be alert",
+    "public awareness", "awareness bulletin", "awareness message", "awareness announcement",
+    "fraud awareness", "fraud prevention", "security advisory", "customer advisory",
+    "advisory bulletin", "security reminder", "prevention announcement", "awareness announcement",
+    "report to", "report on", "report immediately", "report immediately to",
+    "cyber crime portal", "cybercrime portal", "helpline 1930", "helpline one nine three zero",
+    "helpline number", "1930 helpline", "helpline",
+    # Warning actions (Hindi / Hinglish)
+    "साझा न करें", "साझा मत करें", "शेयर न करें", "शेयर मत करें", "कभी साझा", "कभी शेयर",
+    "कभी न दें", "मत दें", "न दें", "मत बताइए", "मत बताएं", "न बताएं",
+    "कभी नहीं मांगता", "कभी नहीं मांगते", "कभी नहीं मांगती",
+    "पुलिस कभी नहीं", "पुलिस कभी", "बैंक कभी नहीं", "बैंक कभी", "कोर्ट कभी नहीं", "अदालत कभी नहीं",
+    "सतर्क रहें", "सावधान रहें", "सावधानी", "सचेत रहें",
+    "जागरूकता", "जागरूकता संदेश", "सुरक्षा जागरूकता", "वित्तीय जागरूकता", "सुरक्षा संदेश",
+    "एडवाइजरी", "परामर्श", "बचाव",
+    "रिपोर्ट करें", "हेल्पलाइन", "1930", "साइबर क्राइम",
+}
+
+HELPLINE_NUMBERS: Set[str] = {
+    "1930", "one nine three zero", "nineteen thirty", "unnis tees", "उन्नीस तीस", "१९३०",
+    "100", "112", "one one two", "one zero zero",
+}
+
 REQUEST_VERBS: Set[str] = {
     "bataiye",
     "batao",
@@ -210,49 +242,158 @@ class Matcher:
 
                 current_sentence = tokens[tok_start]["sentence_idx"]
 
-                # Context Rule 1: Negation / Warning Suppression
-                # Strictly check tokens outside the pattern itself, within the SAME sentence
+                # Context Rule 1: Negation / Warning & Advisory Frame Suppression
+                # Check tokens outside the pattern itself, within the same clause/sentence
                 if pat["category"] in {"OTP_PIN_REQUEST", "MONEY_TRANSFER", "SECRECY", "THREAT_ARREST", "ISOLATION"}:
+                    # Backward window: check up to 10 tokens before
                     before_indices = [
-                        ti for ti in range(max(0, tok_start - 6), tok_start)
+                        ti for ti in range(max(0, tok_start - 10), tok_start)
                         if tokens[ti]["sentence_idx"] == current_sentence
                     ]
+                    # Forward window: Hindi negation follows coordinate list (up to 8 tokens)
                     after_indices = [
-                        ti for ti in range(tok_end + 1, min(num_tokens, tok_end + 7))
+                        ti for ti in range(tok_end + 1, min(num_tokens, tok_end + 9))
                         if tokens[ti]["sentence_idx"] == current_sentence
                     ]
+
+                    before_words = [tokens[ti]["text"] for ti in before_indices]
+                    before_str = " " + " ".join(before_words) + " "
+                    after_words = [tokens[ti]["text"] for ti in after_indices]
+                    after_str = " " + " ".join(after_words) + " "
 
                     has_negation = False
-                    for ti in before_indices + after_indices:
-                        tok_word = tokens[ti]["text"]
-                        
-                        # Check if this token is part of an excluded combo like 'mat batana' or 'mat kaatna'
-                        is_combo = False
-                        if ti + 1 < num_tokens:
-                            combo = f"{tok_word} {tokens[ti+1]['text']}"
-                            if combo in EXCLUDED_NEGATION_COMBOS:
-                                is_combo = True
-                        if ti > 0:
-                            combo_prev = f"{tokens[ti-1]['text']} {tok_word}"
-                            if combo_prev in EXCLUDED_NEGATION_COMBOS:
-                                is_combo = True
 
-                        if is_combo:
-                            continue
+                    # Check English & Hindi advisory phrases preceding the pattern
+                    ADVISORY_BEFORE = [
+                        "never share", "never disclose", "never give", "never tell", "never ask",
+                        "never enter", "never transfer", "never send", "never place",
+                        "do not share", "don't share", "do not disclose", "don't disclose",
+                        "do not give", "don't give", "do not enter", "don't enter",
+                        "do not transfer", "don't transfer", "do not send", "don't send",
+                        "police never", "police and courts never", "courts never", "court never", "cbi never",
+                        "bank never", "banks never", "bank will never", "officers never",
+                        "stay vigilant", "be vigilant", "remain vigilant", "stay alert", "be alert",
+                        "public awareness", "awareness bulletin", "fraud awareness", "fraud prevention",
+                        "security advisory", "customer advisory", "advisory bulletin",
+                        "साझा न करें", "साझा मत करें", "शेयर न करें", "शेयर मत करें", "कभी साझा", "कभी शेयर",
+                        "कभी न दें", "मत दें", "कभी मत दें", "न दें", "मत बताएं", "न बताएं",
+                        "पुलिस कभी नहीं", "पुलिस कभी", "बैंक कभी नहीं", "बैंक कभी", "कोर्ट कभी नहीं", "अदालत कभी नहीं",
+                        "सतर्क रहें", "सावधान रहें", "जागरूकता संदेश", "सुरक्षा जागरूकता", "वित्तीय जागरूकता",
+                    ]
 
-                        if tok_word in NEGATION_TOKENS:
-                            has_negation = True
-                            break
-                        if ti + 1 < num_tokens:
-                            two_word = f"{tok_word} {tokens[ti+1]['text']}"
-                            if two_word in {
-                                "do not", "don't", "mat karna", "मत करना", "kabhi mat", "कभी मत",
-                                "caller threatening", "any caller", "fraud prevention", "security advisory"
-                            }:
-                                has_negation = True
+                    for adv in ADVISORY_BEFORE:
+                        if adv in before_str:
+                            adv_norm = adv.split()
+                            adv_len = len(adv_norm)
+                            for bi in range(len(before_words) - adv_len + 1):
+                                if before_words[bi:bi+adv_len] == adv_norm:
+                                    intervening = before_words[bi+adv_len:]
+                                    has_intervening_demand = any(
+                                        w in {"bataiye", "batao", "bhejiye", "bhejo", "dijiye", "enter", "warrant", "active", "mandate", "demand"}
+                                        for w in intervening
+                                    )
+                                    if not has_intervening_demand:
+                                        has_negation = True
+                                        break
+                            if has_negation:
                                 break
 
+                    # Check Hindi warning verbs immediately following credential / coordinate list
+                    if not has_negation and pat["category"] in {"OTP_PIN_REQUEST", "MONEY_TRANSFER"}:
+                        for adv_post in [
+                            "share mat", "शेयर मत", "साझा मत", "मत देना", "मत बताना", "मत करना", "mat karna",
+                            "न दें", "शेयर न", "साझा न", "कभी मत", "kabhi mat", "नहीं मांगता", "नहीं मांगते",
+                            "savdhan", "सावधान", "fraud calls",
+                        ]:
+                            if adv_post in after_str:
+                                # Ensure no intervening demand verb
+                                post_idx = after_str.find(adv_post)
+                                intervening_post = after_str[:post_idx].split()
+                                if not any(w in {"bataiye", "batao", "bhejiye", "bhejo", "dijiye", "enter", "share"} for w in intervening_post):
+                                    has_negation = True
+                                    break
+
+                    # Check standard negation tokens in standard window (max 5 tokens before, 3 tokens after)
+                    if not has_negation:
+                        std_before = [
+                            ti for ti in range(max(0, tok_start - 5), tok_start)
+                            if tokens[ti]["sentence_idx"] == current_sentence
+                        ]
+                        std_after = [
+                            ti for ti in range(tok_end + 1, min(num_tokens, tok_end + 4))
+                            if tokens[ti]["sentence_idx"] == current_sentence
+                        ]
+                        for ti in std_before + std_after:
+                            tok_word = tokens[ti]["text"]
+
+                            # Check excluded combos like 'mat batana' (secrecy) or 'do not tell' (secrecy)
+                            is_combo = False
+                            if ti + 1 < num_tokens:
+                                combo = f"{tok_word} {tokens[ti+1]['text']}"
+                                if combo in EXCLUDED_NEGATION_COMBOS or combo in {"do not tell", "don't tell", "dont tell", "do not disconnect", "don't disconnect"}:
+                                    is_combo = True
+                            if ti > 0:
+                                combo_prev = f"{tokens[ti-1]['text']} {tok_word}"
+                                if combo_prev in EXCLUDED_NEGATION_COMBOS:
+                                    is_combo = True
+
+                            if is_combo:
+                                continue
+
+                            if tok_word in NEGATION_TOKENS:
+                                # For THREAT_ARREST, only negate if directly attached to advisory verbs, not victim denial like "never engaged"
+                                if pat["category"] == "THREAT_ARREST":
+                                    if tok_word in {"fake", "नकली", "beware", "सावधान"}:
+                                        has_negation = True
+                                        break
+                                else:
+                                    has_negation = True
+                                    break
+
+                            if ti + 1 < num_tokens:
+                                two_word = f"{tok_word} {tokens[ti+1]['text']}"
+                                if two_word in {
+                                    "do not", "don't", "mat karna", "मत करना", "kabhi mat", "कभी मत",
+                                    "caller threatening", "any caller", "fraud prevention", "security advisory",
+                                    "never share", "police never", "courts never", "bank never", "stay vigilant",
+                                    "साझा न", "शेयर न", "मत देना", "सतर्क रहें", "सावधान रहें"
+                                }:
+                                    has_negation = True
+                                    break
+
                     if has_negation:
+                        continue
+
+                # Context Rule: Authority Claims inside advisory frames
+                if pat["category"] == "AUTHORITY_CLAIM":
+                    # Check if authority is stating institutional negation (e.g. "police and courts never", "police never", "bank will never")
+                    post_auth_tokens = [tokens[ti]["text"] for ti in range(tok_end + 1, min(num_tokens, tok_end + 5))]
+                    post_auth_str = " ".join(post_auth_tokens)
+                    if any(pw in post_auth_str for pw in ["never", "will never", "and courts never", "kabhi nahi", "कभी नहीं", "डू नॉट", "do not"]):
+                        continue
+
+                    # Check if authority is part of an awareness bulletin / advisory header
+                    surrounding_tokens = [
+                        tokens[ti]["text"] for ti in range(max(0, tok_start - 6), min(num_tokens, tok_end + 7))
+                    ]
+                    surrounding_str = " ".join(surrounding_tokens)
+                    if any(aw in surrounding_str for aw in [
+                        "public awareness", "awareness bulletin", "awareness message", "awareness announcement",
+                        "fraud prevention", "security advisory", "customer advisory", "advisory bulletin",
+                        "जागरूकता", "सुरक्षा जागरूकता", "वित्तीय जागरूकता",
+                    ]):
+                        continue
+
+                # Context Rule: Urgency inside reporting/helpline frames
+                if pat["category"] == "URGENCY":
+                    surrounding_tokens = [
+                        tokens[ti]["text"] for ti in range(max(0, tok_start - 4), min(num_tokens, tok_end + 5))
+                    ]
+                    surrounding_str = " ".join(surrounding_tokens)
+                    if any(rw in surrounding_str for rw in [
+                        "report", "helpline", "1930", "cybercrime", "cyber crime", "portal",
+                        "रिपोर्ट", "शिकायत", "हेल्पलाइन", "पोर्टल", "one nine three zero"
+                    ]):
                         continue
 
                 # Context Rule 3: needs_request_context
@@ -292,8 +433,6 @@ class Matcher:
         # Context Rule: Spoken digit sequence following code request
         has_code_request = any(
             m["category"] == "OTP_PIN_REQUEST" for m in raw_matches
-        ) or any(
-            kw in padded_norm for kw in ["code", "otp", "password", "pin", "verification", "authorization", "कोड", "ओटीपी"]
         )
         if has_code_request:
             idx_tok = 0
@@ -306,7 +445,15 @@ class Matcher:
                         seq_norm_start = tokens[idx_tok]["norm_start"]
                         seq_norm_end = tokens[j - 1]["norm_end"]
                         ev_text, r_start, r_end = norm.get_raw_substring(seq_norm_start, seq_norm_end)
-                        if ev_text:
+                        
+                        # Check if this digit sequence is a helpline number (like 1930) or near helpline/report
+                        norm_seq = " ".join(tokens[k]["text"] for k in range(idx_tok, j))
+                        is_helpline = norm_seq in HELPLINE_NUMBERS or any(hn in norm_seq for hn in ["1930", "one nine three zero", "nineteen thirty", "उन्नीस तीस"])
+                        nearby_words = [tokens[k]["text"] for k in range(max(0, idx_tok - 4), min(num_tokens, j + 4))]
+                        if any(w in {"helpline", "report", "portal", "cybercrime", "crime", "हेल्पलाइन", "रिपोर्ट", "पोर्टल"} for w in nearby_words):
+                            is_helpline = True
+
+                        if ev_text and not is_helpline:
                             raw_matches.append({
                                 "category": "OTP_PIN_REQUEST",
                                 "base_weight": 3,
@@ -348,6 +495,32 @@ class Matcher:
                                 "segment_index": segment_index,
                             })
                         break
+
+        # Institutional Advisory Context:
+        is_advisory_call = any(
+            hdr in padded_norm for hdr in [
+                "public awareness bulletin", "awareness bulletin", "fraud prevention announcement",
+                "fraud awareness", "customer security advisory", "security advisory",
+                "सुरक्षा जागरूकता सेवा", "सुरक्षा जागरूकता", "वित्तीय जागरूकता संदेश", "वित्तीय जागरूकता",
+                "जागरूकता सेवा", "ग्राहक सुरक्षा", "rbi public awareness", "bulletin from the reserve bank",
+                "fraud prevention unit"
+            ]
+        ) and any(
+            adv in padded_norm for adv in [
+                "never share", "police never", "courts never", "bank will never", "stay vigilant",
+                "helpline", "1930", "cyber crime", "साझा न करें", "शेयर न करें", "सतर्क रहें", "सावधान रहें"
+            ]
+        )
+
+        if is_advisory_call:
+            has_unnegated_demands = any(
+                (m["category"] in {"OTP_PIN_REQUEST", "MONEY_TRANSFER"} and m.get("has_request_context", True)) or
+                m["category"] == "REMOTE_ACCESS_APP" or
+                (m["category"] in {"ISOLATION", "THREAT_ARREST"} and m["base_weight"] >= 3)
+                for m in raw_matches
+            )
+            if not has_unnegated_demands:
+                raw_matches = []
 
         deduped_matches = self._deduplicate_matches(raw_matches)
 

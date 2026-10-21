@@ -40,6 +40,12 @@ interface EvalReport {
     primary_type: string;
     score: number;
     signals_count: number;
+    signals?: Array<{
+      id: string;
+      category: string;
+      evidence: string;
+      weight: number;
+    }>;
     transcript: string;
     audio_duration_seconds: number;
     time_to_detect_likely_scam: number | null;
@@ -185,7 +191,7 @@ export default function AccuracyPage() {
           <div className="mb-4">
             <h2 className="text-lg font-display font-semibold">Performance by Dataset Split • डेटासेट विभाजन के अनुसार</h2>
             <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>
-              Dev (used for pattern tuning), Test (unseen partition), Holdout (30 fresh scripts evaluated exactly once after playbook freeze)
+              Dev (used for pattern tuning), Test (unseen partition), Holdout (contaminated after M3.1 review), Fresh Holdout (6 new untouched advisory scripts)
             </p>
           </div>
           <div className="overflow-x-auto">
@@ -202,29 +208,42 @@ export default function AccuracyPage() {
                 </tr>
               </thead>
               <tbody className="divide-y" style={{ borderColor: "var(--rule)" }}>
-                {Object.entries(per_split).map(([splitName, m]: [string, any]) => (
-                  <tr key={splitName} className="py-2">
-                    <td className="py-2.5 font-medium">
-                      <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                        splitName === "holdout" 
-                          ? "bg-purple-100 text-purple-800 dark:bg-purple-950/50 dark:text-purple-300" 
-                          : splitName === "test"
-                          ? "bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-300"
-                          : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
-                      }`}>
-                        {splitName.toUpperCase()}
-                      </span>
-                    </td>
-                    <td className="py-2.5">{m.total_clips}</td>
-                    <td className="py-2.5">{m.fp + m.tn === 0 ? "N/A" : `${(m.precision * 100).toFixed(1)}%`}</td>
-                    <td className="py-2.5">{(m.recall * 100).toFixed(1)}%</td>
-                    <td className="py-2.5">{m.f1.toFixed(3)}</td>
-                    <td className="py-2.5" style={{ color: m.false_positive_rate === 0 ? "#15803d" : "var(--stamp)" }}>
-                      {(m.false_positive_rate * 100).toFixed(1)}%
-                    </td>
-                    <td className="py-2.5">{(m.type_accuracy * 100).toFixed(1)}%</td>
-                  </tr>
-                ))}
+                {Object.entries(per_split).map(([splitName, m]: [string, any]) => {
+                  const label =
+                    splitName === "holdout"
+                      ? "HOLDOUT (CONTAMINATED AFTER M3.1)"
+                      : splitName === "fresh_holdout"
+                      ? "FRESH HOLDOUT (UNTOUCHED)"
+                      : splitName === "test"
+                      ? "TEST"
+                      : "DEV";
+                  const badgeColor =
+                    splitName === "fresh_holdout"
+                      ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
+                      : splitName === "holdout"
+                      ? "bg-purple-100 text-purple-800 dark:bg-purple-950/50 dark:text-purple-300"
+                      : splitName === "test"
+                      ? "bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-300"
+                      : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200";
+
+                  return (
+                    <tr key={splitName} className="py-2">
+                      <td className="py-2.5 font-medium">
+                        <span className={`px-2 py-0.5 rounded text-xs font-semibold ${badgeColor}`}>
+                          {label}
+                        </span>
+                      </td>
+                      <td className="py-2.5">{m.total_clips}</td>
+                      <td className="py-2.5">{m.fp + m.tn === 0 ? "N/A" : `${(m.precision * 100).toFixed(1)}%`}</td>
+                      <td className="py-2.5">{m.tp + m.fn === 0 ? "N/A" : `${(m.recall * 100).toFixed(1)}%`}</td>
+                      <td className="py-2.5">{m.f1.toFixed(3)}</td>
+                      <td className="py-2.5" style={{ color: m.false_positive_rate === 0 ? "#15803d" : "var(--stamp)" }}>
+                        {(m.false_positive_rate * 100).toFixed(1)}%
+                      </td>
+                      <td className="py-2.5">{m.tp === 0 ? "N/A" : `${(m.type_accuracy * 100).toFixed(1)}%`}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

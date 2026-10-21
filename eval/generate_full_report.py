@@ -30,8 +30,9 @@ async def main() -> None:
     dev_scripts = [s for s in scripts if s.split == "dev"]
     test_scripts = [s for s in scripts if s.split == "test"]
     holdout_scripts = [s for s in scripts if s.split == "holdout"]
+    fresh_holdout_scripts = [s for s in scripts if s.split == "fresh_holdout"]
 
-    print(f"Loaded scripts: dev={len(dev_scripts)}, test={len(test_scripts)}, holdout={len(holdout_scripts)}")
+    print(f"Loaded scripts: dev={len(dev_scripts)}, test={len(test_scripts)}, holdout={len(holdout_scripts)}, fresh_holdout={len(fresh_holdout_scripts)}")
 
     all_items = []
 
@@ -43,7 +44,7 @@ async def main() -> None:
             if wav_path.is_file():
                 res = await evaluate_clip(wav_path, s, "clean", hinglish_stt_lang="en-IN", client=client)
                 all_items.append(res)
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.02)
 
         # 2. Evaluate test scripts (clean)
         print("Evaluating test scripts (clean)...")
@@ -52,7 +53,7 @@ async def main() -> None:
             if wav_path.is_file():
                 res = await evaluate_clip(wav_path, s, "clean", hinglish_stt_lang="en-IN", client=client)
                 all_items.append(res)
-                await asyncio.sleep(0.2)
+                await asyncio.sleep(0.02)
 
         # 3. Evaluate holdout scripts (clean and tel)
         print("Evaluating holdout scripts (clean and tel)...")
@@ -62,7 +63,17 @@ async def main() -> None:
                 if wav_path.is_file():
                     res = await evaluate_clip(wav_path, s, variant, hinglish_stt_lang="en-IN", client=client)
                     all_items.append(res)
-                    await asyncio.sleep(0.1)
+                    await asyncio.sleep(0.02)
+
+        # 4. Evaluate fresh holdout scripts (clean and tel)
+        print("Evaluating fresh holdout scripts (clean and tel)...")
+        for s in fresh_holdout_scripts:
+            for variant in ("clean", "tel"):
+                wav_path = CORPUS_AUDIO_DIR / variant / f"{s.id}.wav"
+                if wav_path.is_file():
+                    res = await evaluate_clip(wav_path, s, variant, hinglish_stt_lang="en-IN", client=client)
+                    all_items.append(res)
+                    await asyncio.sleep(0.02)
 
     print(f"Total evaluated clips: {len(all_items)}")
 
@@ -73,6 +84,7 @@ async def main() -> None:
         "dev": compute_metrics([it for it in all_items if it.get("split") == "dev"]),
         "test": compute_metrics([it for it in all_items if it.get("split") == "test"]),
         "holdout": compute_metrics([it for it in all_items if it.get("split") == "holdout"]),
+        "fresh_holdout": compute_metrics([it for it in all_items if it.get("split") == "fresh_holdout"]),
     }
 
     per_language = {}
@@ -97,6 +109,7 @@ async def main() -> None:
             "dev_count": len(dev_scripts),
             "test_count": len(test_scripts),
             "holdout_count": len(holdout_scripts),
+            "fresh_holdout_count": len(fresh_holdout_scripts),
         },
         "overall": overall_metrics,
         "per_split": per_split,

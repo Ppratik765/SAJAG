@@ -1,0 +1,17 @@
+id: fresh_holdout_legit_police_hi_001
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: fresh_holdout
+turns:
+- speaker: caller
+  text: नमस्ते, पुलिस साइबर सेल की ओर से यह आम जनता के लिए सुरक्षा परामर्श और जागरूकता संदेश है।
+- speaker: victim
+  text: जी, मैं सुन रहा हूँ।
+- speaker: caller
+  text: ध्यान दें, पुलिस या सीबीआई कभी भी वीडियो कॉल पर डिजिटल अरेस्ट नहीं करती और न ही जमानत के नाम पर पैसे ट्रांसफर करने को कहती है। यह पूरी तरह से धोखाधड़ी है।
+- speaker: victim
+  text: धन्यवाद सर, यह जानकारी बहुत जरूरी थी।
+- speaker: caller
+  text: डरे नहीं और किसी भी धमकाने वाली कॉल की शिकायत तुरंत नेशनल साइबर क्राइम पोर्टल पर दर्ज करवाएं।

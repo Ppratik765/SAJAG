@@ -1,0 +1,17 @@
+id: fresh_holdout_legit_bank_hi_001
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: fresh_holdout
+turns:
+- speaker: caller
+  text: नमस्कार, यह आपके बैंक की ओर से एक महत्वपूर्ण वित्तीय सुरक्षा जागरूकता संदेश है।
+- speaker: victim
+  text: हाँ जी, बताइए।
+- speaker: caller
+  text: सावधान रहें, बैंक अधिकारी कभी भी फोन पर आपसे गुप्त ओटीपी, एटीएम पिन या पासवर्ड नहीं मांगते। किसी भी अनजान व्यक्ति के साथ अपना कोड साझा मत कीजिए।
+- speaker: victim
+  text: जी बिल्कुल, मैं कभी किसी को नहीं बताती।
+- speaker: caller
+  text: सतर्क रहिए और फर्जी कॉल्स आने पर तुरंत अपनी बैंक शाखा या साइबर हेल्पलाइन 1930 पर संपर्क करें।

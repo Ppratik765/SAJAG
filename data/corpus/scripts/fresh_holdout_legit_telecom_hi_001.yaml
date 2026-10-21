@@ -1,0 +1,17 @@
+id: fresh_holdout_legit_telecom_hi_001
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: fresh_holdout
+turns:
+- speaker: caller
+  text: नमस्कार, दूरसंचार विभाग की ओर से यह एक जरूरी ग्राहक सुरक्षा जागरूकता सूचना है।
+- speaker: victim
+  text: हाँ, क्या बात है?
+- speaker: caller
+  text: ट्राई या दूरसंचार विभाग कभी भी सिम कार्ड ब्लॉक या नंबर बंद करने की धमकी देकर पैसे नहीं मांगता। बिजली बिल या सिम केवाईसी के नाम पर कोई भी ऐप डाउनलोड न करें।
+- speaker: victim
+  text: ठीक है, मैं समझ गया।
+- speaker: caller
+  text: सावधानी बरतें और किसी भी संदिग्ध कॉल की सूचना तुरंत संचार साथी पोर्टल या 1930 पर दें।

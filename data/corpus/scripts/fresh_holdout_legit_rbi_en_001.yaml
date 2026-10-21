@@ -1,0 +1,17 @@
+id: fresh_holdout_legit_rbi_en_001
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: fresh_holdout
+turns:
+- speaker: caller
+  text: This is a public awareness announcement from the Reserve Bank of India Financial Education Desk.
+- speaker: victim
+  text: Yes, I am listening.
+- speaker: caller
+  text: Always remember that banks and RBI never ask for your confidential card PIN, CVV, or one-time verification password over the phone. Never enter your credentials on unverified third-party web links.
+- speaker: victim
+  text: Thank you for the awareness reminder.
+- speaker: caller
+  text: Stay alert against fraudulent callers. If you notice any unauthorized transaction, report immediately to your branch or cyber crime helpline 1930.
