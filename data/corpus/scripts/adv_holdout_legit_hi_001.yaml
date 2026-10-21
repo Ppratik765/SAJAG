@@ -1,0 +1,17 @@
+id: adv_holdout_legit_hi_001
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: केनरा बैंक ग्राहक सुरक्षा एवं सतर्कता सेवा से परामर्श।
+- speaker: victim
+  text: जी क्या बात है?
+- speaker: caller
+  text: बैंक कभी भी फोन पर ग्राहकों से पासवर्ड, डेबिट कार्ड पिन या ओटीपी नहीं मांगता। किसी भी अनजान व्यक्ति के साथ यह जानकारी साझा मत कीजिए।
+- speaker: victim
+  text: जी मुझे जानकारी है, धन्यवाद।
+- speaker: caller
+  text: किसी भी अनजान ऐप को अपने फोन में डाउनलोड न करें और सतर्क रहें।

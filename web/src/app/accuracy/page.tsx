@@ -244,6 +244,33 @@ export default function AccuracyPage() {
                     </tr>
                   );
                 })}
+                {/* M4a Adversarial Text-Only Evaluation Rows */}
+                <tr className="py-2 border-t" style={{ borderColor: "var(--rule)" }}>
+                  <td className="py-2.5 font-medium">
+                    <span className="px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-900 dark:bg-amber-950/50 dark:text-amber-300">
+                      ADV DEV (TEXT ONLY)
+                    </span>
+                  </td>
+                  <td className="py-2.5">16</td>
+                  <td className="py-2.5">70.0%</td>
+                  <td className="py-2.5">87.5%</td>
+                  <td className="py-2.5">0.778</td>
+                  <td className="py-2.5" style={{ color: "var(--stamp)" }}>37.5%</td>
+                  <td className="py-2.5">87.5%</td>
+                </tr>
+                <tr className="py-2">
+                  <td className="py-2.5 font-medium">
+                    <span className="px-2 py-0.5 rounded text-xs font-semibold bg-rose-100 text-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+                      ADV HOLDOUT (TEXT ONLY)
+                    </span>
+                  </td>
+                  <td className="py-2.5">16</td>
+                  <td className="py-2.5">75.0%</td>
+                  <td className="py-2.5">75.0%</td>
+                  <td className="py-2.5">0.750</td>
+                  <td className="py-2.5" style={{ color: "var(--stamp)" }}>25.0%</td>
+                  <td className="py-2.5">75.0%</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -378,6 +405,9 @@ export default function AccuracyPage() {
         <ul className="space-y-2 text-sm pl-7 list-disc">
           <li>
             <strong>Process Invariant:</strong> The synthetic dialogue scripts and the detection rules were authored by the same engineering process.
+          </li>
+          <li>
+            <strong>Advisory Imitation Scams:</strong> Scam calls that imitate advisory language: hardened in M4a, measured on 32 scripts (text only), see table.
           </li>
           <li>
             <strong>Audio Cleanliness:</strong> Synthetic TTS speech passed directly to STT is substantially cleaner than real telephony calls (lacks low-bitrate carrier codecs, packet drop, acoustic echo, and heavy background noise).

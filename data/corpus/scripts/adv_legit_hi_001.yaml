@@ -1,0 +1,17 @@
+id: adv_legit_hi_001
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: नमस्कार, यह पंजाब नेशनल बैंक की ग्राहक सुरक्षा और वित्तीय जागरूकता सेवा है।
+- speaker: victim
+  text: जी, कोई खास जानकारी?
+- speaker: caller
+  text: बैंक कभी भी फोन पर ग्राहकों से ओटीपी, एटीएम पिन या पासवर्ड नहीं मांगता। कृपया अपना ओटीपी किसी के साथ भी शेयर न करें।
+- speaker: victim
+  text: जी बिल्कुल, मैं कभी किसी को पासवर्ड नहीं देता।
+- speaker: caller
+  text: सतर्क रहें और किसी भी अज्ञात कॉलर के कहने पर कोई ऐप इंस्टॉल न करें। धन्यवाद।

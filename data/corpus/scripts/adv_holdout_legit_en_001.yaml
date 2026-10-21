@@ -1,0 +1,17 @@
+id: adv_holdout_legit_en_001
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: Good day, this is Kotak Mahindra Bank fraud prevention unit calling with a security verification.
+- speaker: victim
+  text: Hello, has something happened to my savings account?
+- speaker: caller
+  text: We have stopped an unauthorized online debit of thirty thousand rupees on your debit card. Please note, bank employees never ask for your card PIN or OTP. Please do not share any password with anyone, even me.
+- speaker: victim
+  text: Thank you for stopping that transaction.
+- speaker: caller
+  text: Your card has been temporarily locked for safety. Please visit NetBanking or your local branch to unblock it. Never transfer funds to unknown accounts.

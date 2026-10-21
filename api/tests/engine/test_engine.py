@@ -766,3 +766,41 @@ def test_generic_authority_advisory_rule():
         assert "MONEY_TRANSFER" not in fired_cats, f"MONEY_TRANSFER fired for: '{text}'"
         assert res.level == "safe"
 
+
+def test_m4a_advisory_imitation_resolution():
+    """M4a: Advisory imitation sentences must not be suppressed by advisory keywords,
+    while explicit negated directives remain protected/safe."""
+    # Problem 1: Imitating RBI advisory but demanding OTP
+    t1 = "This is RBI security advisory. Your account will be frozen. Be alert and tell me the OTP right now."
+    res1 = analyze_text(t1)
+    level_order = {"safe": 0, "suspicious": 1, "likely_scam": 2, "scam": 3}
+    assert level_order[res1.level] >= level_order["likely_scam"], f"Expected >= likely_scam, got {res1.level} (score: {res1.score})"
+    cats1 = {s.category for s in res1.signals}
+    assert "OTP_PIN_REQUEST" in cats1
+
+    # Problem 2: Imitating fraud prevention team but demanding OTP
+    t2 = "This is State Bank fraud prevention team. Your account is compromised. Share the OTP immediately to stop the fraud."
+    res2 = analyze_text(t2)
+    assert level_order[res2.level] >= level_order["likely_scam"], f"Expected >= likely_scam, got {res2.level} (score: {res2.score})"
+    cats2 = {s.category for s in res2.signals}
+    assert "OTP_PIN_REQUEST" in cats2
+
+    # Problem 3: Contraband fake passport with arrest warrant and money transfer demand
+    t3 = "मैं पुलिस से बोल रहा हूँ। आपके नाम पर नकली पासपोर्ट मिला है, अरेस्ट वारंट है। अभी पैसे ट्रांसफर करें।"
+    res3 = analyze_text(t3)
+    assert level_order[res3.level] >= level_order["likely_scam"], f"Expected >= likely_scam, got {res3.level} (score: {res3.score})"
+    cats3 = {s.category for s in res3.signals}
+    assert "THREAT_ARREST" in cats3, f"THREAT_ARREST must not be lost to 'नकली': {cats3}"
+    assert "MONEY_TRANSFER" in cats3
+
+    # Explicit negated directives must remain safe
+    suppressed_cases = [
+        "Never share your OTP with anyone, even me",
+        "Police never ask for money transfer",
+        "Police and courts never place citizens under digital arrest",
+    ]
+    for text in suppressed_cases:
+        res = analyze_text(text)
+        assert res.level == "safe", f"Expected 'safe' for advisory directive '{text}', got '{res.level}' (score: {res.score})"
+
+

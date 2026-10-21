@@ -1,0 +1,17 @@
+id: adv_legit_hi_002
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: गृह मंत्रालय और पुलिस साइबर सेल द्वारा जनहित में जारी सुरक्षा संदेश।
+- speaker: victim
+  text: जी क्या संदेश है?
+- speaker: caller
+  text: कानून में डिजिटल अरेस्ट का कोई प्रावधान नहीं है। पुलिस या सीबीआई कभी भी वीडियो कॉल पर डिजिटल अरेस्ट नहीं करती और न ही पैसे ट्रांसफर करने को कहती है।
+- speaker: victim
+  text: बहुत से लोग इस डर में फंस जाते हैं।
+- speaker: caller
+  text: यदि कोई अधिकारी बनकर धमकाए तो तुरंत कॉल काटें और राष्ट्रीय साइबर अपराध पोर्टल या हेल्पलाइन 1930 पर शिकायत दर्ज कराएं।

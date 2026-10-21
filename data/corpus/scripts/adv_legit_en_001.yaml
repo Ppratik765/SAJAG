@@ -1,0 +1,19 @@
+id: adv_legit_en_001
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Good afternoon, this is an automated security outreach from HDFC Bank fraud prevention desk.
+- speaker: victim
+  text: Hello, is there an issue with my card?
+- speaker: caller
+  text: We noticed an unusual charge of ten thousand rupees attempted online. Please note, bank officials will never ask for your password, PIN or OTP. Never share your OTP with anyone, even me.
+- speaker: victim
+  text: I did not make that purchase. What should I do?
+- speaker: caller
+  text: We have safely blocked the card. Please log in to your mobile app to request a replacement. Never disclose confidential credentials to callers.
+- speaker: victim
+  text: Understood, thank you for safeguarding my account.

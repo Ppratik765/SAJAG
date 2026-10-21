@@ -1,0 +1,19 @@
+id: adv_holdout_scam_en_003
+language: en-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: Official warning from Android Security customer care helpline.
+- speaker: victim
+  text: Yes, who is this?
+- speaker: caller
+  text: We have detected malware attempting to harvest your banking passwords from your handheld device. Your phone security has been compromised.
+- speaker: victim
+  text: What should I do to remove it?
+- speaker: caller
+  text: Open your application store immediately, install RustDesk remote support tool, and grant remote screen access to our technician.
+- speaker: victim
+  text: I am installing RustDesk now.

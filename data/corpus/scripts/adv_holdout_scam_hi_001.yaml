@@ -1,0 +1,19 @@
+id: adv_holdout_scam_hi_001
+language: hi-IN
+label: bank_kyc
+legit_kind: null
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: बैंक ऑफ बड़ौदा सुरक्षा एवं सतर्कता विंग से आपातकालीन कॉल।
+- speaker: victim
+  text: जी क्या समस्या है?
+- speaker: caller
+  text: आपके एटीएम कार्ड से संदिग्ध ऑनलाइन खरीदारी की कोशिश हुई है। आपके खाते को अवैध डेबिट से बचाने के लिए तुरंत ब्लॉक किया जा रहा है।
+- speaker: victim
+  text: मुझे अपना कार्ड चालू रखना है, मैं क्या करूँ?
+- speaker: caller
+  text: ब्लॉकिंग रोकने के लिए आपके मोबाइल पर आया हुआ छह अंकों का वेरिफिकेशन ओटीपी अभी तुरंत साझा करें।
+- speaker: victim
+  text: जी ओटीपी देख रहा हूँ, एक मिनट।

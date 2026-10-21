@@ -1,0 +1,19 @@
+id: adv_holdout_scam_en_002
+language: en-IN
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: This is Central Bureau of Investigation economic offences advisory division.
+- speaker: victim
+  text: Why is CBI calling my phone?
+- speaker: caller
+  text: A consignment addressed to you containing contraband narcotics and fake bank drafts has been seized at Mumbai airport. High Court has issued a summons and immediate arrest warrant.
+- speaker: victim
+  text: I have no connection with any illegal parcel, please believe me!
+- speaker: caller
+  text: To avoid immediate police arrest at your doorstep, you must cooperate with our digital arrest protocol. Transfer thirty thousand rupees security bond to the RBI clearance account within fifteen minutes.
+- speaker: victim
+  text: Please do not arrest me, I will make the payment.

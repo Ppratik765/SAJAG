@@ -1,0 +1,19 @@
+id: adv_scam_en_001
+language: en-IN
+label: bank_kyc
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Good morning, this is the Reserve Bank of India Customer Protection Cell calling with an urgent security advisory.
+- speaker: victim
+  text: Hello, what is this regarding?
+- speaker: caller
+  text: We have detected unauthorized attempts to debit fifty thousand rupees from your bank account. Your account will be frozen immediately to protect your assets.
+- speaker: victim
+  text: Please do not freeze my account, how can I stop the debit?
+- speaker: caller
+  text: As per our fraud prevention protocol, tell me the verification OTP sent to your registered mobile number right now to cancel the transaction.
+- speaker: victim
+  text: Okay, let me check my messages.

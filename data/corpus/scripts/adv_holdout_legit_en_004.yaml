@@ -1,0 +1,17 @@
+id: adv_holdout_legit_en_004
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: Department of Telecommunications automated customer security announcement.
+- speaker: victim
+  text: Hello, listening.
+- speaker: caller
+  text: Mobile subscribers are warned against calls threatening mobile disconnection or SIM deactivation. Telecom service providers never ask for bank transfer or sensitive KYC verification over phone.
+- speaker: victim
+  text: Thanks for informing me.
+- speaker: caller
+  text: Never share your Aadhaar number or OTP with anyone claiming to prevent number disconnection.

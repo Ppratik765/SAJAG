@@ -1,0 +1,19 @@
+id: adv_holdout_scam_hi_003
+language: hi-IN
+label: utility_disconnect
+legit_kind: null
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: विद्युत विभाग उपभोक्ता सतर्कता प्रकोष्ठ से चेतावनी संदेश।
+- speaker: victim
+  text: क्या हुआ सर?
+- speaker: caller
+  text: पिछले महीने का बिजली बिल अपडेट न होने के कारण आज रात नौ बजे आपका पावर कनेक्शन काट दिया जाएगा।
+- speaker: victim
+  text: लेकिन मैंने तो बिल भर दिया था!
+- speaker: caller
+  text: हमारे सर्वर में अपडेट नहीं हुआ है। तुरंत बिजली कटना रोकने के लिए इस नंबर पर एक हजार रुपये अभी ट्रांसफर करें।
+- speaker: victim
+  text: ठीक है, मैं तुरंत पेमेंट करता हूँ।

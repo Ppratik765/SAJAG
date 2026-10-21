@@ -1,0 +1,17 @@
+id: adv_legit_en_002
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: This is a public awareness announcement from the Reserve Bank of India on financial cyber crimes.
+- speaker: victim
+  text: Yes, please go ahead.
+- speaker: caller
+  text: Fraudsters are posing as police and enforcement agencies threatening digital arrest. Remember that law enforcement agencies and courts never conduct arrests over video calls and never demand money transfer.
+- speaker: victim
+  text: That is an important reminder for the public.
+- speaker: caller
+  text: Stay alert. Report any suspicious scam call immediately to the national cyber crime helpline 1930.

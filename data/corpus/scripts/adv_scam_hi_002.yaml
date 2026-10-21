@@ -1,0 +1,19 @@
+id: adv_scam_hi_002
+language: hi-IN
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: यह केंद्रीय जांच ब्यूरो और पुलिस साइबर सेल का सुरक्षा जागरूकता विभाग है।
+- speaker: victim
+  text: जी क्या समस्या है?
+- speaker: caller
+  text: आपके बैंक खाते से मनी लॉन्ड्रिंग की गई है और सुप्रीम कोर्ट से आपके खिलाफ गैर जमानती अरेस्ट वारंट जारी हुआ है।
+- speaker: victim
+  text: सर मैंने कुछ नहीं किया, मुझे इस बारे में कुछ नहीं पता!
+- speaker: caller
+  text: आप अभी डिजिटल अरेस्ट में हैं, फोन मत काटना। वेरिफिकेशन के लिए पच्चीस हजार रुपये सरकारी खाते में अभी पैसे ट्रांसफर करें।
+- speaker: victim
+  text: ठीक है सर, मैं तुरंत ट्रांसफर कर रहा हूँ।

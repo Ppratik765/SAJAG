@@ -1,0 +1,19 @@
+id: adv_scam_hi_004
+language: hi-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: नमस्कार, बैंक साइबर सिक्योरिटी जागरूकता सेल से अधिकारी बात कर रहा हूँ।
+- speaker: victim
+  text: हाँ जी, बताइए।
+- speaker: caller
+  text: आपके नेटबैंकिंग में हैकर्स द्वारा अनधिकृत लॉगिन की चेतावनी आई है। आपका पैसा सुरक्षित करना जरूरी है।
+- speaker: victim
+  text: तो मैं क्या करूँ?
+- speaker: caller
+  text: तुरंत प्ले स्टोर से एनीडेस्क ऐप डाउनलोड करें और स्क्रीन शेयरिंग कोड हमें बताइए।
+- speaker: victim
+  text: मैं ऐप डाउनलोड कर रहा हूँ।

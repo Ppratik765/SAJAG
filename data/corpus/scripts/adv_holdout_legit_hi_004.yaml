@@ -1,0 +1,17 @@
+id: adv_holdout_legit_hi_004
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: भारतीय साइबर अपराध समन्वय केंद्र द्वारा प्रसारित सतर्कता संदेश।
+- speaker: victim
+  text: जी क्या जानकारी है?
+- speaker: caller
+  text: साइबर अपराधियों द्वारा बैंक अधिकारी या पुलिस बनकर पैसे ठगने के नए तरीके अपनाए जा रहे हैं। याद रखें, पुलिस कभी भी नागरिकों को डिजिटल अरेस्ट नहीं करती और न ही पैसे मांगती है।
+- speaker: victim
+  text: लोगों को इस बारे में जानना बहुत जरूरी है।
+- speaker: caller
+  text: किसी भी अनजान व्यक्ति के खाते में पैसे ट्रांसफर कभी मत करना। संदिग्ध कॉल की तुरंत 1930 पर रिपोर्ट करें।

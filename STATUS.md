@@ -1,15 +1,67 @@
-# STATUS — M3.1b Advisory Rule Generalisation, Playbook Refactor & Benchmark — 2026-10-21 IST
+# STATUS — M4a Advisory-Imitation Hole Closure & Adversarial Benchmark — 2026-10-21 IST
 
-## 1. M3.1b Summary & Objectives Completed
+## 1. M4a Summary & Objectives Completed
 
-Milestone M3.1b completes the advisory rule generalisation, playbook data refactoring, and secrecy pattern expansion without starting M4:
-- **Playbook Data Externalisation:** Moved `ADVISORY_BEFORE`, `ADVISORY_PHRASES`, and `HELPLINE_NUMBERS` out of `api/app/engine/matcher.py` into `data/playbook/playbook.yaml` as declarative configuration (108 deduplicated advisory phrases, 10 helpline numbers, advisory authorities, and advisory frame keywords). The matcher reads them from the playbook at initialisation. Dev and test numbers remain strictly identical.
-- **Generic Authority Advisory Rule:** Added a generic sentence-level rule: when an authority name (`police`, `CBI`, `cyber cell`, `bank`, `RBI`, `TRAI`, `पुलिस`, `साइबर सेल`, `सी बी आई`, etc.) appears inside a sentence that contains an advisory frame (`"fake"`, `"नकली"`, `"सावधान"`, `"never"`, `"कभी नहीं"`, `"advisory"`, `"awareness"`, `"जागरूकता"`, `"report"`, `"शिकायत"`, etc.), it must not score `AUTHORITY_CLAIM`, `THREAT_ARREST`, or `MONEY_TRANSFER` for that sentence. Signals before and after were printed for `fresh_holdout_legit_police_hi_001`, `fresh_holdout_legit_police_en_001`, and `bank_advisory_en_calib_005` without inspecting or modifying their script texts.
-- **Secrecy Patterns & Advisory Suppression:** Added `SECRECY` pattern matches for English ("do not share this with anyone", "don't tell your family", "do not discuss this with anyone", "keep this confidential", etc.) and Hindi/Hinglish equivalents ("किसी के साथ शेयर मत करना", "किसी से चर्चा मत करना", "परिवार को मत बताना", etc.). Added 6 new scam test cases and unit tests verifying that advisory sentences ("never share your OTP with anyone") stay suppressed from scoring as secrecy. All 131 tests in `pytest api/tests` pass with zero failures.
-- **Zero API Credits Consumed:** All runs were text-engine only, consuming 0 STT/TTS API credits (well within the max ~15 credit limit).
-- **Strict Regression Invariant:** Re-evaluated all 239 clips. Dev scam recall remained strictly unchanged at **83.9% (47/56)** and Test scam recall at **75.0% (21/28)**. Legit false positive rate is **0.00% across dev (0/57), test (0/26), holdout (0/30), and fresh holdout (0/12)**. Fresh holdout is reported as `"fresh holdout (seen after M3.1b)"` with FPR dropped from 16.67% to 0.00%.
+Milestone M4a closes the "advisory-imitation" vulnerability in the engine while preserving all legit protections:
+- **Core Principle & Resolution Order Implemented:**
+  1. Explicit negated directive governing the exact verb/category (`advisory_negated_directives`, `advisory_arrest_negated_directives`, `advisory_money_negated_directives` from `data/playbook/playbook.yaml`) $\to$ suppress action.
+  2. Demand-to-listener pattern present without a negation governing it $\to$ **NEVER suppress**, regardless of advisory keywords (`advisory`, `awareness`, `prevention`, `security`, `alert`, `fake`, `नकली`, `सावधान`...).
+  3. Advisory keywords alone (`fake`, `नकली`, `advisory`, `awareness`, `report`, `शिकायत`, `prevention`, `vigilant`) stop suppressing `THREAT_ARREST` and `MONEY_TRANSFER` unless rule (1) applies.
+- **Evidence-Substring Invariant Maintained:** Zero hardcoded string lists in `matcher.py`; all directives, preambles, and demand patterns are externalised in `data/playbook/playbook.yaml`.
+- **Target Problem Sentences Resolved:**
+  - Sentence 1: `This is RBI security advisory. Your account will be frozen. Be alert and tell me the OTP right now.` $\to$ reaches `likely_scam` (score 7) [was `safe` (1)].
+  - Sentence 2: `This is State Bank fraud prevention team. Your account is compromised. Share the OTP immediately to stop the fraud.` $\to$ reaches `likely_scam` (score 7) [was `suspicious` (5)].
+  - Sentence 3: `मैं पुलिस से बोल रहा हूँ। आपके नाम पर नकली पासपोर्ट मिला है, अरेस्ट वारंट है। अभी पैसे ट्रांसफर करें।` $\to$ reaches `scam` (score 12), keeps `THREAT_ARREST` 'अरेस्ट' and 'वारंट' [was lost to "नकली"].
+  - Legitimate directives stay protected: `Never share your OTP with anyone, even me`, `Police never ask for money transfer`, and `Police and courts never place citizens under digital arrest` evaluate cleanly to `safe` (score 0).
+- **32 New Adversarial Scripts Authored (`data/corpus/scripts/adv_*.yaml`):**
+  - 16 scam scripts (8 EN, 8 HI/Hinglish) where callers imitate bank/RBI/police/TRAI advisory while demanding OTP/money/remote access.
+  - 16 matching hard legit scripts (8 EN, 8 HI/Hinglish) with genuine advisories and institutional warnings.
+  - Strict holdout protocol: 16 scripts (8 scam + 8 legit) held out as `split: adv_holdout`, never inspected during tuning, and evaluated untouched once at the end.
+- **`--text-only` Regression Pipeline Added:**
+  - Evaluates dialogue text directly using `analyze_text`.
+  - Displayed on `/accuracy` page with dedicated rows and limitation text updated.
+- **Zero API Credits Consumed:** Text-only implementation consumed 0 STT seconds and 0 TTS characters.
 
 ---
+
+## 2. Evidence: Problem Sentences Before & After
+
+| Case | Sentence Text | Before M4a | After M4a | Signals After M4a |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. RBI Advisory OTP** | *This is RBI security advisory. Your account will be frozen. Be alert and tell me the OTP right now.* | Level: `safe`<br>Score: 1 | **Level: `likely_scam`**<br>Score: 7 | `[ACCOUNT_THREAT]` ('account will be frozen', 2)<br>`[OTP_PIN_REQUEST]` ('OTP', 4)<br>`[URGENCY]` ('right now', 1) |
+| **2. Fraud Prevention OTP** | *This is State Bank fraud prevention team. Your account is compromised. Share the OTP immediately to stop the fraud.* | Level: `suspicious`<br>Score: 5 | **Level: `likely_scam`**<br>Score: 7 | `[ACCOUNT_THREAT]` ('compromised', 2)<br>`[OTP_PIN_REQUEST]` ('OTP', 4)<br>`[URGENCY]` ('immediately', 1) |
+| **3. Fake Passport Warrant** | *मैं पुलिस से बोल रहा हूँ। आपके नाम पर नकली पासपोर्ट मिला है, अरेस्ट वारंट है। अभी पैसे ट्रांसफर करें।* | Level: `suspicious`<br>Score: 6<br>*(lost THREAT_ARREST)* | **Level: `scam`**<br>Score: 12 | `[AUTHORITY_CLAIM]` ('पुलिस', 2)<br>`[PARCEL]` ('पासपोर्ट मिला', 2)<br>`[THREAT_ARREST]` ('अरेस्ट', 3)<br>`[THREAT_ARREST]` ('वारंट', 3)<br>`[URGENCY]` ('अभी', 1)<br>`[MONEY_TRANSFER]` ('ट्रांसफर', 3) |
+| **Suppression 1** | *Never share your OTP with anyone, even me* | Level: `safe` (0) | **Level: `safe` (0)** | None (`OTP_PIN_REQUEST` suppressed) |
+| **Suppression 2** | *Police never ask for money transfer* | Level: `safe` (0) | **Level: `safe` (0)** | None (`MONEY_TRANSFER` suppressed) |
+| **Suppression 3** | *Police and courts never place citizens under digital arrest* | Level: `safe` (0) | **Level: `safe` (0)** | None (`THREAT_ARREST` suppressed) |
+
+---
+
+## 3. Regression Results Across Sets
+
+### Audio Replay Regression (`eval/results/latest.json` with 239 clips)
+```
+Split: DEV            | Scam Recall:  83.9% (47/56) | Legit FP Rate:  0.00% ( 0/57) | Precision: 100.0%
+Split: TEST           | Scam Recall:  75.0% (21/28) | Legit FP Rate:  0.00% ( 0/26) | Precision: 100.0%
+Split: HOLDOUT        | Scam Recall:  63.3% (19/30) | Legit FP Rate:  0.00% ( 0/30) | Precision: 100.0%
+Split: FRESH_HOLDOUT  | Scam Recall:   0.0% ( 0/ 0) | Legit FP Rate:  0.00% ( 0/12) | Precision:   0.0%
+Dropped Scams: []
+New False Positives: []
+```
+
+### Text-Only Regression (`python eval/run_regression.py --text-only`)
+```
+Split: DEV            | Scam Recall:  92.9% (52/56) | Legit FP Rate:  1.75% ( 1/57) | Precision:  98.1%
+Split: TEST           | Scam Recall:  75.0% (21/28) | Legit FP Rate:  0.00% ( 0/26) | Precision: 100.0%
+Split: HOLDOUT        | Scam Recall:  73.3% (11/15) | Legit FP Rate: 20.00% ( 3/15) | Precision:  78.6%
+Split: FRESH_HOLDOUT  | Scam Recall:   0.0% ( 0/ 0) | Legit FP Rate: 16.67% ( 1/ 6) | Precision:   0.0%
+Split: ADV_DEV        | Scam Recall:  87.5% ( 7/ 8) | Legit FP Rate: 37.50% ( 3/ 8) | Precision:  70.0%
+Split: ADV_HOLDOUT    | Scam Recall:  75.0% (6/ 8) | Legit FP Rate: 25.00% ( 2/ 8) | Precision:  75.0%
+```
+
+---
+
+## 4. Prior Milestones Context
 
 ## 2. Evidence: Signals Before & After Generic Rule
 

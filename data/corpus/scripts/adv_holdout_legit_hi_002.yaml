@@ -1,0 +1,17 @@
+id: adv_holdout_legit_hi_002
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: दिल्ली पुलिस साइबर सेल जन-जागरूकता बुलेटिन।
+- speaker: victim
+  text: हाँ जी, बताइए।
+- speaker: caller
+  text: पार्सल में गैरकानूनी सामान मिलने के नाम पर आने वाली फर्जी कॉलों से सावधान रहें। पुलिस विभाग कभी भी आम नागरिकों को वीडियो कॉल पर अरेस्ट नहीं करता और न ही पैसे मांगता है।
+- speaker: victim
+  text: यह बहुत जरूरी जानकारी है।
+- speaker: caller
+  text: ऐसी फर्जी कॉल आने पर तुरंत फोन काटें और 1930 हेल्पलाइन पर शिकायत दर्ज करवाएं।

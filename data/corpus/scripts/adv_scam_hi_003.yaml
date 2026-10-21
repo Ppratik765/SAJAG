@@ -1,0 +1,19 @@
+id: adv_scam_hi_003
+language: hi-IN
+label: upi_refund
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: हेलो, यह नेशनल पेमेंट्स कॉरपोरेशन ऑफ इंडिया की यूपीआई सुरक्षा एडवाइजरी टीम से कॉल है।
+- speaker: victim
+  text: जी क्या हुआ?
+- speaker: caller
+  text: आपके यूपीआई खाते में पांच हजार रुपये की धोखाधड़ी का प्रयास हुआ है। सतर्क रहें और तुरंत रिफंड प्राप्त करें।
+- speaker: victim
+  text: रिफंड कैसे मिलेगा?
+- speaker: caller
+  text: हमने आपके ऐप पर लिंक भेजा है, रिफंड लेने के लिए अपना यूपीआई पिन दर्ज करें।
+- speaker: victim
+  text: अच्छा, मैं पिन डालकर रिफंड कलेक्ट करता हूँ।

@@ -1,0 +1,19 @@
+id: adv_scam_hi_001
+language: hi-IN
+label: bank_kyc
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: नमस्कार, मैं स्टेट बैंक ऑफ इंडिया की धोखाधड़ी रोकथाम और सुरक्षा सेल से बोल रहा हूँ।
+- speaker: victim
+  text: जी कहिए, क्या बात है?
+- speaker: caller
+  text: आपके खाते में संदिग्ध गतिविधि देखी गई है और सुरक्षा कारणों से आपका बैंक खाता तुरंत फ्रीज किया जा रहा है।
+- speaker: victim
+  text: अरे, पर मैंने तो कोई गलत लेनदेन नहीं किया। खाता चालू कैसे रहेगा?
+- speaker: caller
+  text: अपने खाते को सुरक्षित करने के लिए बैंक द्वारा भेजा गया छह अंकों का ओटीपी अभी मुझे बताइए।
+- speaker: victim
+  text: जी मैं संदेश देखकर ओटीपी बताता हूँ।

@@ -1,0 +1,17 @@
+id: adv_holdout_legit_en_002
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: National Cyber Crime Reporting Portal audio advisory broadcast.
+- speaker: victim
+  text: Yes, what is the notification?
+- speaker: caller
+  text: Citizens are advised to be alert against fake parcel scams. Custom officers and police never call claiming illegal drugs found in courier packages and never ask citizens to pay clearance fees.
+- speaker: victim
+  text: Good to know, criminals are getting very sophisticated.
+- speaker: caller
+  text: If you receive any threatening call regarding arrest or money laundering, disconnect and report immediately to cybercrime portal or call helpline 1930.

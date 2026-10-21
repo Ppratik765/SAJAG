@@ -1,0 +1,19 @@
+id: adv_holdout_scam_en_001
+language: en-IN
+label: bank_kyc
+legit_kind: null
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: Urgent security alert from Axis Bank anti fraud monitoring cell.
+- speaker: victim
+  text: Yes, what is the matter?
+- speaker: caller
+  text: An international merchant transaction of forty five thousand rupees is pending clearance on your debit card. We will block your card permanently unless you verify ownership.
+- speaker: victim
+  text: I did not authorise any foreign payment, please cancel it immediately.
+- speaker: caller
+  text: To stop the unauthorized transaction right now, please read out the six digit authorization OTP received on your phone.
+- speaker: victim
+  text: The code is five eight two one.

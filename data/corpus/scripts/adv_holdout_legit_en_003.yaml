@@ -1,0 +1,17 @@
+id: adv_holdout_legit_en_003
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: Securities and Exchange Board of India financial safety bulletin.
+- speaker: victim
+  text: Yes, please proceed.
+- speaker: caller
+  text: Beware of fraudulent groups promising guaranteed returns on stock market trading. SEBI never manages private investment portfolios and never asks for money transfer to personal bank accounts.
+- speaker: victim
+  text: I have seen many such fraudulent ads online.
+- speaker: caller
+  text: Never share your demat credentials or transfer funds to unverified individuals. Stay vigilant against stock market task fraud.

@@ -1,0 +1,19 @@
+id: adv_scam_en_004
+language: en-IN
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Delhi Police Crime Branch cyber crime alert. I am Deputy Commissioner of Police calling on behalf of Supreme Court vigilance.
+- speaker: victim
+  text: Why are police calling me?
+- speaker: caller
+  text: We have found your credentials linked to international money laundering. A non-bailable arrest warrant has been registered under your name.
+- speaker: victim
+  text: Officer, I have never committed any crime!
+- speaker: caller
+  text: As per legal guidelines, you are under digital arrest. Do not disconnect this call and transfer twenty thousand rupees bail bond immediately to court clearance account.
+- speaker: victim
+  text: I am arranging the money transfer immediately.

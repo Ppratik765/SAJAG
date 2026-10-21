@@ -1,0 +1,19 @@
+id: adv_scam_en_003
+language: en-IN
+label: utility_disconnect
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Urgent notice from Telecom Regulatory Authority of India fraud monitoring unit.
+- speaker: victim
+  text: Who is speaking?
+- speaker: caller
+  text: This is TRAI official telecom advisory. Multiple complaints of financial fraud have been registered on your mobile number. All cellular services will be disconnected within two hours.
+- speaker: victim
+  text: This is my only number for work! There must be an error.
+- speaker: caller
+  text: To avoid immediate disconnection, you must transfer ten thousand rupees verification deposit to our nodal treasury account right away.
+- speaker: victim
+  text: Where should I send the transfer?

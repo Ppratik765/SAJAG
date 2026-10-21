@@ -1,0 +1,17 @@
+id: adv_legit_hi_003
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: स्टेट बैंक ऑफ इंडिया सुरक्षा जागरूकता विभाग से महत्वपूर्ण सूचना।
+- speaker: victim
+  text: हाँ जी कहिए।
+- speaker: caller
+  text: लॉटरी या पुरस्कार जीतने का झांसा देने वाली कॉल से सावधान रहें। बैंक कभी भी इनाम देने के नाम पर प्रोसेसिंग फीस या पैसे ट्रांसफर करने को नहीं कहता।
+- speaker: victim
+  text: जी, कई फर्जी फोन आते रहते हैं ऐसे।
+- speaker: caller
+  text: कभी भी किसी अनजान खाते में पैसे न भेजें। किसी भी संदेह की स्थिति में अपनी बैंक शाखा में संपर्क करें।

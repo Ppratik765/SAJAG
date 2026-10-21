@@ -1,0 +1,19 @@
+id: adv_holdout_scam_en_004
+language: en-IN
+label: upi_refund
+legit_kind: null
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: Calling from PhonePe payment grievance and fraud prevention department.
+- speaker: victim
+  text: Hello, why are you calling?
+- speaker: caller
+  text: An erroneous credit of four thousand rupees was transferred into your UPI wallet from another customer. Keep your account secure and reverse the transaction.
+- speaker: victim
+  text: Oh, I see a notification. How do I reverse it?
+- speaker: caller
+  text: Scan the reversal QR code we sent on your chat and enter your UPI PIN to approve the refund.
+- speaker: victim
+  text: Scanning and entering PIN now.

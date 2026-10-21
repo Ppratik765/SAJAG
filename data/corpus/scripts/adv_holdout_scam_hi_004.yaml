@@ -1,0 +1,19 @@
+id: adv_holdout_scam_hi_004
+language: hi-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: यह केंद्रीय साइबर सुरक्षा सेल का जरूरी तकनीकी परामर्श है।
+- speaker: victim
+  text: जी क्या हुआ?
+- speaker: caller
+  text: आपके स्मार्टफोन में वायरस मिला है जो आपके बैंक की गोपनीय जानकारी चुरा रहा है। सुरक्षा के लिए एंटीवायरस पैच लगाना होगा।
+- speaker: victim
+  text: क्या करना पड़ेगा इसके लिए?
+- speaker: caller
+  text: अपने फोन में क्विकसपोर्ट ऐप इंस्टॉल करें और स्क्रीन पर दिख रहा नौ अंकों का कोड मुझे भेजिए।
+- speaker: victim
+  text: जी ऐप इंस्टॉल हो गया, कोड बताता हूँ।

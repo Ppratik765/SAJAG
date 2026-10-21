@@ -1,0 +1,17 @@
+id: adv_legit_hi_004
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: भारतीय रिज़र्व बैंक जन जागरूकता संदेश।
+- speaker: victim
+  text: नमस्ते, क्या सूचना है?
+- speaker: caller
+  text: बैंक अधिकारी या आरबीआई प्रतिनिधि कभी भी फोन पर ग्राहकों से गोपनीय बैंकिंग क्रेडेंशियल नहीं मांगते। किसी भी अनजान लिंक पर क्लिक मत करना।
+- speaker: victim
+  text: धन्यवाद, मैं हमेशा सतर्क रहता हूँ।
+- speaker: caller
+  text: वित्तीय धोखाधड़ी की शिकायत तुरंत नजदीकी पुलिस स्टेशन या 1930 पर दर्ज करवाएं। सुरक्षित रहें, सतर्क रहें।

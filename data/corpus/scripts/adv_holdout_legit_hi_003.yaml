@@ -1,0 +1,17 @@
+id: adv_holdout_legit_hi_003
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: आयकर विभाग वित्तीय धोखाधड़ी चेतावनी सेवा।
+- speaker: victim
+  text: जी क्या संदेश है?
+- speaker: caller
+  text: आयकर रिफंड जारी करने के नाम पर फर्जी मैसेज और कॉल से सतर्क रहें। कोई भी आयकर अधिकारी कभी भी फोन पर पासवर्ड, यूपीआई पिन या ओटीपी नहीं मांगता।
+- speaker: victim
+  text: ठीक है, मैं समझ गया।
+- speaker: caller
+  text: किसी भी अनजान लिंक पर अपनी बैंक डिटेल न भरें। धोखाधड़ी की सूचना तुरंत साइबर पोर्टल पर दें।

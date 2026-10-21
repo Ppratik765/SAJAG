@@ -1,0 +1,19 @@
+id: adv_scam_en_002
+language: en-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Hello sir, I am calling from the Microsoft Cyber Security Vigilance division regarding a high severity safety advisory.
+- speaker: victim
+  text: Yes, what happened to my computer?
+- speaker: caller
+  text: Suspicious trojan spyware has breached your banking portals. To prevent complete account takeover, you must follow our safety guidelines immediately.
+- speaker: victim
+  text: That sounds terrifying! What do I need to do?
+- speaker: caller
+  text: To secure your firewall right now, please install AnyDesk from the store and share the nine digit access code with me.
+- speaker: victim
+  text: Opening the app now to give you the code.

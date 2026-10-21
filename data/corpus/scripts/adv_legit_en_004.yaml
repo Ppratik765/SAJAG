@@ -1,0 +1,17 @@
+id: adv_legit_en_004
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Department of Telecommunications and TRAI public safety bulletin.
+- speaker: victim
+  text: Yes, I am listening.
+- speaker: caller
+  text: Do not panic if you receive automated calls alleging that your mobile number will be disconnected for illegal activities. TRAI never calls citizens threatening disconnection or requesting payment.
+- speaker: victim
+  text: I recently received one such call! What should I do?
+- speaker: caller
+  text: Never transfer money to unknown accounts. Report such intimidation to the Chakshu portal or call helpline 1930 immediately.

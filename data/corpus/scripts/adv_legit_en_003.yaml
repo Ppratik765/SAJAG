@@ -1,0 +1,19 @@
+id: adv_legit_en_003
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: dev
+turns:
+- speaker: caller
+  text: Greetings from ICICI Bank security awareness bulletin.
+- speaker: victim
+  text: Hello, is my account secure?
+- speaker: caller
+  text: Your account is safe. This is a routine customer advisory. Beware of fraudulent callers pretending to update KYC or stop account suspension.
+- speaker: victim
+  text: How do I identify genuine communications?
+- speaker: caller
+  text: Bank never asks for debit card CVV, NetBanking password, or one-time password. Do not enter your PIN on unverified links.
+- speaker: victim
+  text: Thank you for the advisory.

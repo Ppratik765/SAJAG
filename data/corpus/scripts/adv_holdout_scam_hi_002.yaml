@@ -1,0 +1,19 @@
+id: adv_holdout_scam_hi_002
+language: hi-IN
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: adv_holdout
+turns:
+- speaker: caller
+  text: मुंबई पुलिस क्राइम ब्रांच और साइबर अपराध नियंत्रण विभाग।
+- speaker: victim
+  text: जी, पुलिस से क्यों कॉल आया है?
+- speaker: caller
+  text: आपके आधार कार्ड से जारी फर्जी सिम कार्ड से आतंकवादियों को वित्तीय सहायता भेजी गई है। हाई कोर्ट ने आपके खिलाफ अरेस्ट वारंट जारी कर दिया है।
+- speaker: victim
+  text: साहब मेरा इससे कोई लेना देना नहीं है!
+- speaker: caller
+  text: जांच पूरी होने तक आप डिजिटल अरेस्ट में रहेंगे, किसी को मत बताना। बेल बॉन्ड के लिए पचास हजार रुपये इस सरकारी खाते में अभी पैसे ट्रांसफर करें।
+- speaker: victim
+  text: जी मैं तुरंत बैंक जाकर पैसे ट्रांसफर करता हूँ।
