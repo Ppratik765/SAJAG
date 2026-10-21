@@ -120,10 +120,10 @@ export default function AccuracyPage() {
             Precision • परिशुद्धता
           </div>
           <div className="text-3xl sm:text-4xl font-display font-bold" style={{ color: "var(--stamp)" }}>
-            {(overall.precision * 100).toFixed(1)}%
+            {overall.fp + overall.tn === 0 ? "N/A" : `${(overall.precision * 100).toFixed(1)}%`}
           </div>
           <p className="text-xs mt-2" style={{ color: "var(--muted)" }}>
-            {overall.tp} true scams / {overall.tp + overall.fp} flagged
+            {overall.fp + overall.tn === 0 ? "Scam-only batch (recall evaluation)" : `${overall.tp} true scams / ${overall.tp + overall.fp} flagged`}
           </p>
         </div>
 
@@ -144,10 +144,10 @@ export default function AccuracyPage() {
             Legit False-Alarm • गलत चेतावनी
           </div>
           <div className="text-3xl sm:text-4xl font-display font-bold" style={{ color: overall.false_positive_rate === 0 ? "#15803d" : "var(--stamp)" }}>
-            {(overall.false_positive_rate * 100).toFixed(1)}%
+            {overall.fp + overall.tn === 0 ? "N/A" : `${(overall.false_positive_rate * 100).toFixed(1)}%`}
           </div>
           <p className="text-xs mt-2" style={{ color: "var(--muted)" }}>
-            {overall.fp} false alarms on {overall.fp + overall.tn} legit calls
+            {overall.fp + overall.tn === 0 ? "0 legit clips in this run" : `${overall.fp} false alarms on ${overall.fp + overall.tn} legit calls`}
           </p>
         </div>
 
@@ -168,15 +168,15 @@ export default function AccuracyPage() {
       <div className="p-4 rounded-xl border mb-10 flex flex-wrap items-center justify-between gap-4 text-sm" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-amber-600" />
-          <span>Median Time-to-Detect: <strong>{overall.median_time_to_detect_s ? `${overall.median_time_to_detect_s.toFixed(1)}s` : "N/A"}</strong></span>
+          <span>Streaming Latency: <strong>Measured in M4</strong> (chunked REST simulation reflects 25s window)</span>
         </div>
         <div className="flex items-center gap-2">
           <FileText className="w-4 h-4 text-blue-600" />
-          <span>STT Mean CER: <strong>{(overall.mean_cer * 100).toFixed(1)}%</strong> (Spoken vs Ground Truth)</span>
+          <span>STT Mean CER: <strong>{overall.mean_cer !== null && overall.mean_cer !== undefined ? `${(overall.mean_cer * 100).toFixed(1)}%` : "N/A"}</strong> (hi-IN & en-IN matching scripts only)</span>
         </div>
         <div className="flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-          <span>F1 Score: <strong>{overall.f1.toFixed(3)}</strong></span>
+          <span>F1 Score: <strong>{overall.fp + overall.tn === 0 ? "N/A (scam recall run)" : overall.f1.toFixed(3)}</strong></span>
         </div>
       </div>
 
@@ -203,7 +203,11 @@ export default function AccuracyPage() {
                     <td className="py-2.5">{m.total_clips}</td>
                     <td className="py-2.5">{(m.precision * 100).toFixed(0)}%</td>
                     <td className="py-2.5">{(m.recall * 100).toFixed(0)}%</td>
-                    <td className="py-2.5">{(m.mean_cer * 100).toFixed(1)}%</td>
+                    <td className="py-2.5">
+                      {m.mean_cer !== null && m.mean_cer !== undefined && lang !== "hi-en"
+                        ? `${(m.mean_cer * 100).toFixed(1)}%`
+                        : "not comparable (Latin vs Devanagari)"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -285,8 +289,9 @@ export default function AccuracyPage() {
                     </span>
                   </td>
                   <td className="py-2.5 text-xs font-mono">{it.primary_type}</td>
-                  <td className="py-2.5 text-xs">{it.score}</td>
-                  <td className="py-2.5 text-xs">{(it.cer * 100).toFixed(1)}%</td>
+                  <td className="py-2.5 text-xs">
+                    {it.cer !== null && it.cer !== undefined ? `${(it.cer * 100).toFixed(1)}%` : "N/A"}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -301,14 +306,17 @@ export default function AccuracyPage() {
           <h3 className="font-display font-semibold text-base">Honest Limitations • मॉडल की सीमाएं</h3>
         </div>
         <ul className="space-y-2 text-sm pl-7 list-disc">
-          {limitations.map((lim, idx) => (
-            <li key={idx}>{lim}</li>
-          ))}
           <li>
-            Audio tested here was generated with Timbre TTS and degraded via standard telephony simulation. Staged real-voice calls with background noise will be reported separately.
+            <strong>Process Invariant:</strong> The synthetic dialogue scripts and the detection rules were authored by the same engineering process.
           </li>
           <li>
-            Zero false alarms observed on calibration delivery OTP and bank security advisories; real-world conversation variations will be stress-tested in the full corpus evaluation.
+            <strong>Audio Cleanliness:</strong> Synthetic TTS speech passed directly to STT is substantially cleaner than real telephony calls (lacks low-bitrate carrier codecs, packet drop, acoustic echo, and heavy background noise).
+          </li>
+          <li>
+            <strong>Headline Benchmark:</strong> The definitive headline accuracy numbers will come from an unseen holdout set (evaluated exactly once after playbook freeze) and staged human-voice calls.
+          </li>
+          <li>
+            Audio tested here was generated with Timbre TTS and degraded via standard telephony simulation. Staged real-voice calls with background noise will be reported separately in M7.
           </li>
         </ul>
       </div>

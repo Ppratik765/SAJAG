@@ -198,3 +198,35 @@ def create_degraded_variants(
     results["tel_noise5"] = write_wav(noise5_out, noisy_5, 8000)
 
     return results
+
+
+def main() -> None:
+    import argparse
+    parser = argparse.ArgumentParser(description="Generate degraded audio variants")
+    parser.add_argument("--script-id", help="Single script ID to degrade")
+    args = parser.parse_args()
+
+    clean_dir = Path("data/corpus/audio/clean")
+    base_dir = Path("data/corpus/audio")
+
+    if args.script_id:
+        clean_file = clean_dir / f"{args.script_id}.wav"
+        if clean_file.is_file():
+            create_degraded_variants(clean_file, base_dir, args.script_id)
+            print(f"Degraded {args.script_id}")
+    else:
+        clean_files = sorted(clean_dir.glob("*.wav"))
+        print(f"Generating degraded variants for {len(clean_files)} audio files...")
+        count = 0
+        for cf in clean_files:
+            sid = cf.stem
+            # Check if all 3 variants exist
+            if not all((base_dir / var / f"{sid}.wav").is_file() for var in ("tel", "tel_noise15", "tel_noise5")):
+                create_degraded_variants(cf, base_dir, sid)
+                count += 1
+        print(f"Degradation complete! Created variants for {count} newly available files.")
+
+
+if __name__ == "__main__":
+    main()
+

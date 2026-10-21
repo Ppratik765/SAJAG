@@ -28,6 +28,12 @@ NEGATION_TOKENS: Set[str] = {
     "beware",
     "savdhan",
     "सावधान",
+    "threatening",
+    "threaten",
+    "threatened",
+    "advisory",
+    "सतर्क",
+    "सतर्कता",
 }
 
 # Words that form secrecy/isolation phrases with 'mat' - when 'mat' is part of these, it's not a generic negation
@@ -71,6 +77,33 @@ REQUEST_VERBS: Set[str] = {
     "type",
     "daaliye",
     "डालिए",
+    "read",
+    "बोल",
+    "बोलिए",
+    "बोलिये",
+    "boliye",
+    "bolo",
+    "padhiye",
+    "पढ़िए",
+    "पढ़िए",
+}
+
+DIGIT_WORDS: Set[str] = {
+    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "oh",
+    "शून्य", "एक", "दो", "तीन", "चार", "पांच", "पाँच", "छह", "छः", "सात", "आठ", "नौ",
+    "shunya", "ek", "do", "teen", "char", "paanch", "panch", "chheh", "che", "saat", "aath", "nau",
+    "जीरो", "वन", "टू", "थ्री", "फोर", "फाइव", "सिक्स", "सेवन", "एट", "नाइन",
+}
+
+AMOUNT_KEYWORDS: Set[str] = {
+    "thousand", "lakh", "lakhs", "crore", "crores", "hundred", "rupees",
+    "हजार", "हज़ार", "लाख", "करोड़", "रुपये", "रुपए", "रुपया",
+    "थाउजेंड", "थाउजंड", "थाउज़न्ड",
+}
+
+TRANSFER_VERBS: Set[str] = {
+    "send", "transfer", "deposit", "bhejiye", "bhejo", "bhej", "remit",
+    "भेजिए", "भेजें", "भेजो", "जमा", "ट्रांसफर", "डिपॉजिट", "pay",
 }
 
 DELIVERY_WORDS: Set[str] = {
@@ -212,7 +245,10 @@ class Matcher:
                             break
                         if ti + 1 < num_tokens:
                             two_word = f"{tok_word} {tokens[ti+1]['text']}"
-                            if two_word in {"do not", "don't", "mat karna", "मत करना", "kabhi mat", "कभी मत"}:
+                            if two_word in {
+                                "do not", "don't", "mat karna", "मत करना", "kabhi mat", "कभी मत",
+                                "caller threatening", "any caller", "fraud prevention", "security advisory"
+                            }:
                                 has_negation = True
                                 break
 
@@ -253,6 +289,65 @@ class Matcher:
                     "reviewed": pat["reviewed"],
                     "segment_index": segment_index,
                 })
+        # Context Rule: Spoken digit sequence following code request
+        has_code_request = any(
+            m["category"] == "OTP_PIN_REQUEST" for m in raw_matches
+        ) or any(
+            kw in padded_norm for kw in ["code", "otp", "password", "pin", "verification", "authorization", "कोड", "ओटीपी"]
+        )
+        if has_code_request:
+            idx_tok = 0
+            while idx_tok < num_tokens:
+                if tokens[idx_tok]["text"] in DIGIT_WORDS or tokens[idx_tok]["text"].isdigit():
+                    j = idx_tok
+                    while j < num_tokens and (tokens[j]["text"] in DIGIT_WORDS or tokens[j]["text"].isdigit()):
+                        j += 1
+                    if j - idx_tok >= 3:
+                        seq_norm_start = tokens[idx_tok]["norm_start"]
+                        seq_norm_end = tokens[j - 1]["norm_end"]
+                        ev_text, r_start, r_end = norm.get_raw_substring(seq_norm_start, seq_norm_end)
+                        if ev_text:
+                            raw_matches.append({
+                                "category": "OTP_PIN_REQUEST",
+                                "base_weight": 3,
+                                "hard": True,
+                                "needs_request_context": False,
+                                "has_request_context": True,
+                                "evidence": ev_text,
+                                "raw_start": r_start,
+                                "raw_end": r_end,
+                                "reviewed": True,
+                                "segment_index": segment_index,
+                            })
+                    idx_tok = j
+                else:
+                    idx_tok += 1
+
+        # Context Rule: Spelled-out amount with transfer/deposit/send/bhejiye
+        for ti, tok in enumerate(tokens):
+            if tok["text"] in TRANSFER_VERBS:
+                window = range(max(0, ti - 5), min(num_tokens, ti + 6))
+                for wi in window:
+                    if tokens[wi]["text"] in AMOUNT_KEYWORDS:
+                        start_tok = min(ti, wi)
+                        end_tok = max(ti, wi)
+                        ev_text, r_start, r_end = norm.get_raw_substring(
+                            tokens[start_tok]["norm_start"], tokens[end_tok]["norm_end"]
+                        )
+                        if ev_text:
+                            raw_matches.append({
+                                "category": "MONEY_TRANSFER",
+                                "base_weight": 3,
+                                "hard": True,
+                                "needs_request_context": False,
+                                "has_request_context": True,
+                                "evidence": ev_text,
+                                "raw_start": r_start,
+                                "raw_end": r_end,
+                                "reviewed": True,
+                                "segment_index": segment_index,
+                            })
+                        break
 
         deduped_matches = self._deduplicate_matches(raw_matches)
 

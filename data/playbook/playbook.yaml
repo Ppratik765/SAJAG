@@ -81,6 +81,11 @@ categories:
       - {text: "फोन मत काटना", lang: hi, reviewed: true}
       - {text: "room lock", lang: any, reviewed: true}
       - {text: "कमरा बंद", lang: hi, reviewed: true}
+      - {text: "screen ke samne", lang: hinglish, reviewed: true}
+      - {text: "screen ke aage", lang: hinglish, reviewed: true}
+      - {text: "स्क्रीन के सामने", lang: hi, reviewed: true}
+      - {text: "स्क्रीन के आगे", lang: hi, reviewed: true}
+      - {text: "stay in front of screen", lang: any, reviewed: true}
 
   SECRECY:
     weight: 3
@@ -88,6 +93,8 @@ categories:
     patterns:
       - {text: "don't tell anyone", lang: any, reviewed: true}
       - {text: "do not tell anyone", lang: any, reviewed: true}
+      - {text: "डोन्ट टेल एनीवन", lang: hi, reviewed: true}
+      - {text: "डोंट टेल एनीवन", lang: hi, reviewed: true}
       - {text: "kisi ko mat batana", lang: hinglish, reviewed: true}
       - {text: "किसी को मत बताना", lang: hi, reviewed: true}
       - {text: "किसी को नहीं बताना", lang: hi, reviewed: true}
@@ -107,7 +114,23 @@ categories:
       - {text: "otp", lang: any, reviewed: true}
       - {text: "ओटीपी", lang: hi, reviewed: true}
       - {text: "ओ टी पी", lang: hi, reviewed: true}
+      - {text: "ओह टी पी", lang: hi, reviewed: true}
+      - {text: "ओहटीपी", lang: hi, reviewed: true}
       - {text: "one time password", lang: any, reviewed: true}
+      - {text: "verification code", lang: any, reviewed: true}
+      - {text: "वेरिफिकेशन कोड", lang: hi, reviewed: true}
+      - {text: "कोड वेरिफ़िएड", lang: hi, reviewed: true}
+      - {text: "कोड वेरिफाइड", lang: hi, reviewed: true}
+      - {text: "कोड वेरिफिकेशन", lang: hi, reviewed: true}
+      - {text: "authorization code", lang: any, reviewed: true}
+      - {text: "auth code", lang: any, reviewed: true}
+      - {text: "read out the code", lang: any, reviewed: true}
+      - {text: "read out the", lang: any, reviewed: true}
+      - {text: "read out", lang: any, reviewed: true}
+      - {text: "code batao", lang: hinglish, reviewed: true}
+      - {text: "code bataiye", lang: hinglish, reviewed: true}
+      - {text: "कोड बताइए", lang: hi, reviewed: true}
+      - {text: "कोड बोलिए", lang: hi, reviewed: true}
       - {text: "upi pin", lang: any, reviewed: true}
       - {text: "यूपीआई पिन", lang: hi, reviewed: true}
       - {text: "pin", lang: any, reviewed: true}
@@ -120,6 +143,8 @@ categories:
       - {text: "4 digit code", lang: any, reviewed: true}
       - {text: "6 digit code", lang: any, reviewed: true}
       - {text: "छह अंकों का कोड", lang: hi, reviewed: true}
+      - {text: "four digit code", lang: any, reviewed: true}
+      - {text: "six digit code", lang: any, reviewed: true}
 
   MONEY_TRANSFER:
     weight: 3
@@ -144,6 +169,17 @@ categories:
       - {text: "क्यूआर कोड स्कैन", lang: hi, reviewed: true}
       - {text: "processing fee", lang: any, reviewed: true}
       - {text: "प्रोसेसिंग फीस", lang: hi, reviewed: true}
+      - {text: "clearance fee", lang: any, reviewed: true}
+      - {text: "clearance capital", lang: any, reviewed: true}
+      - {text: "registration fee", lang: any, reviewed: true}
+      - {text: "रजिस्ट्रेशन फीस", lang: hi, reviewed: true}
+      - {text: "deposit", lang: any, reviewed: true}
+      - {text: "डिपॉजिट", lang: hi, reviewed: true}
+      - {text: "जमा करें", lang: hi, reviewed: true}
+      - {text: "जमा कीजिए", lang: hi, reviewed: true}
+      - {text: "remit payment", lang: any, reviewed: true}
+      - {text: "remit", lang: any, reviewed: true}
+      - {text: "advance deposit", lang: any, reviewed: true}
       - {text: "penalty", lang: any, reviewed: true}
       - {text: "जुर्माना", lang: hi, reviewed: true}
 
@@ -172,6 +208,12 @@ categories:
     hard: false
     patterns:
       - {text: "account block", lang: any, reviewed: true}
+      - {text: "account freeze", lang: any, reviewed: true}
+      - {text: "card freeze", lang: any, reviewed: true}
+      - {text: "account will freeze", lang: any, reviewed: true}
+      - {text: "freeze", lang: any, reviewed: true}
+      - {text: "खाता फ्रीज", lang: hi, reviewed: true}
+      - {text: "फ्रीज", lang: hi, reviewed: true}
       - {text: "खाता बंद", lang: hi, reviewed: true}
       - {text: "खाता ब्लॉक", lang: hi, reviewed: true}
       - {text: "अकाउंट ब्लॉक", lang: hi, reviewed: true}
@@ -245,12 +287,32 @@ categories:
       - {text: "दुर्घटना", lang: hi, reviewed: true}
       - {text: "hospital", lang: any, reviewed: true}
       - {text: "अस्पताल", lang: hi, reviewed: true}
+      - {text: "हॉस्पिटल", lang: hi, reviewed: true}
+      - {text: "हॉस्पिटल में", lang: hi, reviewed: true}
+      - {text: "इमरजेंसी", lang: hi, reviewed: true}
+      - {text: "hospitalized", lang: any, reviewed: true}
+      - {text: "हॉस्पिटल में भर्ती", lang: hi, reviewed: true}
       - {text: "police station me hu", lang: hinglish, reviewed: true}
       - {text: "थाने में हूँ", lang: hi, reviewed: true}
       - {text: "police station", lang: any, reviewed: true}
+      - {text: "police custody", lang: any, reviewed: true}
+      - {text: "पुलिस हिरासत", lang: hi, reviewed: true}
       - {text: "new number", lang: any, reviewed: true}
       - {text: "नया नंबर", lang: hi, reviewed: true}
+      - {text: "friend's number", lang: any, reviewed: true}
+      - {text: "friends number", lang: any, reviewed: true}
+      - {text: "फ्रेंड का नंबर", lang: hi, reviewed: true}
+      - {text: "dost ka phone", lang: hinglish, reviewed: true}
+      - {text: "dost ka number", lang: hinglish, reviewed: true}
+      - {text: "dost ke number", lang: hinglish, reviewed: true}
+      - {text: "दोस्त का फोन", lang: hi, reviewed: true}
+      - {text: "दोस्त का नंबर", lang: hi, reviewed: true}
       - {text: "mera phone kho gaya", lang: hinglish, reviewed: true}
+      - {text: "do not tell parents", lang: any, reviewed: true}
+      - {text: "don't tell parents", lang: any, reviewed: true}
+      - {text: "dont tell parents", lang: any, reviewed: true}
+      - {text: "mummy papa ko mat batana", lang: hinglish, reviewed: true}
+      - {text: "माता पिता को मत बताना", lang: hi, reviewed: true}
       - {text: "bail", lang: any, reviewed: true}
       - {text: "ज़मानत", lang: hi, reviewed: true}
       - {text: "emergency operation", lang: any, reviewed: true}
@@ -284,10 +346,24 @@ categories:
       - {text: "trading group", lang: any, reviewed: true}
       - {text: "ट्रेडिंग", lang: hi, reviewed: true}
       - {text: "telegram task", lang: any, reviewed: true}
+      - {text: "telegram group", lang: any, reviewed: true}
+      - {text: "telegram channel", lang: any, reviewed: true}
+      - {text: "vip telegram", lang: any, reviewed: true}
       - {text: "टेलीग्राम", lang: hi, reviewed: true}
       - {text: "part time job", lang: any, reviewed: true}
       - {text: "घर बैठे कमाई", lang: hi, reviewed: true}
       - {text: "like subscribe task", lang: any, reviewed: true}
+      - {text: "rating task", lang: any, reviewed: true}
+      - {text: "rating tasks", lang: any, reviewed: true}
+      - {text: "review task", lang: any, reviewed: true}
+      - {text: "review tasks", lang: any, reviewed: true}
+      - {text: "merchant rating", lang: any, reviewed: true}
+      - {text: "five star review", lang: any, reviewed: true}
+      - {text: "five-star review", lang: any, reviewed: true}
+      - {text: "digital task", lang: any, reviewed: true}
+      - {text: "accumulated profits", lang: any, reviewed: true}
+      - {text: "high yield", lang: any, reviewed: true}
+      - {text: "daily income", lang: any, reviewed: true}
       - {text: "daily profit", lang: any, reviewed: true}
 
 types:

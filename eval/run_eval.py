@@ -234,7 +234,11 @@ async def evaluate_clip(
     is_detected_scam = final_result.level in ("likely_scam", "scam")
     is_true_scam = script.label != "legit"
 
-    cer = compute_cer(script.full_text, full_transcript)
+    # CER: compute only for en-IN and hi-IN where reference and ASR use matching scripts.
+    # For hi-en (Hinglish), reference is Latin script and ASR is Devanagari (not directly character-comparable).
+    cer = None
+    if script.language in ("en-IN", "hi-IN") or (script.language == "hi-en" and hinglish_stt_lang == "en-IN"):
+        cer = round(compute_cer(script.full_text, full_transcript), 4)
 
     return {
         "script_id": script.id,
@@ -251,14 +255,12 @@ async def evaluate_clip(
         "signals_count": len(final_result.signals),
         "transcript": full_transcript,
         "audio_duration_seconds": round(audio_duration, 2),
-        "time_to_detect_likely_scam": first_likely_scam_time,
-        "time_to_detect_suspicious": first_suspicious_time,
-        "cer": round(cer, 4),
+        "cer": cer,
     }
 
 
 def compute_metrics(eval_items: Sequence[dict[str, Any]]) -> dict[str, Any]:
-    """Compute precision, recall, F1, FPR, type accuracy, latency, and CER."""
+    """Compute precision, recall, F1, FPR, type accuracy, and CER."""
     total = len(eval_items)
     if total == 0:
         return {}
@@ -280,22 +282,9 @@ def compute_metrics(eval_items: Sequence[dict[str, Any]]) -> dict[str, Any]:
     correct_type_count = sum(1 for it in scam_items if it["is_detected_scam"] and it["primary_type"] == it["label"])
     type_accuracy = correct_type_count / tp if tp > 0 else 0.0
 
-    # Latencies
-    scam_latencies = [
-        it["time_to_detect_likely_scam"]
-        for it in scam_items
-        if it["time_to_detect_likely_scam"] is not None
-    ]
-    scam_latencies.sort()
-    if scam_latencies:
-        median_ttd = scam_latencies[len(scam_latencies) // 2]
-        p90_idx = int(math.ceil(0.9 * len(scam_latencies))) - 1
-        p90_ttd = scam_latencies[min(p90_idx, len(scam_latencies) - 1)]
-    else:
-        median_ttd = None
-        p90_ttd = None
-
-    mean_cer = sum(it["cer"] for it in eval_items) / total
+    # CER averaged only over comparable languages (hi-IN, en-IN)
+    comparable_cer_items = [it["cer"] for it in eval_items if it.get("cer") is not None]
+    mean_cer = sum(comparable_cer_items) / len(comparable_cer_items) if comparable_cer_items else None
 
     return {
         "total_clips": total,
@@ -308,9 +297,7 @@ def compute_metrics(eval_items: Sequence[dict[str, Any]]) -> dict[str, Any]:
         "f1": round(f1, 4),
         "false_positive_rate": round(fpr, 4),
         "type_accuracy": round(type_accuracy, 4),
-        "median_time_to_detect_s": median_ttd,
-        "p90_time_to_detect_s": p90_ttd,
-        "mean_cer": round(mean_cer, 4),
+        "mean_cer": round(mean_cer, 4) if mean_cer is not None else None,
     }
 
 
@@ -407,14 +394,15 @@ async def main() -> None:
     parser = argparse.ArgumentParser(description="Run Sajag corpus evaluation harness")
     parser.add_argument("--script-id", help="Single script ID to evaluate")
     parser.add_argument("--script-ids", nargs="+", help="Explicit list of script IDs to evaluate")
-    parser.add_argument("--split", choices=["dev", "test"], default="dev", help="Dataset split (default: dev)")
+    parser.add_argument("--split", choices=["dev", "test", "all"], default="all", help="Dataset split (default: all)")
+    parser.add_argument("--label", choices=["scam", "legit", "all"], default="all", help="Filter by label (scam, legit, all)")
     parser.add_argument("--variants", nargs="+", default=["clean"], help="Variants to evaluate: clean, tel, tel_noise15, tel_noise5")
     parser.add_argument("--calibration-only", action="store_true", help="Run only on calibration scripts")
     parser.add_argument("--exclude-calibration", action="store_true", help="Exclude calibration scripts")
     parser.add_argument("--limit", type=int, default=None, help="Maximum number of scripts to evaluate")
     parser.add_argument("--offset", type=int, default=0, help="Offset into scripts list")
     parser.add_argument("--format", default="verbatim", choices=["verbatim", "transcribe"], help="STT formatting mode")
-    parser.add_argument("--hinglish-stt-lang", default="hi-IN", choices=["hi-IN", "en-IN"], help="STT language to use for Hinglish (default: hi-IN)")
+    parser.add_argument("--hinglish-stt-lang", default="en-IN", choices=["hi-IN", "en-IN"], help="STT language to use for Hinglish (default: en-IN)")
     parser.add_argument("--bias-list", nargs="+", help="Word boosting list for STT")
     parser.add_argument("--bias-score", type=float, default=0.0, choices=[0.0, 0.5, 1.0, 1.5, 2.0], help="Word boosting score")
 
@@ -432,7 +420,12 @@ async def main() -> None:
         candidates = all_scripts
         if args.exclude_calibration:
             candidates = [s for s in candidates if "_calib_" not in s.id]
-        if args.split:
+        if args.label and args.label != "all":
+            if args.label == "legit":
+                candidates = [s for s in candidates if s.label == "legit"]
+            elif args.label == "scam":
+                candidates = [s for s in candidates if s.label != "legit"]
+        if args.split and args.split != "all":
             candidates = [s for s in candidates if s.split == args.split]
         selected = candidates[args.offset : (args.offset + args.limit) if args.limit else None]
 

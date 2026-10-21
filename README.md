@@ -32,3 +32,8 @@ Gnani smoke test (needs `.env` with `GNANI_API_KEY`, see `.env.example`), from t
 ```
 api\.venv\Scripts\python.exe scripts\smoke.py
 ```
+
+## Limitations & Honest Reporting
+- **Script & Rule Authorship:** The synthetic corpus scripts and the detection rules were authored by the same engineering process.
+- **Acoustic Cleanliness:** Synthetic TTS speech passed to STT is substantially cleaner than real telephony calls (no packet drop, carrier codec degradation, or heavy acoustic reverberation).
+- **Headline Accuracy:** The true headline accuracy will come from an unseen holdout set (evaluated exactly once after playbook freeze) and staged human-voice calls.
