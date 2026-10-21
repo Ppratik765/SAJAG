@@ -1,0 +1,18 @@
+id: holdout_legit_fm_hien_001
+language: hi-en
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Hey bhaiya, are you home right now?
+- speaker: victim
+  text: Haan bolo, main laptop pe kaam kar raha tha. Kuch chahiye tha?
+- speaker: caller
+  text: Bhaiya grocery store pe card swipe machine down hai. Mere account mein one
+    thousand rupees send kar do na Google Pay pe, main bill pay kar dungi.
+- speaker: victim
+  text: Theek hai, abhi do minute mein regular number pe transfer kar deta hoon.
+- speaker: caller
+  text: Thanks bhaiya, received notification, shaam ko milte hain.

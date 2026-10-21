@@ -145,7 +145,7 @@ async def main() -> None:
     parser = argparse.ArgumentParser(description="Generate synthetic call audio using Timbre TTS")
     parser.add_argument("--script-id", help="Single script ID to generate")
     parser.add_argument("--script-ids", nargs="+", help="Explicit list of script IDs to generate")
-    parser.add_argument("--split", choices=["dev", "test"], help="Generate for specific split")
+    parser.add_argument("--split", choices=["dev", "test", "holdout"], help="Generate for specific split")
     parser.add_argument("--calibration-only", action="store_true", help="Generate only 5 calibration scripts")
     parser.add_argument("--exclude-calibration", action="store_true", help="Exclude calibration scripts")
     parser.add_argument("--limit", type=int, default=None, help="Maximum number of scripts to process")

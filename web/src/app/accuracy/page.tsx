@@ -22,10 +22,9 @@ interface EvalReport {
     f1: number;
     false_positive_rate: number;
     type_accuracy: number;
-    median_time_to_detect_s: number | null;
-    p90_time_to_detect_s: number | null;
-    mean_cer: number;
+    mean_cer: number | null;
   };
+  per_split?: Record<string, any>;
   per_language: Record<string, any>;
   per_variant: Record<string, any>;
   items: Array<{
@@ -84,7 +83,7 @@ export default function AccuracyPage() {
     );
   }
 
-  const { overall, config, per_language, per_variant, items, limitations } = data;
+  const { overall, config, per_language, per_variant, items, limitations, per_split } = data;
 
   return (
     <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto" style={{ backgroundColor: "var(--bg)", color: "var(--ink)" }}>
@@ -179,6 +178,58 @@ export default function AccuracyPage() {
           <span>F1 Score: <strong>{overall.fp + overall.tn === 0 ? "N/A (scam recall run)" : overall.f1.toFixed(3)}</strong></span>
         </div>
       </div>
+
+      {/* Per-Split Table (Dev vs Test vs Holdout) */}
+      {per_split && Object.keys(per_split).length > 0 && (
+        <div className="p-6 rounded-xl border mb-10" style={{ backgroundColor: "var(--paper)", borderColor: "var(--rule)" }}>
+          <div className="mb-4">
+            <h2 className="text-lg font-display font-semibold">Performance by Dataset Split • डेटासेट विभाजन के अनुसार</h2>
+            <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>
+              Dev (used for pattern tuning), Test (unseen partition), Holdout (30 fresh scripts evaluated exactly once after playbook freeze)
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b" style={{ borderColor: "var(--rule)", color: "var(--muted)" }}>
+                <tr>
+                  <th className="pb-2">Split</th>
+                  <th className="pb-2">Clips</th>
+                  <th className="pb-2">Precision</th>
+                  <th className="pb-2">Recall</th>
+                  <th className="pb-2">F1 Score</th>
+                  <th className="pb-2">False-Alarm Rate</th>
+                  <th className="pb-2">Type Accuracy</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y" style={{ borderColor: "var(--rule)" }}>
+                {Object.entries(per_split).map(([splitName, m]: [string, any]) => (
+                  <tr key={splitName} className="py-2">
+                    <td className="py-2.5 font-medium">
+                      <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                        splitName === "holdout" 
+                          ? "bg-purple-100 text-purple-800 dark:bg-purple-950/50 dark:text-purple-300" 
+                          : splitName === "test"
+                          ? "bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-300"
+                          : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+                      }`}>
+                        {splitName.toUpperCase()}
+                      </span>
+                    </td>
+                    <td className="py-2.5">{m.total_clips}</td>
+                    <td className="py-2.5">{m.fp + m.tn === 0 ? "N/A" : `${(m.precision * 100).toFixed(1)}%`}</td>
+                    <td className="py-2.5">{(m.recall * 100).toFixed(1)}%</td>
+                    <td className="py-2.5">{m.f1.toFixed(3)}</td>
+                    <td className="py-2.5" style={{ color: m.false_positive_rate === 0 ? "#15803d" : "var(--stamp)" }}>
+                      {(m.false_positive_rate * 100).toFixed(1)}%
+                    </td>
+                    <td className="py-2.5">{(m.type_accuracy * 100).toFixed(1)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Breakdown Tables */}
       <div className="grid md:grid-cols-2 gap-8 mb-10">

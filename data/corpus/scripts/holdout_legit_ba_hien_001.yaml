@@ -1,0 +1,20 @@
+id: holdout_legit_ba_hien_001
+language: hi-en
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Hello, this is an important security reminder from ICICI Bank fraud prevention
+    unit.
+- speaker: victim
+  text: Haan bol rahe hain, koi issue hai kya?
+- speaker: caller
+  text: Bank will never ask you to disclose verification codes or download remote
+    screen-sharing tools like AnyDesk to unblock your account. Be aware of fraud calls
+    claiming parcel arrest.
+- speaker: victim
+  text: Acha hua bata diya, aajkal bahut scams chal rahe hain.
+- speaker: caller
+  text: Thank you for banking with us. Report unauthorized transactions on 1930.

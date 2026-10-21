@@ -1,0 +1,19 @@
+id: holdout_legit_do_hi_001
+language: hi-IN
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: नमस्ते भैया, फ्लिपकार्ट डिलीवरी बॉय बोल रहा हूँ। आपका जूतों वाला पार्सल लेकर
+    आया हूँ।
+- speaker: victim
+  text: हाँ भैया, मैं घर पर ही हूँ, घंटी बजा दीजिए।
+- speaker: caller
+  text: दरवाजे पर खड़ा हूँ भैया, पार्सल देने के लिए आपके मोबाइल पर आया हुआ चार अंकों
+    का डिलीवरी ओटीपी बता दीजिए।
+- speaker: victim
+  text: हाँ एक मिनट, डिलीवरी ओटीपी है आठ, तीन, एक, पाँच।
+- speaker: caller
+  text: ओटीपी मैच हो गया भैया, यह रहा आपका पार्सल, धन्यवाद।

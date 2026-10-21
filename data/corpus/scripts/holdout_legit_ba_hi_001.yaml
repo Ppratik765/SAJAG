@@ -1,0 +1,18 @@
+id: holdout_legit_ba_hi_001
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: नमस्ते, भारतीय स्टेट बैंक की ओर से ग्राहक सुरक्षा एवं वित्तीय जागरूकता संदेश।
+- speaker: victim
+  text: जी, बताइए क्या सूचना है?
+- speaker: caller
+  text: कृपया ध्यान दें, बैंक अधिकारी कभी भी फोन पर आपसे ओटीपी, पासवर्ड या यूपीआई
+    पिन नहीं मांगते। किसी भी अनजान कॉलर के कहने पर एनीडेस्क ऐप डाउनलोड न करें।
+- speaker: victim
+  text: जी धन्यवाद, मैं हमेशा इस बात का ध्यान रखता हूँ।
+- speaker: caller
+  text: सुरक्षित रहें और साइबर धोखाधड़ी की स्थिति में तुरंत अपने बैंक को सूचित करें।

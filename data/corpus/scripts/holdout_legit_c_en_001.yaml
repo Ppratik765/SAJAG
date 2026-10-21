@@ -1,0 +1,19 @@
+id: holdout_legit_c_en_001
+language: en-IN
+label: legit
+legit_kind: chitchat
+difficulty: easy
+split: holdout
+turns:
+- speaker: caller
+  text: Hey Vivek, how are you man? Long time no talk!
+- speaker: victim
+  text: Hey Sameer! What a pleasant surprise, I was just thinking about you the other
+    day.
+- speaker: caller
+  text: I just got back from a trekking trip in the Western Ghats with some college
+    friends. The monsoon waterfalls were unbelievable.
+- speaker: victim
+  text: That sounds fantastic! Let's definitely catch up for coffee this Sunday afternoon.
+- speaker: caller
+  text: Awesome, I'll text you the cafe location on Saturday. Take care!

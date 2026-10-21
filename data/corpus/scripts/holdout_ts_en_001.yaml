@@ -1,0 +1,23 @@
+id: holdout_ts_en_001
+language: en-IN
+label: tech_support_remote
+legit_kind: null
+difficulty: medium
+split: holdout
+turns:
+- speaker: caller
+  text: Good day sir, this is Microsoft Windows Security Center in Bangalore. We are
+    receiving critical telemetry alerts from your home computer.
+- speaker: victim
+  text: My laptop? What kind of alerts? It was running a bit slow this morning.
+- speaker: caller
+  text: A dangerous trojan malware has compromised your banking cookies and network
+    firewall. Your personal passwords are being leaked to a foreign server.
+- speaker: victim
+  text: Oh heavens, how can I stop this immediately?
+- speaker: caller
+  text: Please sit in front of your computer screen now. Press Windows key and R,
+    and download AnyDesk or TeamViewer so our certified network engineer can remote
+    in and purge the malicious virus.
+- speaker: victim
+  text: Okay, I am sitting at my laptop, opening the browser to install AnyDesk.

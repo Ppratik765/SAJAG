@@ -1,0 +1,22 @@
+id: holdout_bk_hi_001
+language: hi-IN
+label: bank_kyc
+legit_kind: null
+difficulty: medium
+split: holdout
+turns:
+- speaker: caller
+  text: नमस्कार, मैं पंजाब नेशनल बैंक कस्टमर सपोर्ट सेल से वरिष्ठ अधिकारी बात कर रहा
+    हूँ।
+- speaker: victim
+  text: हाँ जी, कहिए क्या सहायता चाहिए?
+- speaker: caller
+  text: सर आपके खाते में पैन और आधार लिंकिंग अधूरी होने के कारण आज रात 12 बजे आपका
+    खाता फ्रीज कर दिया जाएगा।
+- speaker: victim
+  text: अरे ऐसा मत कीजिए, कल मुझे बच्चों की कॉलेज फीस जमा करनी है।
+- speaker: caller
+  text: परेशान मत होइए, मैं सिस्टम से तुरंत री-एक्टिवेशन कर देता हूँ। आपके मोबाइल
+    पर जो 6 अंकों का ओटीपी आया है, मुझे बताइए।
+- speaker: victim
+  text: हाँ मैसेज आया है, मैं देखकर बताता हूँ।

@@ -1,0 +1,19 @@
+id: holdout_legit_cc_en_001
+language: en-IN
+label: legit
+legit_kind: customer_care
+difficulty: easy
+split: holdout
+turns:
+- speaker: caller
+  text: Good afternoon, this is Priya from Airtel Fiber customer service following
+    up on your broadband service request.
+- speaker: victim
+  text: Yes, hello Priya. When will the technician come to set up the router?
+- speaker: caller
+  text: Our field engineer Ramesh is assigned to visit your premise tomorrow morning
+    between ten and twelve. Will you be available?
+- speaker: victim
+  text: Yes, I work from home tomorrow, that time window is perfectly fine.
+- speaker: caller
+  text: Thank you, your appointment is confirmed. Have a pleasant day!

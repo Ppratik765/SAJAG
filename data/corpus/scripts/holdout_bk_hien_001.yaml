@@ -1,0 +1,22 @@
+id: holdout_bk_hien_001
+language: hi-en
+label: bank_kyc
+legit_kind: null
+difficulty: medium
+split: holdout
+turns:
+- speaker: caller
+  text: Hello sir, HDFC bank customer care security department se update call hai
+    regarding your banking profile.
+- speaker: victim
+  text: Haanji, bol rahe hain, kya issue hua?
+- speaker: caller
+  text: Sir aapka KYC documents verification pending hai jiski wajah se online banking
+    transactions hold pe chali gayi hain.
+- speaker: victim
+  text: Par mera toh regular salary account hai, achanak hold kaise ho gaya?
+- speaker: caller
+  text: Sir biometric compliance mandatory hai. Main abhi authentication SMS bhej
+    raha hoon, verification code share kijiye taaki account activate ho sake.
+- speaker: victim
+  text: Theek hai, code aane dijiye phone pe.

@@ -1,0 +1,19 @@
+id: holdout_legit_do_hien_001
+language: hi-en
+label: legit
+legit_kind: delivery_otp
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Hello sir, Amazon delivery courier boy here. Aapke society lobby mein aa gaya
+    hoon with the parcel.
+- speaker: victim
+  text: Haan bhai, lift se third floor pe aa jao.
+- speaker: caller
+  text: Door pe khada hoon sir. Delivery complete karne ke liye parcel secret code
+    bata dijiye please.
+- speaker: victim
+  text: Haan message check kiya, secret code hai six, two, nine, zero.
+- speaker: caller
+  text: Okay sir, verification ho gaya. Parcel receive kar lijiye.

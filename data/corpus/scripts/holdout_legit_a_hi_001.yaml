@@ -1,0 +1,18 @@
+id: holdout_legit_a_hi_001
+language: hi-IN
+label: legit
+legit_kind: appointment
+difficulty: easy
+split: holdout
+turns:
+- speaker: caller
+  text: नमस्ते सर, मेट्रो डायग्नोस्टिक सेंटर से रिसेप्शनिस्ट बोल रही हूँ।
+- speaker: victim
+  text: नमस्ते, कल सुबह के ब्लड टेस्ट के बारे में कॉल है?
+- speaker: caller
+  text: जी सर, याद दिलाने के लिए कॉल किया था कि कल सुबह आठ बजे सैंपल देने से पहले
+    आपको दस घंटे का उपवास रखना है।
+- speaker: victim
+  text: हाँ बिल्कुल, मैं रात दस बजे के बाद कुछ नहीं खाऊंगा।
+- speaker: caller
+  text: धन्यवाद सर, कल सुबह आठ बजे लैब में मिलते हैं।

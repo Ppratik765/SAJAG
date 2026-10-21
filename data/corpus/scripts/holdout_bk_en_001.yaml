@@ -1,0 +1,23 @@
+id: holdout_bk_en_001
+language: en-IN
+label: bank_kyc
+legit_kind: null
+difficulty: medium
+split: holdout
+turns:
+- speaker: caller
+  text: Good morning sir, I am calling from the centralized card operations center
+    of State Bank regarding your savings account debit card.
+- speaker: victim
+  text: Yes, tell me quickly, I am just heading into an office meeting.
+- speaker: caller
+  text: Sir, your mandatory periodic KYC authentication has lapsed. Your NetBanking
+    access and ATM withdrawals are scheduled to be blocked tonight by midnight.
+- speaker: victim
+  text: Oh, but I had submitted all documents at my home branch six months ago.
+- speaker: caller
+  text: To prevent immediate account suspension, I am triggering an online re-verification
+    code right now. Please read out the six-digit verification code you received on
+    SMS.
+- speaker: victim
+  text: Yes, I see the text message, let me check the code.

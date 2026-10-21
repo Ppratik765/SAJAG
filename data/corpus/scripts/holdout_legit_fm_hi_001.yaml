@@ -1,0 +1,18 @@
+id: holdout_legit_fm_hi_001
+language: hi-IN
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: पापा प्रणाम, मैं कॉलेज की लाइब्रेरी से बोल रहा हूँ।
+- speaker: victim
+  text: हाँ बेटा, क्लास खत्म हो गई तुम्हारी?
+- speaker: caller
+  text: हाँ पापा, प्रोजेक्ट की फाइल और नोट्स फोटोकॉपी करवाने हैं, दुकान वाले को चार
+    सौ रुपये यूपीआई कर दीजिए मेरे नंबर पर।
+- speaker: victim
+  text: हाँ अभी कर देता हूँ फोनपे से। पढ़ाई कैसी चल रही है?
+- speaker: caller
+  text: बहुत अच्छी चल रही है पापा, पैसे आ गए, धन्यवाद!

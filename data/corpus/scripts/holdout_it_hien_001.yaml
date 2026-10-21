@@ -1,0 +1,25 @@
+id: holdout_it_hien_001
+language: hi-en
+label: investment_task
+legit_kind: null
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Hello ma'am, congratulations! You have completed task level two on our Telegram
+    work-from-home review channel.
+- speaker: victim
+  text: Yes, I submitted the Google hotel reviews yesterday, where is my payout?
+- speaker: caller
+  text: Ma'am, your dashboard shows an accumulated profit of 48,000 rupees! To unlock
+    and withdraw this guaranteed amount to your bank, you must deposit 15,000 rupees
+    as mandatory clearance capital.
+- speaker: victim
+  text: Deposit fifteen thousand rupees? But earlier you said tasks were completely
+    free!
+- speaker: caller
+  text: This is refundable security deposit. Once you transfer fifteen thousand to
+    our corporate account, your full 63,000 balance will be credited within five minutes.
+- speaker: victim
+  text: Okay, send me the company account number so I can transfer and withdraw my
+    profits.

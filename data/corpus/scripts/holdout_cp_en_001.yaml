@@ -1,0 +1,22 @@
+id: holdout_cp_en_001
+language: en-IN
+label: courier_parcel
+legit_kind: null
+difficulty: medium
+split: holdout
+turns:
+- speaker: caller
+  text: Hello, this is the BlueDart courier parcel distribution hub customer helpline.
+    We have an international package for you that has been flagged at customs.
+- speaker: victim
+  text: A parcel? I did not order anything from abroad, who is the sender?
+- speaker: caller
+  text: The parcel originated from Cambodia under your name and Aadhaar details, containing
+    restricted foreign currency and unauthorized surveillance chips.
+- speaker: victim
+  text: I don't know anyone in Cambodia, someone is misusing my identity!
+- speaker: caller
+  text: Our hub manager has connected you directly to the narcotics control bureau.
+    Stay on the line, an arrest summons has been prepared.
+- speaker: victim
+  text: Please hold on, let me speak to the officer, I have done nothing wrong.

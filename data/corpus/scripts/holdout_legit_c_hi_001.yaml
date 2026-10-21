@@ -1,0 +1,19 @@
+id: holdout_legit_c_hi_001
+language: hi-IN
+label: legit
+legit_kind: chitchat
+difficulty: easy
+split: holdout
+turns:
+- speaker: caller
+  text: अरे वर्मा जी नमस्कार, कैसे हैं आप? बहुत दिनों बाद आवाज सुनी।
+- speaker: victim
+  text: नमस्कार शर्मा जी! बस सब कुशल मंगल है, आप बताइए, सब ठीक-ठाक?
+- speaker: caller
+  text: हाँ जी, वो इस रविवार को सोसाइटी के पार्क की सफाई और नए पौधे लगाने की मीटिंग
+    है, आप रहेंगे ना?
+- speaker: victim
+  text: हाँ बिल्कुल रहूँगा, पर्यावरण के काम में हम सब साथ हैं। रविवार सुबह दस बजे
+    मिलते हैं।
+- speaker: caller
+  text: बहुत बढ़िया वर्मा जी, रविवार को मिलते हैं, अपना ख्याल रखिएगा।

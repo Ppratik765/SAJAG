@@ -1,0 +1,22 @@
+id: holdout_da_hien_001
+language: hi-en
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Hello, this is Inspector Deshmukh from Cyber Crime Investigation Cell Mumbai.
+    Aapka naam verify kijiye.
+- speaker: victim
+  text: Haan bol rahe hain, kya problem ho gayi sir?
+- speaker: caller
+  text: FedEx cargo se ek shipment intercept hui hai jisme illicit MDMA drugs aur
+    fake ATM cards mile hain. Case CBI ko transfer ho chuka hai.
+- speaker: victim
+  text: Sir main toh retired government employee hoon, maine koi parcel nahi bheja!
+- speaker: caller
+  text: Court ne digital arrest warrant sign kar diya hai. Call disconnect kiya toh
+    local police aapke ghar aayegi. WhatsApp video pe aao and room lock rakho.
+- speaker: victim
+  text: Sir main call hold pe rakh raha hoon, please arrest mat kijiye.

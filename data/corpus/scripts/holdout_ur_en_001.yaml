@@ -1,0 +1,23 @@
+id: holdout_ur_en_001
+language: en-IN
+label: upi_refund
+legit_kind: null
+difficulty: medium
+split: holdout
+turns:
+- speaker: caller
+  text: Hello ma'am, this is PhonePe merchant settlement support. You had an unsuccessful
+    transaction yesterday where 3,450 rupees were debited twice.
+- speaker: victim
+  text: Yes! The supermarket bill was debited twice from my account, I was going to
+    call the helpline.
+- speaker: caller
+  text: We are processing the direct reversal refund to your linked bank account right
+    now through Google Pay.
+- speaker: victim
+  text: Thank you, that is such a relief. How will the amount come?
+- speaker: caller
+  text: Open your Google Pay app now, you will see a pending refund request. Click
+    on pay and enter your secret UPI PIN to claim the refund credit into your bank.
+- speaker: victim
+  text: Wait, do I need to type my UPI PIN to receive money?

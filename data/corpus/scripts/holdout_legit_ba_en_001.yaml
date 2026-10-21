@@ -1,0 +1,21 @@
+id: holdout_legit_ba_en_001
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Good morning, this is an automated public awareness bulletin from the Reserve
+    Bank of India.
+- speaker: victim
+  text: Yes, I am listening.
+- speaker: caller
+  text: Never share your one-time passwords, debit card CVV, or NetBanking credentials
+    with anyone over phone or SMS. Remember, police and courts never place citizens
+    under digital arrest.
+- speaker: victim
+  text: Thank you, that is very helpful advice for our family.
+- speaker: caller
+  text: Stay vigilant. In case of suspicious financial fraud, report immediately to
+    cyber crime portal or helpline 1930.

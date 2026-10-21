@@ -1,0 +1,18 @@
+id: holdout_legit_cc_hi_001
+language: hi-IN
+label: legit
+legit_kind: customer_care
+difficulty: easy
+split: holdout
+turns:
+- speaker: caller
+  text: नमस्कार, भारत गैस डिस्ट्रीब्यूशन एजेंसी से सुमन बात कर रही हूँ।
+- speaker: victim
+  text: नमस्ते मैडम, हमारे रसोई गैस सिलेंडर के बारे में फोन है क्या?
+- speaker: caller
+  text: हाँ जी, आपके कल के गैस सिलेंडर रिफिल की डिलीवरी सफल रही? क्या डिलीवरी ब्वॉय
+    ने कोई अतिरिक्त शुल्क तो नहीं माँगा?
+- speaker: victim
+  text: नहीं मैडम, सब कुछ बिल्कुल सही था, सिलेंडर समय पर मिल गया था।
+- speaker: caller
+  text: फीडबैक के लिए धन्यवाद सर, आपका दिन शुभ हो।

@@ -349,6 +349,12 @@ async def run_evaluation(
 
     metrics = compute_metrics(all_results)
 
+    # Per-split metrics
+    per_split: dict[str, Any] = {}
+    splits = sorted({it["split"] for it in all_results if "split" in it})
+    for sp in splits:
+        per_split[sp] = compute_metrics([it for it in all_results if it.get("split") == sp])
+
     # Per-language metrics
     per_language: dict[str, Any] = {}
     languages = sorted({it["language"] for it in all_results})
@@ -369,6 +375,7 @@ async def run_evaluation(
             "scripts_count": len(scripts),
         },
         "overall": metrics,
+        "per_split": per_split,
         "per_language": per_language,
         "per_variant": per_variant,
         "items": all_results,
@@ -394,7 +401,7 @@ async def main() -> None:
     parser = argparse.ArgumentParser(description="Run Sajag corpus evaluation harness")
     parser.add_argument("--script-id", help="Single script ID to evaluate")
     parser.add_argument("--script-ids", nargs="+", help="Explicit list of script IDs to evaluate")
-    parser.add_argument("--split", choices=["dev", "test", "all"], default="all", help="Dataset split (default: all)")
+    parser.add_argument("--split", choices=["dev", "test", "holdout", "all"], default="all", help="Dataset split (default: all)")
     parser.add_argument("--label", choices=["scam", "legit", "all"], default="all", help="Filter by label (scam, legit, all)")
     parser.add_argument("--variants", nargs="+", default=["clean"], help="Variants to evaluate: clean, tel, tel_noise15, tel_noise5")
     parser.add_argument("--calibration-only", action="store_true", help="Run only on calibration scripts")

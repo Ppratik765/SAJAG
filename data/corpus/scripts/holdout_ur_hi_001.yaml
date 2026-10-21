@@ -1,0 +1,22 @@
+id: holdout_ur_hi_001
+language: hi-IN
+label: upi_refund
+legit_kind: null
+difficulty: medium
+split: holdout
+turns:
+- speaker: caller
+  text: नमस्कार सर, मैं पेटीएम रिफंड डिपार्टमेंट से बात कर रहा हूँ। बिजली बिल भुगतान
+    का 2,500 रुपये का रिफंड पेंडिंग है।
+- speaker: victim
+  text: हाँ, पिछले हफ्ते बिल डबल कट गया था, कब तक वापस आएगा?
+- speaker: caller
+  text: सर अभी एक मिनट में खाते में क्रेडिट हो जाएगा। मैंने आपके नंबर पर रिफंड अप्रूवल
+    रिक्वेस्ट भेजी है।
+- speaker: victim
+  text: मुझे क्या करना होगा बताइए?
+- speaker: caller
+  text: अपना यूपीआई ऐप खोलिए, रिक्वेस्ट पर क्लिक करके अपना 6 अंकों का यूपीआई पिन डालिए,
+    तुरंत पैसा आपके खाते में ट्रांसफर हो जाएगा।
+- speaker: victim
+  text: अच्छा, ऐप खोलकर यूपीआई पिन डालना है?

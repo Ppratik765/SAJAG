@@ -1,0 +1,18 @@
+id: holdout_legit_fm_en_001
+language: en-IN
+label: legit
+legit_kind: family_money
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Hi Dad, are you free for a second? I just reached the coaching class.
+- speaker: victim
+  text: Yes beta, is everything okay? Did you reach safely?
+- speaker: caller
+  text: Yes Dad, but the auto rickshaw driver doesn't have cash change for a five
+    hundred rupee note. Can you Google Pay him two hundred rupees?
+- speaker: victim
+  text: Sure sweetheart, tell him to show his QR code or send his number on WhatsApp.
+- speaker: caller
+  text: I am sending his number right now, thanks Dad, see you in the evening.

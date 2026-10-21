@@ -1,0 +1,23 @@
+id: holdout_ur_hien_001
+language: hi-en
+label: upi_refund
+legit_kind: null
+difficulty: medium
+split: holdout
+turns:
+- speaker: caller
+  text: Hello sir, Amazon customer service se refund desk call kar raha hai regarding
+    returned bluetooth headphones.
+- speaker: victim
+  text: Haan, parcel courier wala le gaya tha par refund abhi tak wallet mein nahi
+    aaya.
+- speaker: caller
+  text: Sir technical issue tha. Hum aapke bank account mein direct reverse transfer
+    initiate kar rahe hain.
+- speaker: victim
+  text: Accha, toh kaise credit hoga mere account mein?
+- speaker: caller
+  text: Aap Google Pay open kijiye, receive refund request show ho rahi hogi. Uss
+    par click karke UPI PIN enter kijiye for instant credit.
+- speaker: victim
+  text: Receive karne ke liye bhi UPI PIN lagta hai kya?

@@ -1,0 +1,19 @@
+id: holdout_legit_a_en_001
+language: en-IN
+label: legit
+legit_kind: appointment
+difficulty: easy
+split: holdout
+turns:
+- speaker: caller
+  text: Good morning, this is Apollo Dental Clinic calling to confirm your routine
+    dental cleaning appointment.
+- speaker: victim
+  text: Good morning, yes, I had booked for Thursday afternoon with Dr. Rao.
+- speaker: caller
+  text: That is correct, Thursday at 3:30 PM. Please arrive ten minutes early for
+    initial registration.
+- speaker: victim
+  text: Sure, I have noted down the time. See you on Thursday.
+- speaker: caller
+  text: Thank you, see you then.

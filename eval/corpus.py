@@ -57,8 +57,10 @@ RE_PAN = re.compile(r"\b[A-Z]{5}\d{4}[A-Z]\b")
 RE_AADHAAR = re.compile(r"\b\d{4}\s?\d{4}\s?\d{4}\b")
 
 
-def compute_split(script_id: str) -> Literal["dev", "test"]:
-    """Deterministically assign 70% dev / 30% test based on sha256(id)."""
+def compute_split(script_id: str) -> Literal["dev", "test", "holdout"]:
+    """Deterministically assign 70% dev / 30% test based on sha256(id), or holdout for holdout scripts."""
+    if script_id.startswith("holdout_"):
+        return "holdout"
     h = int(hashlib.sha256(script_id.encode("utf-8")).hexdigest(), 16)
     return "dev" if (h % 100) < 70 else "test"
 
@@ -89,7 +91,7 @@ class Script(BaseModel):
     legit_kind: str | None = None
     difficulty: Literal["easy", "medium", "hard"] = "medium"
     turns: list[ScriptTurn] = Field(min_length=2)
-    split: Literal["dev", "test"]
+    split: Literal["dev", "test", "holdout"]
 
     @model_validator(mode="after")
     def validate_script_rules(self) -> Script:

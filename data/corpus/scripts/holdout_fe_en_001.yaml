@@ -1,0 +1,24 @@
+id: holdout_fe_en_001
+language: en-IN
+label: family_emergency
+legit_kind: null
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Uncle, uncle, can you hear me? This is Rohit's college friend Rahul calling,
+    there has been a terrible emergency!
+- speaker: victim
+  text: Rahul? What happened to Rohit? Why are you calling from a strange phone number?
+- speaker: caller
+  text: Rohit met with a severe highway motorcycle crash near Pune. His smartphone
+    got smashed in the accident and he is unconscious in the emergency ward right
+    now.
+- speaker: victim
+  text: Oh my god! Is he breathing? Where are his parents?
+- speaker: caller
+  text: The doctors need an immediate surgical advance deposit of 25,000 rupees to
+    start emergency treatment. Please don't tell auntie yet, she has a weak heart,
+    just transfer the money to this clinic doctor UPI ID right now.
+- speaker: victim
+  text: I will send the money right away, give me the UPI ID immediately!

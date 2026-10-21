@@ -1,0 +1,24 @@
+id: holdout_ud_en_001
+language: en-IN
+label: utility_disconnect
+legit_kind: null
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Urgent alert from the State Electricity Distribution Board. Is this the meter
+    consumer?
+- speaker: victim
+  text: Yes, what is the matter? We are in the middle of dinner.
+- speaker: caller
+  text: Dear consumer, your electricity bill update failed on the central grid server.
+    Your power line is scheduled for disconnection tonight at 9:30 PM.
+- speaker: victim
+  text: That is ridiculous, I paid the electricity bill through my bank app on the
+    fifth of this month!
+- speaker: caller
+  text: The bill receipt was rejected by the nodal billing office. To prevent disconnection,
+    pay the overdue charge of 1,890 rupees immediately through our officer helpline
+    link.
+- speaker: victim
+  text: Please do not cut the power, there is an elderly patient on oxygen at home!

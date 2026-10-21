@@ -1,0 +1,28 @@
+id: holdout_da_en_001
+language: en-IN
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: holdout
+turns:
+- speaker: caller
+  text: Good afternoon, am I speaking with the resident? I am calling from the central
+    customs nodal cell at Mumbai international airport cargo terminal.
+- speaker: victim
+  text: Yes, who is this? I was actually in the middle of preparing lunch, why are
+    you calling my number?
+- speaker: caller
+  text: Ma'am, we have detained an air cargo consignor package shipped under your
+    name containing twenty expired passports, synthetic contraband narcotics, and
+    multiple fake debit cards.
+- speaker: victim
+  text: Contraband? There must be some terrible misunderstanding, I have not ordered
+    or posted anything from Mumbai!
+- speaker: caller
+  text: The high court bench has issued an immediate non-bailable digital arrest order
+    against your identity. You are strictly forbidden from stepping out of your room
+    or disconnecting this audio call until the cyber crime inspector clears your statement
+    over video conference.
+- speaker: victim
+  text: Please do not arrest me, I am alone at home and very terrified, tell me what
+    I should do.

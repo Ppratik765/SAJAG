@@ -193,8 +193,12 @@ async def transcribe_file(
                         raise GnaniRateLimit("Gnani rate limit exceeded (429)", status_code=429, response_data=error_data)
                     raise GnaniServerError(f"Gnani server error ({status})", status_code=status, response_data=error_data)
 
-                jitter = random.uniform(0.05, 0.25)
-                delay = backoff_delays[min(attempt, len(backoff_delays) - 1)] + jitter
+                jitter = random.uniform(0.1, 0.4)
+                if status == 429:
+                    rate_delays = [2.5, 6.0, 12.0]
+                    delay = rate_delays[min(attempt, len(rate_delays) - 1)] + jitter
+                else:
+                    delay = backoff_delays[min(attempt, len(backoff_delays) - 1)] + jitter
                 logger.warning(
                     "Gnani STT returned HTTP %d (attempt %d/%d), retrying in %.2fs",
                     status,
