@@ -62,3 +62,19 @@ class AnalysisResult(BaseModel):
 class TextAnalysisRequest(BaseModel):
     text: str
     language_code: str = "hi-IN"
+
+
+class FirstCrossed(BaseModel):
+    suspicious: Optional[float] = None
+    likely_scam: Optional[float] = None
+
+
+class RiskUpdate(BaseModel):
+    type: Literal["risk"] = "risk"
+    level: RiskLevel
+    score: int
+    primary_type: PrimaryType
+    new_signals: List[Signal] = Field(default_factory=list)
+    elapsed_s: float = 0.0
+    first_crossed: FirstCrossed = Field(default_factory=FirstCrossed)
+

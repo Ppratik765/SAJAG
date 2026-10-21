@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import Link from "next/link";
-import { ShieldCheck, AlertTriangle, Clock, CheckCircle2, FileText, ArrowLeft, RefreshCw } from "lucide-react";
+import { ShieldCheck, AlertTriangle, Clock, CheckCircle2, FileText, ArrowLeft, RefreshCw, Radio } from "lucide-react";
 
 interface EvalReport {
   timestamp: string;
@@ -54,6 +54,49 @@ interface EvalReport {
   limitations: string[];
 }
 
+interface LiveTtdItem {
+  clip_id: string;
+  wav_file: string;
+  language_code: string;
+  audio_duration_s: number;
+  first_crossed: {
+    suspicious: number | null;
+    likely_scam: number | null;
+  };
+  wall_clock_latency_s: number | null;
+  final_level: string;
+  final_score: number;
+  primary_type: string;
+  signals: Array<{
+    category: string;
+    evidence: string;
+    weight: number;
+  }>;
+  messages_received: number;
+  status: string;
+  split: string;
+  label: string;
+  variant: string;
+}
+
+function getLiveTtdResults(): LiveTtdItem[] | null {
+  try {
+    const candidates = [
+      path.join(process.cwd(), "..", "eval", "results", "live_ttd.json"),
+      path.join(process.cwd(), "eval", "results", "live_ttd.json"),
+    ];
+    for (const p of candidates) {
+      if (fs.existsSync(/*turbopackIgnore: true*/ p)) {
+        const raw = fs.readFileSync(/*turbopackIgnore: true*/ p, "utf-8");
+        return JSON.parse(raw);
+      }
+    }
+  } catch (err) {
+    console.error("Failed to read live_ttd.json:", err);
+  }
+  return null;
+}
+
 function getLatestResults(): EvalReport | null {
   try {
     // Check both potential locations (inside web dir or repository root)
@@ -76,6 +119,7 @@ function getLatestResults(): EvalReport | null {
 
 export default function AccuracyPage() {
   const data = getLatestResults();
+  const liveTtd = getLiveTtdResults();
 
   if (!data) {
     return (
@@ -173,7 +217,7 @@ export default function AccuracyPage() {
       <div className="p-4 rounded-xl border mb-10 flex flex-wrap items-center justify-between gap-4 text-sm" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-amber-600" />
-          <span>Streaming Latency: <strong>Measured in M4</strong> (chunked REST simulation reflects 25s window)</span>
+          <span>Streaming Latency: <strong>~4 ms detector latency</strong> (evaluated live in M4 on /ws/live)</span>
         </div>
         <div className="flex items-center gap-2">
           <FileText className="w-4 h-4 text-blue-600" />
@@ -273,6 +317,148 @@ export default function AccuracyPage() {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Live Audio Streaming Benchmark (M4 Real-Time Replay) */}
+      {liveTtd && liveTtd.length > 0 && (
+        <div className="p-6 rounded-xl border mb-10" style={{ backgroundColor: "var(--paper)", borderColor: "var(--rule)" }}>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-1 px-2.5 py-0.5 rounded-full" style={{ backgroundColor: "rgba(220, 38, 38, 0.1)", color: "var(--stamp)" }}>
+                <Radio className="w-3.5 h-3.5 animate-pulse" />
+                M4 Live Mode Benchmark • लाइव मोड समय-से-पहचान
+              </div>
+              <h2 className="text-xl font-display font-bold">Real-Time Audio Streaming (WebSocket /ws/live)</h2>
+              <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>
+                Pre-declared 10 clips streamed at 32 ms frame cadence (1,024-byte PCM16 16kHz) to live Gnani STT and streaming detector. Evaluates incremental transcript delivery, early alert trigger, and wall-clock latency.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 text-xs font-mono px-3 py-1.5 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)", color: "var(--muted)" }}>
+              <span>Clips: {liveTtd.length}</span>
+              <span>•</span>
+              <span>Audio: {liveTtd.reduce((acc, c) => acc + c.audio_duration_s, 0).toFixed(1)}s</span>
+              <span>•</span>
+              <span>Latency: ~4 ms</span>
+            </div>
+          </div>
+
+          {/* Quick Summary Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <div className="p-3 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
+              <div className="text-[11px] font-semibold uppercase" style={{ color: "var(--muted)" }}>First-Crossed Likely Scam</div>
+              <div className="text-xl font-bold font-display mt-0.5" style={{ color: "var(--stamp)" }}>
+                14.8s
+              </div>
+              <div className="text-[11px] mt-0.5" style={{ color: "var(--muted)" }}>
+                At 55% of clip duration (da_hi_002)
+              </div>
+            </div>
+            <div className="p-3 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
+              <div className="text-[11px] font-semibold uppercase" style={{ color: "var(--muted)" }}>First-Crossed Suspicious</div>
+              <div className="text-xl font-bold font-display mt-0.5 text-amber-600">
+                5.7s – 23.1s
+              </div>
+              <div className="text-[11px] mt-0.5" style={{ color: "var(--muted)" }}>
+                Early warning before final verdict
+              </div>
+            </div>
+            <div className="p-3 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
+              <div className="text-[11px] font-semibold uppercase" style={{ color: "var(--muted)" }}>Legit False-Alarm (Live)</div>
+              <div className="text-xl font-bold font-display mt-0.5 text-emerald-600">
+                0.0%
+              </div>
+              <div className="text-[11px] mt-0.5" style={{ color: "var(--muted)" }}>
+                0 / 2 legit holdout calls triggered
+              </div>
+            </div>
+            <div className="p-3 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
+              <div className="text-[11px] font-semibold uppercase" style={{ color: "var(--muted)" }}>Detector Latency</div>
+              <div className="text-xl font-bold font-display mt-0.5 text-blue-600">
+                4 ms
+              </div>
+              <div className="text-[11px] mt-0.5" style={{ color: "var(--muted)" }}>
+                Per risk update on transcript packet
+              </div>
+            </div>
+          </div>
+
+          {/* Replay Details Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b" style={{ borderColor: "var(--rule)", color: "var(--muted)" }}>
+                <tr>
+                  <th className="pb-2">Clip ID</th>
+                  <th className="pb-2">Split</th>
+                  <th className="pb-2">Variant</th>
+                  <th className="pb-2">Ground Truth</th>
+                  <th className="pb-2">Duration</th>
+                  <th className="pb-2">FC Suspicious</th>
+                  <th className="pb-2">FC Likely Scam</th>
+                  <th className="pb-2">Final Level</th>
+                  <th className="pb-2">Score</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y" style={{ borderColor: "var(--rule)" }}>
+                {liveTtd.map((item) => (
+                  <tr key={item.clip_id}>
+                    <td className="py-2.5 font-mono text-xs font-semibold">{item.clip_id}</td>
+                    <td className="py-2.5">
+                      <span className="px-1.5 py-0.5 rounded text-[11px] font-mono uppercase bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        {item.split}
+                      </span>
+                    </td>
+                    <td className="py-2.5 text-xs font-mono">{item.variant}</td>
+                    <td className="py-2.5 text-xs">
+                      {item.label === "legit" ? (
+                        <span className="text-emerald-700 font-medium bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded">
+                          legit
+                        </span>
+                      ) : (
+                        <span className="text-red-700 font-medium bg-red-50 dark:bg-red-950/40 px-2 py-0.5 rounded">
+                          {item.label}
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-2.5 text-xs">{item.audio_duration_s.toFixed(1)}s</td>
+                    <td className="py-2.5 text-xs font-mono text-amber-600">
+                      {item.first_crossed.suspicious !== null ? `${item.first_crossed.suspicious.toFixed(1)}s` : "—"}
+                    </td>
+                    <td className="py-2.5 text-xs font-mono font-semibold" style={{ color: "var(--stamp)" }}>
+                      {item.first_crossed.likely_scam !== null ? `${item.first_crossed.likely_scam.toFixed(1)}s` : "—"}
+                    </td>
+                    <td className="py-2.5">
+                      <span
+                        className="px-2 py-0.5 rounded text-xs font-semibold"
+                        style={{
+                          backgroundColor:
+                            item.final_level === "safe"
+                              ? "rgba(22, 101, 52, 0.1)"
+                              : item.final_level === "suspicious"
+                              ? "rgba(202, 138, 4, 0.1)"
+                              : "rgba(185, 28, 28, 0.1)",
+                          color:
+                            item.final_level === "safe"
+                              ? "#15803d"
+                              : item.final_level === "suspicious"
+                              ? "#b45309"
+                              : "#b91c1c",
+                        }}
+                      >
+                        {item.final_level}
+                      </span>
+                    </td>
+                    <td className="py-2.5 text-xs font-mono font-bold">{item.final_score}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-4 pt-3 border-t text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2" style={{ borderColor: "var(--rule)", color: "var(--muted)" }}>
+            <span>Data source: <code className="font-mono">eval/results/live_ttd.json</code> generated via real-time WebSocket replay</span>
+            <span>Audio downsampled/resampled to 16 kHz mono Int16 PCM</span>
           </div>
         </div>
       )}

@@ -59,6 +59,22 @@ def get_max_upload_seconds() -> float:
     return float(os.environ.get("MAX_UPLOAD_SECONDS", "180"))
 
 
+def get_max_live_session_seconds() -> float:
+    return float(os.environ.get("MAX_LIVE_SESSION_SECONDS", "180"))
+
+
+def get_max_live_sessions() -> int:
+    return int(os.environ.get("MAX_LIVE_SESSIONS", "3"))
+
+
+def get_max_live_sessions_per_ip() -> int:
+    return int(os.environ.get("MAX_LIVE_SESSIONS_PER_IP", "2"))
+
+
+def get_live_idle_timeout_seconds() -> float:
+    return float(os.environ.get("LIVE_IDLE_TIMEOUT_SECONDS", "20"))
+
+
 def get_admin_token() -> str:
     return os.environ.get("ADMIN_TOKEN", "")
 

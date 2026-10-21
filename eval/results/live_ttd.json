@@ -1,0 +1,244 @@
+[
+  {
+    "clip_id": "da_hi_002",
+    "wav_file": "da_hi_002.wav",
+    "language_code": "hi-IN",
+    "audio_duration_s": 26.86,
+    "first_crossed": {
+      "suspicious": 5.73,
+      "likely_scam": 14.82
+    },
+    "wall_clock_latency_s": 0.004,
+    "final_level": "likely_scam",
+    "final_score": 9,
+    "primary_type": "unknown_suspicious",
+    "signals": [
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "सीबीआई",
+        "weight": 2
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "मनी लॉन्ड्रिंग",
+        "weight": 3
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "केस दर्ज",
+        "weight": 3
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "सी बी आई",
+        "weight": 2
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "कोर्ट",
+        "weight": 2
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "गैर जमानती",
+        "weight": 3
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "वारंट",
+        "weight": 3
+      }
+    ],
+    "messages_received": 7,
+    "status": "completed",
+    "split": "dev",
+    "label": "digital_arrest",
+    "variant": "clean"
+  },
+  {
+    "clip_id": "cp_en_001",
+    "wav_file": "cp_en_001.wav",
+    "language_code": "en-IN",
+    "audio_duration_s": 27.98,
+    "first_crossed": {
+      "suspicious": null,
+      "likely_scam": null
+    },
+    "wall_clock_latency_s": null,
+    "final_level": "safe",
+    "final_score": 0,
+    "primary_type": "none",
+    "signals": [],
+    "messages_received": 1,
+    "status": "completed",
+    "split": "dev",
+    "label": "courier_parcel",
+    "variant": "clean"
+  },
+  {
+    "clip_id": "bk_hi_001",
+    "wav_file": "bk_hi_001.wav",
+    "language_code": "hi-IN",
+    "audio_duration_s": 26.54,
+    "first_crossed": {
+      "suspicious": null,
+      "likely_scam": null
+    },
+    "wall_clock_latency_s": null,
+    "final_level": "safe",
+    "final_score": 0,
+    "primary_type": "none",
+    "signals": [],
+    "messages_received": 1,
+    "status": "completed",
+    "split": "dev",
+    "label": "bank_kyc",
+    "variant": "clean"
+  },
+  {
+    "clip_id": "da_hi_001",
+    "wav_file": "da_hi_001.wav",
+    "language_code": "hi-IN",
+    "audio_duration_s": 26.7,
+    "first_crossed": {
+      "suspicious": null,
+      "likely_scam": null
+    },
+    "wall_clock_latency_s": null,
+    "final_level": "safe",
+    "final_score": 0,
+    "primary_type": "none",
+    "signals": [],
+    "messages_received": 1,
+    "status": "completed",
+    "split": "test",
+    "label": "digital_arrest",
+    "variant": "clean"
+  },
+  {
+    "clip_id": "bk_en_001",
+    "wav_file": "bk_en_001.wav",
+    "language_code": "en-IN",
+    "audio_duration_s": 25.26,
+    "first_crossed": {
+      "suspicious": null,
+      "likely_scam": null
+    },
+    "wall_clock_latency_s": null,
+    "final_level": "safe",
+    "final_score": 0,
+    "primary_type": "none",
+    "signals": [],
+    "messages_received": 1,
+    "status": "completed",
+    "split": "test",
+    "label": "bank_kyc",
+    "variant": "clean"
+  },
+  {
+    "clip_id": "cp_hi_003",
+    "wav_file": "cp_hi_003.wav",
+    "language_code": "hi-IN",
+    "audio_duration_s": 25.58,
+    "first_crossed": {
+      "suspicious": null,
+      "likely_scam": null
+    },
+    "wall_clock_latency_s": null,
+    "final_level": "safe",
+    "final_score": 0,
+    "primary_type": "none",
+    "signals": [],
+    "messages_received": 1,
+    "status": "completed",
+    "split": "test",
+    "label": "courier_parcel",
+    "variant": "clean"
+  },
+  {
+    "clip_id": "holdout_legit_ba_en_001",
+    "wav_file": "holdout_legit_ba_en_001.wav",
+    "language_code": "en-IN",
+    "audio_duration_s": 27.64,
+    "first_crossed": {
+      "suspicious": null,
+      "likely_scam": null
+    },
+    "wall_clock_latency_s": null,
+    "final_level": "safe",
+    "final_score": 0,
+    "primary_type": "none",
+    "signals": [],
+    "messages_received": 1,
+    "status": "completed",
+    "split": "holdout",
+    "label": "legit",
+    "variant": "clean"
+  },
+  {
+    "clip_id": "fresh_holdout_legit_police_hi_001",
+    "wav_file": "fresh_holdout_legit_police_hi_001.wav",
+    "language_code": "hi-IN",
+    "audio_duration_s": 27.0,
+    "first_crossed": {
+      "suspicious": null,
+      "likely_scam": null
+    },
+    "wall_clock_latency_s": null,
+    "final_level": "safe",
+    "final_score": 0,
+    "primary_type": "none",
+    "signals": [],
+    "messages_received": 4,
+    "status": "completed",
+    "split": "fresh_holdout",
+    "label": "legit",
+    "variant": "clean"
+  },
+  {
+    "clip_id": "da_hi_001_tel_noise15",
+    "wav_file": "da_hi_001.wav",
+    "language_code": "hi-IN",
+    "audio_duration_s": 26.7,
+    "first_crossed": {
+      "suspicious": null,
+      "likely_scam": null
+    },
+    "wall_clock_latency_s": null,
+    "final_level": "safe",
+    "final_score": 0,
+    "primary_type": "none",
+    "signals": [],
+    "messages_received": 1,
+    "status": "completed",
+    "split": "test",
+    "label": "digital_arrest",
+    "variant": "tel_noise15"
+  },
+  {
+    "clip_id": "bk_en_001_tel_noise15",
+    "wav_file": "bk_en_001.wav",
+    "language_code": "en-IN",
+    "audio_duration_s": 25.26,
+    "first_crossed": {
+      "suspicious": 23.07,
+      "likely_scam": null
+    },
+    "wall_clock_latency_s": null,
+    "final_level": "suspicious",
+    "final_score": 4,
+    "primary_type": "unknown_suspicious",
+    "signals": [
+      {
+        "category": "OTP_PIN_REQUEST",
+        "evidence": "otp",
+        "weight": 4
+      }
+    ],
+    "messages_received": 4,
+    "status": "completed",
+    "split": "test",
+    "label": "bank_kyc",
+    "variant": "tel_noise15"
+  }
+]
