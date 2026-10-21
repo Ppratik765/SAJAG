@@ -69,6 +69,20 @@ class TranscriptEvent:
 
 
 @dataclass
+class ProcessingEvent:
+    type: str = "processing"
+    timestamp: str = ""
+
+
+@dataclass
+class GenericUpstreamEvent:
+    type: str = "upstream_raw"
+    raw_type: str = ""
+    data: Dict[str, Any] = None
+    timestamp: str = ""
+
+
+@dataclass
 class ErrorEvent:
     type: str = "error"
     code: str = ""
@@ -81,7 +95,15 @@ class EndEvent:
     reason: str = ""
 
 
-StreamEvent = ConnectedEvent | SpeechStartEvent | TranscriptEvent | ErrorEvent | EndEvent
+StreamEvent = (
+    ConnectedEvent
+    | SpeechStartEvent
+    | ProcessingEvent
+    | TranscriptEvent
+    | GenericUpstreamEvent
+    | ErrorEvent
+    | EndEvent
+)
 
 
 class GnaniSTTStreamClient:
@@ -96,6 +118,7 @@ class GnaniSTTStreamClient:
         sample_rate: int = 16000,
         vad_threshold: float = 0.5,
         min_silence_ms: int = 700,
+        max_speech_s: Optional[float] = None,
     ):
         if not api_key:
             raise GnaniAuthError("Gnani API key is required.")
@@ -105,6 +128,7 @@ class GnaniSTTStreamClient:
         self.sample_rate = sample_rate
         self.vad_threshold = vad_threshold
         self.min_silence_ms = min_silence_ms
+        self.max_speech_s = max_speech_s
 
         self._ws: Optional[websockets.WebSocketClientProtocol] = None
         self._is_connected = False
@@ -128,6 +152,8 @@ class GnaniSTTStreamClient:
             "x-vad-threshold": str(self.vad_threshold),
             "x-min-silence-ms": str(self.min_silence_ms),
         }
+        if self.max_speech_s is not None:
+            headers["x-max-speech-s"] = str(self.max_speech_s)
 
         try:
             # websockets v14+ supports additional_headers
@@ -211,6 +237,13 @@ class GnaniSTTStreamClient:
                     continue
 
                 ev_type = data.get("type")
+                # Log raw upstream event (redacting ids)
+                redacted_data = {
+                    k: ("<redacted>" if k in ("request_id", "segment_id", "utterance_id", "api_key") else v)
+                    for k, v in data.items()
+                }
+                logger.info("[Gnani upstream event] type=%s payload=%s", ev_type, json.dumps(redacted_data))
+
                 if ev_type == "transcript":
                     dur = float(data.get("audio_duration_ms", 0.0))
                     self._audio_duration_accum_ms += dur
@@ -230,6 +263,11 @@ class GnaniSTTStreamClient:
                         utterance_id=data.get("utterance_id", ""),
                         timestamp=data.get("timestamp", ""),
                     )
+                elif ev_type == "processing":
+                    yield ProcessingEvent(
+                        type="processing",
+                        timestamp=data.get("timestamp", ""),
+                    )
                 elif ev_type == "error":
                     yield ErrorEvent(
                         type="error",
@@ -242,6 +280,13 @@ class GnaniSTTStreamClient:
                         message=data.get("message", ""),
                         request_id=data.get("request_id", ""),
                         config=data.get("config", {}),
+                        timestamp=data.get("timestamp", ""),
+                    )
+                else:
+                    yield GenericUpstreamEvent(
+                        type="upstream_raw",
+                        raw_type=ev_type or "unknown",
+                        data=redacted_data,
                         timestamp=data.get("timestamp", ""),
                     )
         except ConnectionClosed:

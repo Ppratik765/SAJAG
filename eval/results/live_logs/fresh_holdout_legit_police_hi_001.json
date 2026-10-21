@@ -1,0 +1,176 @@
+[
+  {
+    "elapsed_s": 0.625,
+    "received_at": "2026-10-21T11:33:37.466Z",
+    "type": "ready",
+    "payload": {
+      "type": "ready"
+    }
+  },
+  {
+    "elapsed_s": 1.074,
+    "received_at": "2026-10-21T11:33:37.916Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:33:39.459137+00:00"
+    }
+  },
+  {
+    "elapsed_s": 9.798,
+    "received_at": "2026-10-21T11:33:46.640Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 1,
+      "text": "नमस्ते, पुलिस साइबर सेल की ओर से यह आम जनता के लिए सुरक्षा परामर्श और जागरूकता संदेश है।",
+      "audio_duration_ms": 6176.0,
+      "latency": 151
+    }
+  },
+  {
+    "elapsed_s": 9.803,
+    "received_at": "2026-10-21T11:33:46.645Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 9.78,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 9.804,
+    "received_at": "2026-10-21T11:33:46.645Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:33:48.182933+00:00"
+    }
+  },
+  {
+    "elapsed_s": 18.641,
+    "received_at": "2026-10-21T11:33:55.482Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 2,
+      "text": "मैं सुन रहा हूँ ध्यान दें, पुलिस या सी बी आई कभी भी वीडियो कॉल पर डिजिटल अरेस्ट नहीं कर",
+      "audio_duration_ms": 6016.0,
+      "latency": 132
+    }
+  },
+  {
+    "elapsed_s": 18.65,
+    "received_at": "2026-10-21T11:33:55.491Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 18.62,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 18.65,
+    "received_at": "2026-10-21T11:33:55.492Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:33:57.027026+00:00"
+    }
+  },
+  {
+    "elapsed_s": 27.363,
+    "received_at": "2026-10-21T11:34:04.205Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 3,
+      "text": "और न ही जमानत के नाम पर पैसे ट्रांसफर करने को कहती है यह पूरी तरह से धोखाधड़ी है",
+      "audio_duration_ms": 6016.0,
+      "latency": 152
+    }
+  },
+  {
+    "elapsed_s": 27.378,
+    "received_at": "2026-10-21T11:34:04.220Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 27.35,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 27.849,
+    "received_at": "2026-10-21T11:34:04.691Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:34:06.236067+00:00"
+    }
+  },
+  {
+    "elapsed_s": 36.644,
+    "received_at": "2026-10-21T11:34:13.486Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 4,
+      "text": "धन्यवाद सर ये जानकारी बहुत ज़रूरी थी डरे नहीं और किसी भी धमकाने वाली कॉल की शिकायत",
+      "audio_duration_ms": 6336.0,
+      "latency": 177
+    }
+  },
+  {
+    "elapsed_s": 36.651,
+    "received_at": "2026-10-21T11:34:13.492Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 36.62,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 36.651,
+    "received_at": "2026-10-21T11:34:13.493Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:34:15.030268+00:00"
+    }
+  }
+]

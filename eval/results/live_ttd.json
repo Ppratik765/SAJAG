@@ -6,11 +6,11 @@
     "audio_duration_s": 26.86,
     "first_crossed": {
       "suspicious": 5.73,
-      "likely_scam": 14.82
+      "likely_scam": 11.78
     },
-    "wall_clock_latency_s": 0.004,
+    "wall_clock_latency_s": 0.005,
     "final_level": "likely_scam",
-    "final_score": 9,
+    "final_score": 10,
     "primary_type": "unknown_suspicious",
     "signals": [
       {
@@ -30,7 +30,7 @@
       },
       {
         "category": "AUTHORITY_CLAIM",
-        "evidence": "सी बी आई",
+        "evidence": "सीबीआई",
         "weight": 2
       },
       {
@@ -47,9 +47,14 @@
         "category": "THREAT_ARREST",
         "evidence": "वारंट",
         "weight": 3
+      },
+      {
+        "category": "URGENCY",
+        "evidence": "तुरंत",
+        "weight": 1
       }
     ],
-    "messages_received": 7,
+    "messages_received": 13,
     "status": "completed",
     "split": "dev",
     "label": "digital_arrest",
@@ -61,15 +66,41 @@
     "language_code": "en-IN",
     "audio_duration_s": 27.98,
     "first_crossed": {
-      "suspicious": null,
-      "likely_scam": null
+      "suspicious": 6.14,
+      "likely_scam": 24.67
     },
-    "wall_clock_latency_s": null,
-    "final_level": "safe",
-    "final_score": 0,
-    "primary_type": "none",
-    "signals": [],
-    "messages_received": 1,
+    "wall_clock_latency_s": 0.009,
+    "final_level": "likely_scam",
+    "final_score": 9,
+    "primary_type": "courier_parcel",
+    "signals": [
+      {
+        "category": "PARCEL",
+        "evidence": "fedex",
+        "weight": 2
+      },
+      {
+        "category": "PARCEL",
+        "evidence": "parcel",
+        "weight": 2
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "customs",
+        "weight": 2
+      },
+      {
+        "category": "MONEY_TRANSFER",
+        "evidence": "transfer forty thousand",
+        "weight": 3
+      },
+      {
+        "category": "MONEY_TRANSFER",
+        "evidence": "rupees as a refundable security deposit",
+        "weight": 3
+      }
+    ],
+    "messages_received": 13,
     "status": "completed",
     "split": "dev",
     "label": "courier_parcel",
@@ -81,15 +112,41 @@
     "language_code": "hi-IN",
     "audio_duration_s": 26.54,
     "first_crossed": {
-      "suspicious": null,
-      "likely_scam": null
+      "suspicious": 12.45,
+      "likely_scam": 24.48
     },
-    "wall_clock_latency_s": null,
-    "final_level": "safe",
-    "final_score": 0,
-    "primary_type": "none",
-    "signals": [],
-    "messages_received": 1,
+    "wall_clock_latency_s": 0.187,
+    "final_level": "likely_scam",
+    "final_score": 9,
+    "primary_type": "bank_kyc",
+    "signals": [
+      {
+        "category": "ACCOUNT_THREAT",
+        "evidence": "के वाई सी",
+        "weight": 2
+      },
+      {
+        "category": "URGENCY",
+        "evidence": "आज रात",
+        "weight": 1
+      },
+      {
+        "category": "ACCOUNT_THREAT",
+        "evidence": "खाता बंद",
+        "weight": 2
+      },
+      {
+        "category": "OTP_PIN_REQUEST",
+        "evidence": "ओटीपी",
+        "weight": 4
+      },
+      {
+        "category": "URGENCY",
+        "evidence": "तुरंत",
+        "weight": 1
+      }
+    ],
+    "messages_received": 13,
     "status": "completed",
     "split": "dev",
     "label": "bank_kyc",
@@ -101,15 +158,51 @@
     "language_code": "hi-IN",
     "audio_duration_s": 26.7,
     "first_crossed": {
-      "suspicious": null,
-      "likely_scam": null
+      "suspicious": 6.18,
+      "likely_scam": 18.21
     },
-    "wall_clock_latency_s": null,
-    "final_level": "safe",
-    "final_score": 0,
-    "primary_type": "none",
-    "signals": [],
-    "messages_received": 1,
+    "wall_clock_latency_s": 0.014,
+    "final_level": "scam",
+    "final_score": 11,
+    "primary_type": "courier_parcel",
+    "signals": [
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "पुलिस",
+        "weight": 2
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "क्राइम ब्रांच",
+        "weight": 2
+      },
+      {
+        "category": "PARCEL",
+        "evidence": "पार्सल",
+        "weight": 2
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "गिरफ्तारी",
+        "weight": 3
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "वारंट",
+        "weight": 3
+      },
+      {
+        "category": "PARCEL",
+        "evidence": "पार्सल",
+        "weight": 2
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "कोर्ट",
+        "weight": 2
+      }
+    ],
+    "messages_received": 13,
     "status": "completed",
     "split": "test",
     "label": "digital_arrest",
@@ -126,10 +219,16 @@
     },
     "wall_clock_latency_s": null,
     "final_level": "safe",
-    "final_score": 0,
+    "final_score": 2,
     "primary_type": "none",
-    "signals": [],
-    "messages_received": 1,
+    "signals": [
+      {
+        "category": "OTP_PIN_REQUEST",
+        "evidence": "otp",
+        "weight": 1
+      }
+    ],
+    "messages_received": 13,
     "status": "completed",
     "split": "test",
     "label": "bank_kyc",
@@ -141,15 +240,56 @@
     "language_code": "hi-IN",
     "audio_duration_s": 25.58,
     "first_crossed": {
-      "suspicious": null,
-      "likely_scam": null
+      "suspicious": 12.35,
+      "likely_scam": 12.35
     },
-    "wall_clock_latency_s": null,
-    "final_level": "safe",
-    "final_score": 0,
-    "primary_type": "none",
-    "signals": [],
-    "messages_received": 1,
+    "wall_clock_latency_s": 0.005,
+    "final_level": "scam",
+    "final_score": 14,
+    "primary_type": "courier_parcel",
+    "signals": [
+      {
+        "category": "PARCEL",
+        "evidence": "कूरियर",
+        "weight": 2
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "पुलिस",
+        "weight": 2
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "केस दर्ज",
+        "weight": 3
+      },
+      {
+        "category": "URGENCY",
+        "evidence": "तुरंत",
+        "weight": 1
+      },
+      {
+        "category": "MONEY_TRANSFER",
+        "evidence": "जुर्माना",
+        "weight": 3
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "जेल",
+        "weight": 3
+      },
+      {
+        "category": "URGENCY",
+        "evidence": "तुरंत",
+        "weight": 1
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "अरेस्ट",
+        "weight": 3
+      }
+    ],
+    "messages_received": 13,
     "status": "completed",
     "split": "test",
     "label": "courier_parcel",
@@ -169,7 +309,7 @@
     "final_score": 0,
     "primary_type": "none",
     "signals": [],
-    "messages_received": 1,
+    "messages_received": 13,
     "status": "completed",
     "split": "holdout",
     "label": "legit",
@@ -189,7 +329,7 @@
     "final_score": 0,
     "primary_type": "none",
     "signals": [],
-    "messages_received": 4,
+    "messages_received": 13,
     "status": "completed",
     "split": "fresh_holdout",
     "label": "legit",
@@ -201,15 +341,51 @@
     "language_code": "hi-IN",
     "audio_duration_s": 26.7,
     "first_crossed": {
-      "suspicious": null,
-      "likely_scam": null
+      "suspicious": 6.18,
+      "likely_scam": 18.21
     },
-    "wall_clock_latency_s": null,
-    "final_level": "safe",
-    "final_score": 0,
-    "primary_type": "none",
-    "signals": [],
-    "messages_received": 1,
+    "wall_clock_latency_s": 0.01,
+    "final_level": "scam",
+    "final_score": 11,
+    "primary_type": "courier_parcel",
+    "signals": [
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "पुलिस",
+        "weight": 2
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "क्राइम ब्रांच",
+        "weight": 2
+      },
+      {
+        "category": "PARCEL",
+        "evidence": "पार्सल",
+        "weight": 2
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "गिरफ्तारी",
+        "weight": 3
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "वारंट",
+        "weight": 3
+      },
+      {
+        "category": "PARCEL",
+        "evidence": "पार्सल",
+        "weight": 2
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "कोर्ट",
+        "weight": 2
+      }
+    ],
+    "messages_received": 13,
     "status": "completed",
     "split": "test",
     "label": "digital_arrest",
@@ -221,21 +397,21 @@
     "language_code": "en-IN",
     "audio_duration_s": 25.26,
     "first_crossed": {
-      "suspicious": 23.07,
+      "suspicious": null,
       "likely_scam": null
     },
     "wall_clock_latency_s": null,
-    "final_level": "suspicious",
-    "final_score": 4,
-    "primary_type": "unknown_suspicious",
+    "final_level": "safe",
+    "final_score": 1,
+    "primary_type": "none",
     "signals": [
       {
         "category": "OTP_PIN_REQUEST",
         "evidence": "otp",
-        "weight": 4
+        "weight": 1
       }
     ],
-    "messages_received": 4,
+    "messages_received": 13,
     "status": "completed",
     "split": "test",
     "label": "bank_kyc",

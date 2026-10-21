@@ -1,0 +1,260 @@
+[
+  {
+    "elapsed_s": 0.617,
+    "received_at": "2026-10-21T11:32:10.506Z",
+    "type": "ready",
+    "payload": {
+      "type": "ready"
+    }
+  },
+  {
+    "elapsed_s": 1.06,
+    "received_at": "2026-10-21T11:32:10.948Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:32:12.491185+00:00"
+    }
+  },
+  {
+    "elapsed_s": 11.478,
+    "received_at": "2026-10-21T11:32:21.366Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 1,
+      "text": "कूरियर कस्टम्स जाँच ब्यूरो, आपके पते पर भेजे गए पैकेट में अवैध विदेशी मुद्रा और नकली दस्तावेज़ मिले हैं।",
+      "audio_duration_ms": 6176.0,
+      "latency": 148
+    }
+  },
+  {
+    "elapsed_s": 11.482,
+    "received_at": "2026-10-21T11:32:21.371Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 2,
+      "primary_type": "none",
+      "new_signals": [
+        {
+          "id": "sig_01_001",
+          "category": "PARCEL",
+          "weight": 2,
+          "evidence": "कूरियर",
+          "segment_index": 1,
+          "start_char": 0,
+          "end_char": 6,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 11.45,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 11.483,
+    "received_at": "2026-10-21T11:32:21.371Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:32:22.908342+00:00"
+    }
+  },
+  {
+    "elapsed_s": 18.679,
+    "received_at": "2026-10-21T11:32:28.567Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 2,
+      "text": "सर कोई मेरे पते का गलत इस्तेमाल कर रहा है पुलिस केस दर्ज हो चुका है तुरंत पचास हजार का",
+      "audio_duration_ms": 6176.0,
+      "latency": 91
+    }
+  },
+  {
+    "elapsed_s": 18.684,
+    "received_at": "2026-10-21T11:32:28.573Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "likely_scam",
+      "score": 8,
+      "primary_type": "courier_parcel",
+      "new_signals": [
+        {
+          "id": "sig_02_001",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "पुलिस",
+          "segment_index": 2,
+          "start_char": 42,
+          "end_char": 47,
+          "reviewed": true
+        },
+        {
+          "id": "sig_02_002",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "केस दर्ज",
+          "segment_index": 2,
+          "start_char": 48,
+          "end_char": 56,
+          "reviewed": true
+        },
+        {
+          "id": "sig_02_003",
+          "category": "URGENCY",
+          "weight": 1,
+          "evidence": "तुरंत",
+          "segment_index": 2,
+          "start_char": 68,
+          "end_char": 73,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 18.65,
+      "first_crossed": {
+        "suspicious": 12.35,
+        "likely_scam": 12.35
+      }
+    }
+  },
+  {
+    "elapsed_s": 18.685,
+    "received_at": "2026-10-21T11:32:28.574Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:32:30.100609+00:00"
+    }
+  },
+  {
+    "elapsed_s": 27.493,
+    "received_at": "2026-10-21T11:32:37.381Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 3,
+      "text": "जुर्माना भरिए वरना आज ही जेल जाना पड़ेगा क्या मुझे थाने आकर बात करने की अनुमति है",
+      "audio_duration_ms": 6016.0,
+      "latency": 158
+    }
+  },
+  {
+    "elapsed_s": 27.507,
+    "received_at": "2026-10-21T11:32:37.395Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 12,
+      "primary_type": "courier_parcel",
+      "new_signals": [
+        {
+          "id": "sig_03_001",
+          "category": "MONEY_TRANSFER",
+          "weight": 3,
+          "evidence": "जुर्माना",
+          "segment_index": 3,
+          "start_char": 0,
+          "end_char": 8,
+          "reviewed": true
+        },
+        {
+          "id": "sig_03_002",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "जेल",
+          "segment_index": 3,
+          "start_char": 25,
+          "end_char": 28,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 27.48,
+      "first_crossed": {
+        "suspicious": 12.35,
+        "likely_scam": 12.35
+      }
+    }
+  },
+  {
+    "elapsed_s": 27.508,
+    "received_at": "2026-10-21T11:32:37.396Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:32:38.925245+00:00"
+    }
+  },
+  {
+    "elapsed_s": 36.251,
+    "received_at": "2026-10-21T11:32:46.140Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 4,
+      "text": "नहीं, तुरंत ऑनलाइन ट्रांसफर कीजिए वरना अरेस्ट टीम आपके घर पहुँच रही है, यह सरासर ठगी है?",
+      "audio_duration_ms": 6016.0,
+      "latency": 149
+    }
+  },
+  {
+    "elapsed_s": 36.266,
+    "received_at": "2026-10-21T11:32:46.155Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 14,
+      "primary_type": "courier_parcel",
+      "new_signals": [
+        {
+          "id": "sig_04_001",
+          "category": "URGENCY",
+          "weight": 1,
+          "evidence": "तुरंत",
+          "segment_index": 4,
+          "start_char": 6,
+          "end_char": 11,
+          "reviewed": true
+        },
+        {
+          "id": "sig_04_002",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "अरेस्ट",
+          "segment_index": 4,
+          "start_char": 39,
+          "end_char": 45,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 36.24,
+      "first_crossed": {
+        "suspicious": 12.35,
+        "likely_scam": 12.35
+      }
+    }
+  },
+  {
+    "elapsed_s": 36.463,
+    "received_at": "2026-10-21T11:32:46.352Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:32:47.895663+00:00"
+    }
+  }
+]

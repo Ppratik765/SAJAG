@@ -1,132 +1,159 @@
-# STATUS — M4b Live Mode with WebSocket Relay & Alive UI — 2026-10-21 IST
+# STATUS — M4c Live Transcription Segmentation & Advisory Hardening — 2026-10-21 IST
 
-## 1. M4b Summary & Objectives Completed
+## 1. M4c Summary & Objectives Completed
 
-Milestone M4b brings live streaming audio detection to SAJAG per `SAJAG_SPEC.md` (sections 4.3, 4.5, 5.5, 7.3) and `docs/M06_ALIVE_BRIEF.md`:
-- **Backend WebSocket Relay (`api/app/routes/live.py`, `WS /ws/live?lang=`):**
-  - Upstream streaming client (`api/app/gnani/stt_stream.py`) connects to `wss://api.vachana.ai/stt/v3/stream` with clean-web-mic VAD preset (`0.5` / `700`), verbatim format, and 16 kHz sample rate.
-  - Strict input validation: Language validated against `SUPPORTED_STT_LANGUAGES` before connecting upstream.
-  - Frame invariant enforced: Binary only, exactly 1,024 bytes (512 Int16 LE samples / 32 ms). Non-conforming frames are counted; exceeding 20 bad frames cleanly terminates the socket with error code `bad_frame`.
-  - Cadence-forwarding: Incoming audio frames forwarded upstream immediately at their arrival cadence (no buffer-and-burst).
-  - Outgoing event protocol: Emits `ready`, `speech`, `transcript`, `risk`, `error`, `end`.
-  - Incremental sliding window: Detector evaluates cumulative transcript over the last 5 minutes.
-  - Monotonic escalation: Detection level only escalates within a session (`safe < suspicious < likely_scam < scam`).
-  - Audio-time tracking: `first_crossed` records audio-time (cumulative speech duration in seconds, not wall-clock) for `suspicious` and `likely_scam`.
-  - Evidence substring invariant: Every signal evidence quote is an exact substring of the cumulative transcript.
-  - Cost & resource limits: `MAX_LIVE_SESSION_SECONDS=180`, `MAX_LIVE_SESSIONS=3` global, 2 per IP, 20s idle timeout.
-  - Clean error recovery & teardown: Upstream authentication/quota failures mapped to typed error codes; client disconnect triggers `finally` teardown decrementing session counters and closing upstream socket.
-- **Frontend Audio Pipeline (`web/src/lib/audio/`):**
-  - Pure functions in `resample.ts` (`resampleTo16k`), `pcm.ts` (`floatToPcm16` with clipping `[-1.0, 1.0]`), and `framer.ts` (`Framer` accumulating arbitrary audio chunks and emitting exact 1,024-byte frames with zero sample loss across boundaries).
-  - AudioWorklet processor (`web/public/worklets/pcm-worklet.js`) streaming Float32 audio blocks from browser microphone to the main thread.
-- **Alive Live UI (`web/src/app/live/page.tsx`):**
-  - Compliant with Spec 7.3 and `M06_ALIVE_BRIEF.md`.
-  - Language selector with 10 Indic languages.
-  - User-gesture Start trigger with mic permission explanation.
-  - `<LevelStrip>` with live status badge and pulsing animation.
-  - `<CallTimeline>` with visual progression dots.
-  - `<CallSheet>` displaying rolling transcript with highlighted evidence phrases.
-  - `<VerdictStamp>` overlaying official verdict when `likely_scam` or `scam` threshold is crossed.
-  - 180s countdown timer with warning state.
-  - Always-visible Stop and Mute controls.
-  - Post-call / during-call "What to do now" checklist.
-  - "Warn my family" WhatsApp link (pre-filled warning message with zero transcript content).
-  - Warning audio hook: `playWarning(kind, lang)` stub that cleanly no-ops when M5 audio files are not yet present.
-  - Dev fixture support (`?mock=idle|listening|suspicious|scam|error`) for deterministic UI verification and automated Playwright captures.
-- **Developer Settings (`web/src/app/dev/page.tsx`):**
-  - Microphone DSP constraint switcher (`clean`: AGC true / AEC false / NS false; `raw`: all false; `processed`: all true) stored in localStorage.
-  - Real-time volume meter for testing microphone capture before live calls.
+Milestone M4c diagnoses and fixes the live streaming transcription failure observed in M4b, hardens multi-sentence advisory protection to eliminate the M4a text-only false-positive regression, and updates all benchmarks:
+
+### Part 1: Live Transcription Root Cause & Product Fix
+- **Empirical Diagnosis (No Speculation):**
+  - Added raw upstream event logging to `api/app/gnani/stt_stream.py` and `scripts/live_replay.py`, saving per-clip event logs under `eval/results/live_logs/{clip_id}.json`.
+  - Tested failing clip `cp_en_001` with raw logging: upstream emitted only `ready` (0.64s); zero `speech_start`, `processing`, `transcript`, or `error` events were ever returned before connection close.
+  - Tested hypothesis 2a (continuous speech without pause): Appended 1.5s of silence after the clip. Full transcripts immediately flowed and detection fired. This proved hypothesis 2a as the true root cause: continuous synthetic speech lacked the $\ge 700$ ms pause required by the VAD to close speech segments before socket termination.
+  - Tested hypothesis 2b (resampling filter): Compared `scipy.signal.resample_poly` against `np.interp` on 16 kHz audio. Transcripts and detection scores were identical, disproving 2b.
+  - Tested hypothesis 2c (event shape mis-parsing): Verified event parsers against `docs/GNANI_API_NOTES.md`. Parsers correctly handle all event shapes.
+- **Production Solution (Not Just Test Fix):**
+  - **Live Speech Segmentation (`LIVE_MAX_SPEECH_SECONDS = 6.0`):** Added `x-max-speech-s: 6.0` upstream query parameter and request header in `api/app/config/settings.py`, `api/app/gnani/stt_stream.py`, and `api/app/routes/live.py`. Evaluated values of 6s and 10s across clips; 6.0s reliably segments long uninterrupted caller speech without waiting for pauses, providing early detection updates (e.g. `da_hi_002` at 5.73s, `cp_en_001` at 6.14s).
+  - **Client Disconnect Silence Flush:** When a client disconnects or the session ends, `api/app/routes/live.py` transmits 47 silent PCM frames (1,024 bytes / 32 ms each = 1.504s total) upstream before closing the socket. This ensures trailing speech segments are finalized by the VAD and all intermediate transcripts are emitted.
+  - **Fake-Upstream Integration Tests:** Added tests in `api/tests/test_live_ws.py` verifying that `max_speech_s` is passed to upstream connection URLs/headers and that silent frames are dispatched upon client disconnect.
+- **Replay Verification on Same 10 Clips:**
+  - All 10 pre-declared evaluation clips now receive transcripts continuously (13 messages per clip).
+  - $n=6$ scam clips reached `likely_scam` (median time-to-detect = **18.2s**, min = **11.8s**, max = **24.7s**).
+  - Both legit clips produced full transcripts and remained `safe` (score 0), yielding **0.0% false alarms** in live mode.
+
+---
+
+### Part 2: Text-Only False Positive Fix (M4a Regression)
+- **Tuning Constraint Adherence:**
+  - Tuned strictly against **DEV** and **ADV_DEV** failures.
+  - **HOLDOUT**, **FRESH_HOLDOUT**, and **ADV_HOLDOUT** remained untouched during tuning and were evaluated exactly once afterwards with labels unchanged.
+- **Root Cause & Generalized Engine Hardening:**
+  - In M4a, demand verbs (`OTP_PIN_REQUEST`, `MONEY_TRANSFER`, `PRIZE_REFUND`) fired whenever the verbatim phrase appeared, even if an advisory preamble or protective directive was issued in a preceding sentence ("Remember that bank officials will never ask you to tell us the OTP", "Do not share with anyone including bank staff").
+  - Extended `api/app/engine/matcher.py` with `_get_sentence_window_tokens` to evaluate a 3-sentence sliding context window (current sentence plus the 2 preceding sentences). Demand verbs governed by explicit institutional negated directives (`advisory_negated_directives`, `advisory_money_negated_directives`, `advisory_arrest_negated_directives`) in this window are suppressed unless an unnegated demand to the listener follows.
+  - Delivery context downgrade: In legitimate delivery scenarios where delivery words are present, incidental delivery OTP requests and parcel notifications are downgraded to weight 1.
+  - All phrases and directives externalized in `data/playbook/playbook.yaml` (zero hardcoded lists).
+- **Regression Guard Validation:**
+  - DEV Scam Recall: **92.9%** (52/56) $\ge 92.9\%$ guard threshold.
+  - TEST Scam Recall: **75.0%** (21/28) $\ge 75.0\%$ guard threshold.
+  - ADV_DEV Scam Recall: **87.5%** (7/8) $\ge 7/8$ guard threshold.
+  - ADV_HOLDOUT Scam Recall: **75.0%** (6/8) $\ge 6/8$ guard threshold.
+  - DEV Legit False Positives: **0 / 57 (0.0%)** (down from 1/57 in M4a).
+  - ADV_DEV Legit False Positives: **0 / 8 (0.0%)** (down from 3/8 in M4a).
 
 ---
 
 ## 2. Live Replay Benchmark Results (`eval/results/live_ttd.json`)
 
-10 pre-declared evaluation clips were streamed through `/ws/live` at real-time 32 ms frame cadence. Detector evaluated incremental transcript updates:
+All 10 pre-declared evaluation clips were streamed through `/ws/live` at real-time 32 ms frame cadence with `LIVE_MAX_SPEECH_SECONDS = 6.0` and 1.5s silent frame disconnect flush:
 
-| Clip ID | Split | Channel | Ground Truth | Audio Duration | FC Suspicious (Audio Time) | FC Likely Scam (Audio Time) | Wall-Clock Latency | Final Level | Final Score |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`da_hi_002`** | dev | clean | digital_arrest | 26.9s | **5.73s** | **14.82s** | **4 ms** | `likely_scam` | 9 |
-| **`cp_en_001`** | dev | clean | courier_parcel | 28.0s | — | — | — | `safe` | 0 |
-| **`bk_hi_001`** | dev | clean | bank_kyc | 26.5s | — | — | — | `safe` | 0 |
-| **`da_hi_001`** | test | clean | digital_arrest | 26.7s | — | — | — | `safe` | 0 |
-| **`bk_en_001`** | test | clean | bank_kyc | 25.3s | — | — | — | `safe` | 0 |
-| **`cp_hi_003`** | test | clean | courier_parcel | 25.6s | — | — | — | `safe` | 0 |
-| **`holdout_legit_ba_en_001`** | holdout | clean | legit advisory | 27.6s | — | — | — | `safe` | 0 |
-| **`fresh_holdout_legit_police_hi_001`** | fresh_holdout | clean | legit advisory | 27.0s | — | — | — | `safe` | 0 |
-| **`da_hi_001_tel_noise15`** | test | tel_noise15 | digital_arrest | 26.7s | — | — | — | `safe` | 0 |
-| **`bk_en_001_tel_noise15`** | test | tel_noise15 | bank_kyc | 25.3s | **23.07s** | — | — | `suspicious` | 4 |
+| Clip ID | Split | Channel | Ground Truth | Audio Duration | FC Suspicious (Audio Time) | FC Likely Scam (Audio Time) | Wall-Clock Latency | Final Level | Final Score | Messages Recv |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`da_hi_002`** | dev | clean | digital_arrest | 26.9s | **5.73s** | **11.78s** | **4 ms** | `likely_scam` | 9 | 13 |
+| **`cp_en_001`** | dev | clean | courier_parcel | 28.0s | **6.14s** | **24.67s** | **4 ms** | `likely_scam` | 6 | 13 |
+| **`bk_hi_001`** | dev | clean | bank_kyc | 26.5s | **18.05s** | **24.48s** | **4 ms** | `likely_scam` | 7 | 13 |
+| **`da_hi_001`** | test | clean | digital_arrest | 26.7s | **12.10s** | **18.21s** | **4 ms** | `likely_scam` | 9 | 13 |
+| **`bk_en_001`** | test | clean | bank_kyc | 25.3s | **19.33s** | — | **4 ms** | `suspicious` | 4 | 13 |
+| **`cp_hi_003`** | test | clean | courier_parcel | 25.6s | **5.86s** | **12.35s** | **4 ms** | `likely_scam` | 9 | 13 |
+| **`holdout_legit_ba_en_001`** | holdout | clean | legit advisory | 27.6s | — | — | **4 ms** | `safe` | 0 | 13 |
+| **`fresh_holdout_legit_police_hi_001`** | fresh_holdout | clean | legit advisory | 27.0s | — | — | **4 ms** | `safe` | 0 | 13 |
+| **`da_hi_001_tel_noise15`** | test | tel_noise15 | digital_arrest | 26.7s | **12.10s** | **18.21s** | **4 ms** | `likely_scam` | 9 | 13 |
+| **`bk_en_001_tel_noise15`** | test | tel_noise15 | bank_kyc | 25.3s | **19.33s** | — | **4 ms** | `suspicious` | 4 | 13 |
 
 ### Time-to-Detect Summary (Scam Clips)
-- **Time to `likely_scam` ($n=1$ in this 10-clip sample):**
-  - **Median:** 14.8s
-  - **Min:** 14.8s
-  - **Max:** 14.8s
-  - *(Clip `da_hi_002`: flagged suspicious at 5.7s on authority claim, reached likely_scam at 14.8s on arrest threat)*
-- **Time to `suspicious` ($n=2$):**
-  - 5.73s (`da_hi_002`), 23.07s (`bk_en_001_tel_noise15` on "otp")
+- **Time to `likely_scam` ($n=6$ scam clips reaching verdict):**
+  - **Median:** **18.2s**
+  - **Min:** **11.8s** (`da_hi_002`)
+  - **Max:** **24.7s** (`cp_en_001`)
+- **Time to `suspicious` ($n=8$ scam clips):**
+  - **Min:** **5.73s** (`da_hi_002`)
+  - **Max:** **19.33s** (`bk_en_001`)
 - **Legit False-Alarm Rate in Live Mode:** **0.0% (0 / 2)**
-  - Both `holdout_legit_ba_en_001` and `fresh_holdout_legit_police_hi_001` remained completely `safe` throughout streaming.
-- **Detector Wall-Clock Latency:** **~4 ms** per risk update upon receiving transcript from STT.
-- **Empirical Observation on Live Streaming STT vs Full-File Batch REST:**
-  - In single-pass live streaming STT, fast speech without pauses is transcribed in larger utterance blocks or delayed segments compared to batch REST STT. When transcript packets arrive, detection is instantaneous (4 ms).
+  - Both `holdout_legit_ba_en_001` and `fresh_holdout_legit_police_hi_001` received full transcripts (13 messages each) and remained `safe` (score 0).
+- **Detector Latency:** **~4 ms** per incremental risk update upon transcript receipt.
+- **Root Cause & Production Resolution (Replacing M4b Empirical Observation):**
+  - *Root Cause:* In continuous synthetic speech clips without acoustic pauses ($\ge 700$ ms silence), the upstream streaming STT VAD never endpointed speech segments before the client disconnected. Upstream buffered audio indefinitely and closed without emitting intermediate transcript events.
+  - *Production Fix:* Resolved via two complementary mechanisms:
+    1. Upstream speech segmentation (`x-max-speech-s: 6.0`) forcing intermediate transcript finalization every ~6 seconds regardless of caller pauses.
+    2. Client disconnect flush sending 47 silent frames (1.5s total @ 32 ms) upon session end, closing the final VAD segment before socket teardown.
 
 ---
 
-## 3. Evidence Screenshots & UI Self-Critique (`docs/screens/m4/`)
+## 3. Text-Only False Positive Diagnosis & Resolution
 
-Automated Playwright captures saved to `docs/screens/m4/` using mocked WebSocket fixtures:
-1. `docs/screens/m4/live-idle.png`: Clean pre-call state with language picker and mic guidance.
-2. `docs/screens/m4/live-listening.png`: Active listening state with live audio wave pulse and timer.
-3. `docs/screens/m4/live-suspicious.png`: Amber warning level with highlighted evidence pill and caller transcript.
-4. `docs/screens/m4/live-likely-scam-stamp.png`: High-urgency red state with prominent `<VerdictStamp>`, danger checklist, and WhatsApp alert button.
-5. `docs/screens/m4/live-error.png`: Clear error recovery card with restart action.
-6. `docs/screens/m4/live-mobile-360px.png`: Pixel 360 px viewport verifying zero horizontal scroll and touch-friendly controls.
+### Pre-M4c Legit Scripts Exceeding `suspicious` (Text-Only Mode)
+Before M4c, 8 legitimate scripts triggered false alarms in text-only mode due to single-sentence advisory limitations and delivery notifications:
 
-### Visual Self-Critique
-- **Mobile Viewport (360px):** The sticky header initially felt cramped with the large stamp badge; reduced stamp margin and adjusted padding so the stop button and transcript stay visible without needing immediate scrolling.
-- **Dark Mode Contrast:** Improved contrast of highlighted evidence phrases (`var(--paper)` vs `var(--paper-subtle)`) to ensure text readability in both dark and light modes.
-- **Accessibility:** Added `aria-live="assertive"` on level changes and keyboard-accessible control buttons.
+1. **`legit_do_hi_003`** (DEV): Level `likely_scam` (score 6).
+   - Signals: `OTP_PIN_REQUEST` ("ओटीपी बताना", weight 3), `PARCEL` ("पार्सल", weight 2).
+   - Cause: Genuine delivery arrival OTP instruction without delivery context downgrade.
+2. **`adv_legit_en_002`** (ADV_DEV): Level `likely_scam` (score 7).
+   - Signals: `OTP_PIN_REQUEST` ("asking for otp", weight 3; "tell us the otp", weight 3; "share your otp", weight 3).
+   - Cause: Advisory warning phrases in preceding sentences did not carry over to subsequent sentences.
+3. **`adv_legit_hi_002`** (ADV_DEV): Level `likely_scam` (score 7).
+   - Signals: `AUTHORITY_CLAIM` ("सीबीआई", weight 2), `THREAT_ARREST` ("अरेस्ट", weight 3; "धमकी", weight 2).
+   - Cause: Cyber cell awareness warning quoting scam threats ("धोखेबाज सीबीआई अफसर बनकर धमकी दे रहे हैं").
+4. **`adv_legit_hi_003`** (ADV_DEV): Level `likely_scam` (score 6).
+   - Signals: `MONEY_TRANSFER` ("पैसे ट्रांसफर", weight 3; "बिल भुगतान", weight 2).
+   - Cause: Electricity department advisory warning not to transfer money to unknown accounts.
+5. **`holdout_legit_ba_hi_001`** (HOLDOUT, held out untouched): Level `likely_scam` (score 6).
+   - Signals: `OTP_PIN_REQUEST` ("ओटीपी शेयर", weight 3), `PARCEL` ("पार्सल", weight 2).
+6. **`holdout_legit_ba_hien_001`** (HOLDOUT, held out untouched): Level `likely_scam` (score 9).
+   - Signals: `OTP_PIN_REQUEST` ("otp share", weight 3), `URGENCY` ("immediately", weight 2).
+7. **`fresh_holdout_legit_telecom_hi_001`** (FRESH_HOLDOUT, held out untouched): Level `likely_scam` (score 6).
+   - Signals: `AUTHORITY_CLAIM` ("ट्राई", weight 2), `THREAT_ARREST` ("कनेक्शन काट दिया जाएगा", weight 3).
+8. **`adv_legit_hi_001`** (ADV_HOLDOUT, held out untouched): Level `likely_scam` (score 6).
 
 ---
 
-## 4. Phone-to-Speaker Manual Testing Guide
+### M4a vs M4c Before / After Regression Comparison
 
-Phone-to-speaker acoustic testing requires physical human verification and cannot be synthetically fabricated.
-Full testing protocol and results recording template are documented in:
-👉 [`docs/LIVE_MANUAL_TEST.md`](docs/LIVE_MANUAL_TEST.md)
+| Split | Metric | M4a (Before) | M4c (After) | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **DEV** (113 scripts) | Scam Recall | 92.9% (52/56) | **92.9% (52/56)** | Maintained ($\ge 92.9\%$) |
+| | Legit FP Rate | 1.8% (1/57) | **0.0% (0/57)** | **Fixed (Zero FP)** |
+| **TEST** (54 scripts) | Scam Recall | 75.0% (21/28) | **75.0% (21/28)** | Maintained ($\ge 75.0\%$) |
+| | Legit FP Rate | 0.0% (0/26) | **0.0% (0/26)** | Zero FP |
+| **ADV_DEV** (16 scripts) | Scam Recall | 87.5% (7/8) | **87.5% (7/8)** | Maintained ($\ge 7/8$) |
+| | Legit FP Rate | 37.5% (3/8) | **0.0% (0/8)** | **Fixed (Zero FP)** |
+| **ADV_HOLDOUT** (16 scripts) | Scam Recall | 75.0% (6/8) | **75.0% (6/8)** | Maintained ($\ge 6/8$) |
+| | Legit FP Rate | 25.0% (2/8) | **0.0% (0/8)** | Untouched test |
+| **HOLDOUT** (30 scripts) | Scam Recall | 73.3% (11/15) | **73.3% (11/15)** | Untouched test |
+| | Legit FP Rate | 20.0% (3/15) | **13.3% (2/15)** | Untouched test |
+| **FRESH_HOLDOUT** (6 scripts) | Scam Recall | N/A (0 scams) | **N/A (0 scams)** | Untouched test |
+| | Legit FP Rate | 16.7% (1/6) | **16.7% (1/6)** | Untouched test |
+
+*Note on Speech Recognition vs Text-Only:*
+Speech recognition drops words, introduces phonetic substitutions, and attenuates weak acoustic signals under noise; text-only evaluation tests the pure decision engine directly against ground-truth scripts.
+
+---
+
+## 4. Web UI Updates (`/accuracy`)
+
+- Paired side-by-side **Audio-Path Evaluation (with ASR)** and **Pure Decision Engine (Text-Only)** benchmark tables.
+- Added explicit split rows for `ADV_DEV` and `ADV_HOLDOUT` with sample counts, recall, false positive rates, and F1 scores.
+- Dynamic live streaming summary card computing time-to-detect metrics across $n=6$ scam clips reaching `likely_scam` (median: 18.2s, min: 11.8s, max: 24.7s) and reporting legit false alarm rate (0.0%).
+- Added explanatory callout detailing why audio-path and text-only evaluation metrics differ.
 
 ---
 
 ## 5. Automated Verification Results
 
-- **Backend Pytest Suite:** **140 passed, 0 failed** in 21.52s (`pytest api/tests`).
-  - Includes 8 fake-upstream WebSocket integration tests in `api/tests/test_live_ws.py` verifying relay, cadence, framing invariants, session limits, error codes, and disconnection cleanup without using credits.
+- **Backend Pytest Suite:** **142 passed, 0 failed** in 33.78s (`api\.venv\Scripts\pytest.exe tests`).
+  - Includes 10 WebSocket integration tests verifying live relay streaming, framing cadence, `x-max-speech-s` parameter, and client disconnect silent frame flush.
 - **Frontend Audio Math Suite:** **4 passed, 0 failed** (`node web/tests/audio.test.mjs`).
-  - Frame size invariant (1,024 bytes), sample conservation across chunks, resampling duration preservation (48k/44.1k to 16k), and hard clipping.
-- **Web App Static Build:** Passed cleanly via Next.js Turbopack (`npm run build` in `web/`, **all 15 static routes generated with 0 errors**).
+- **Web App Static Build:** **All 15 static routes generated with 0 errors** (`npm run build` in `web/` using Next.js Turbopack).
 
 ---
 
 ## 6. Credit Consumption & Usage Counters
 
-- **Live Replay Audio Sent in M4b:** **265.5 seconds** (10 evaluation clips, well within the ~150 credits ceiling).
-- **TTS Characters Consumed in M4:** **0 characters** (no TTS audio generated; warning audio hooks stubbed per spec).
+- **Live Replay & Diagnostic Audio Sent in M4c:** **402.0 seconds** (~6.7 minutes of audio; well within the max ~120 credits budget).
+- **TTS Characters Consumed in M4c:** **0 characters** (no TTS generation required).
 - **Current `api/.cache/usage.json` Total:**
-  - Date `2026-10-21`: `stt_seconds: 6169.32`, `tts_chars: 17673`.
-- **Note:** *Dashboard reading needed from the human.*
+  - Date `2026-10-21`: `stt_seconds: 6571.35`, `tts_chars: 17673`.
 
 ---
 
-## 7. M4a Retrospective (Engine Hardening)
+## 7. Ready for next milestone? yes/no (+ blockers)
 
-- Closed advisory-imitation vulnerability where scammers impersonate bank/police advisories while demanding OTP/money.
-- Maintained evidence-substring invariant with externalized playbook data.
-- Added 32 adversarial scripts (16 scam + 16 legit, 8 held out untouched).
-- Problem sentences resolved: Sentence 1 (`likely_scam`, 7), Sentence 2 (`likely_scam`, 7), Sentence 3 (`scam`, 12). Genuine advisories remain `safe` (0).
-- Committed in `72f0828`.
-
----
-
-## 8. Ready for next milestone? yes/no (+ blockers)
-
-- **YES.** Milestone M4 (M4a + M4b) is fully complete.
+- **YES.** Milestone M4c is complete.
 - **STOPPING FOR HUMAN REVIEW.** Per instructions: do NOT start M5.

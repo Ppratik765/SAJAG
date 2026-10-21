@@ -31,6 +31,7 @@ class ThreadedFakeGnaniServer:
     def __init__(self, mode: str = "normal"):
         self.mode = mode
         self.received_frames = []
+        self.received_headers = {}
         self.loop = None
         self.thread = None
         self.server = None
@@ -39,6 +40,10 @@ class ThreadedFakeGnaniServer:
         self.stop_event = threading.Event()
 
     async def handler(self, websocket):
+        try:
+            self.received_headers = dict(websocket.request.headers)
+        except Exception:
+            pass
         if self.mode == "auth_fail":
             await websocket.send(json.dumps({
                 "type": "error",
@@ -333,4 +338,41 @@ def test_cleanup_on_disconnect(fake_gnani: ThreadedFakeGnaniServer):
         time.sleep(0.05)
 
     assert live_route._global_active_sessions == 0
+
+
+def test_max_speech_s_header(fake_gnani: ThreadedFakeGnaniServer):
+    client = TestClient(app)
+    with patch("app.routes.live.get_gnani_api_key", return_value="dummy_key"):
+        with client.websocket_connect("/ws/live?lang=hi-IN&max_speech_s=6.0") as ws:
+            msg = ws.receive_json()
+            assert msg["type"] == "ready"
+            assert fake_gnani.received_headers.get("x-max-speech-s") == "6.0"
+
+
+def test_silence_flush_on_client_disconnect(fake_gnani: ThreadedFakeGnaniServer):
+    client = TestClient(app)
+    with patch("app.routes.live.get_gnani_api_key", return_value="dummy_key"):
+        with client.websocket_connect("/ws/live?lang=hi-IN") as ws:
+            msg = ws.receive_json()
+            assert msg["type"] == "ready"
+            # Send 2 speech audio frames (non-zero)
+            audio_frame = b"\x01\x00" * (FRAME_BYTES // 2)
+            ws.send_bytes(audio_frame)
+            ws.send_bytes(audio_frame)
+            time.sleep(0.1)
+            # Close client connection
+            ws.close()
+
+    # Wait for flush frames to arrive at fake upstream server
+    for _ in range(40):
+        if len(fake_gnani.received_frames) >= 10:
+            break
+        time.sleep(0.05)
+
+    # Verify that silence frames (all zero bytes) were flushed upstream
+    assert len(fake_gnani.received_frames) > 2
+    # The flushed frames should be all zero bytes
+    flushed_frames = fake_gnani.received_frames[2:]
+    for f in flushed_frames:
+        assert f == b"\x00" * FRAME_BYTES
 

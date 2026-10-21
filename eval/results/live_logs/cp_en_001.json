@@ -1,0 +1,229 @@
+[
+  {
+    "elapsed_s": 0.64,
+    "received_at": "2026-10-21T11:29:14.626Z",
+    "type": "ready",
+    "payload": {
+      "type": "ready"
+    }
+  },
+  {
+    "elapsed_s": 1.048,
+    "received_at": "2026-10-21T11:29:15.034Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:29:16.571581+00:00"
+    }
+  },
+  {
+    "elapsed_s": 9.766,
+    "received_at": "2026-10-21T11:29:23.752Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 1,
+      "text": "good morning this is fedex international parcel security desk at mumbai airport yes what is this regarding",
+      "audio_duration_ms": 6144.0,
+      "latency": 164
+    }
+  },
+  {
+    "elapsed_s": 9.769,
+    "received_at": "2026-10-21T11:29:23.755Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "suspicious",
+      "score": 3,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_01_001",
+          "category": "PARCEL",
+          "weight": 2,
+          "evidence": "fedex",
+          "segment_index": 1,
+          "start_char": 21,
+          "end_char": 26,
+          "reviewed": true
+        },
+        {
+          "id": "sig_01_002",
+          "category": "PARCEL",
+          "weight": 2,
+          "evidence": "parcel",
+          "segment_index": 1,
+          "start_char": 41,
+          "end_char": 47,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 9.76,
+      "first_crossed": {
+        "suspicious": 6.14,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 10.477,
+    "received_at": "2026-10-21T11:29:24.463Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:29:26.001530+00:00"
+    }
+  },
+  {
+    "elapsed_s": 19.337,
+    "received_at": "2026-10-21T11:29:33.323Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 2,
+      "text": "a suspicious package sent from cambodia to your name was intercepted with illicit narcotics and fake passports",
+      "audio_duration_ms": 6496.0,
+      "latency": 184
+    }
+  },
+  {
+    "elapsed_s": 19.341,
+    "received_at": "2026-10-21T11:29:33.327Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "suspicious",
+      "score": 3,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [],
+      "elapsed_s": 19.33,
+      "first_crossed": {
+        "suspicious": 6.14,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 19.342,
+    "received_at": "2026-10-21T11:29:33.328Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:29:34.860750+00:00"
+    }
+  },
+  {
+    "elapsed_s": 30.728,
+    "received_at": "2026-10-21T11:29:44.714Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 3,
+      "text": "cambodia or ordered anything customs officers have registered a criminal case",
+      "audio_duration_ms": 6016.0,
+      "latency": 158
+    }
+  },
+  {
+    "elapsed_s": 30.771,
+    "received_at": "2026-10-21T11:29:44.757Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "suspicious",
+      "score": 5,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_03_001",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "customs",
+          "segment_index": 3,
+          "start_char": 29,
+          "end_char": 36,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 30.76,
+      "first_crossed": {
+        "suspicious": 6.14,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 30.771,
+    "received_at": "2026-10-21T11:29:44.757Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:29:46.228472+00:00"
+    }
+  },
+  {
+    "elapsed_s": 36.895,
+    "received_at": "2026-10-21T11:29:50.881Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 4,
+      "text": "you must transfer forty thousand rupees as a refundable security deposit",
+      "audio_duration_ms": 6016.0,
+      "latency": 152
+    }
+  },
+  {
+    "elapsed_s": 36.904,
+    "received_at": "2026-10-21T11:29:50.890Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "likely_scam",
+      "score": 9,
+      "primary_type": "courier_parcel",
+      "new_signals": [
+        {
+          "id": "sig_04_001",
+          "category": "MONEY_TRANSFER",
+          "weight": 3,
+          "evidence": "transfer forty thousand",
+          "segment_index": 4,
+          "start_char": 9,
+          "end_char": 32,
+          "reviewed": true
+        },
+        {
+          "id": "sig_04_002",
+          "category": "MONEY_TRANSFER",
+          "weight": 3,
+          "evidence": "rupees as a refundable security deposit",
+          "segment_index": 4,
+          "start_char": 33,
+          "end_char": 72,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 36.89,
+      "first_crossed": {
+        "suspicious": 6.14,
+        "likely_scam": 24.67
+      }
+    }
+  },
+  {
+    "elapsed_s": 36.905,
+    "received_at": "2026-10-21T11:29:50.891Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:29:52.421213+00:00"
+    }
+  }
+]

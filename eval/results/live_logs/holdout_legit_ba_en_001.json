@@ -1,0 +1,176 @@
+[
+  {
+    "elapsed_s": 0.739,
+    "received_at": "2026-10-21T11:32:52.513Z",
+    "type": "ready",
+    "payload": {
+      "type": "ready"
+    }
+  },
+  {
+    "elapsed_s": 1.156,
+    "received_at": "2026-10-21T11:32:52.930Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:32:54.461700+00:00"
+    }
+  },
+  {
+    "elapsed_s": 9.889,
+    "received_at": "2026-10-21T11:33:01.663Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 1,
+      "text": "good morning this is an automated public awareness bulletin from the reserve bank of india yes i am listening",
+      "audio_duration_ms": 6144.0,
+      "latency": 152
+    }
+  },
+  {
+    "elapsed_s": 9.891,
+    "received_at": "2026-10-21T11:33:01.665Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 9.86,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 10.585,
+    "received_at": "2026-10-21T11:33:02.358Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:33:03.899581+00:00"
+    }
+  },
+  {
+    "elapsed_s": 19.344,
+    "received_at": "2026-10-21T11:33:11.118Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 2,
+      "text": "never share your one time passwords debit card cvv or net banking credentials with anyone over phone or sms",
+      "audio_duration_ms": 6496.0,
+      "latency": 177
+    }
+  },
+  {
+    "elapsed_s": 19.346,
+    "received_at": "2026-10-21T11:33:11.120Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 19.31,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 19.347,
+    "received_at": "2026-10-21T11:33:11.120Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:33:12.657352+00:00"
+    }
+  },
+  {
+    "elapsed_s": 28.032,
+    "received_at": "2026-10-21T11:33:19.805Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 3,
+      "text": "remember police and courts never place citizens under digital arrest",
+      "audio_duration_ms": 6016.0,
+      "latency": 141
+    }
+  },
+  {
+    "elapsed_s": 28.04,
+    "received_at": "2026-10-21T11:33:19.814Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 28.01,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 28.041,
+    "received_at": "2026-10-21T11:33:19.814Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:33:21.344561+00:00"
+    }
+  },
+  {
+    "elapsed_s": 36.921,
+    "received_at": "2026-10-21T11:33:28.695Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 4,
+      "text": "stay vigilant in case of suspicious financial fraud report immediately to",
+      "audio_duration_ms": 6016.0,
+      "latency": 144
+    }
+  },
+  {
+    "elapsed_s": 36.927,
+    "received_at": "2026-10-21T11:33:28.700Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 36.89,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 36.927,
+    "received_at": "2026-10-21T11:33:28.701Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:33:30.235806+00:00"
+    }
+  }
+]

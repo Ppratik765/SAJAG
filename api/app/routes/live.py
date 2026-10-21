@@ -22,6 +22,7 @@ from app.config.settings import (
     get_daily_stt_seconds_cap,
     get_gnani_api_key,
     get_live_idle_timeout_seconds,
+    get_live_max_speech_seconds,
     get_max_live_session_seconds,
     get_max_live_sessions,
     get_max_live_sessions_per_ip,
@@ -37,6 +38,8 @@ from app.gnani.stt_stream import (
     GnaniSTTStreamClient,
     GnaniStreamError,
     SpeechStartEvent,
+    ProcessingEvent,
+    GenericUpstreamEvent,
     TranscriptEvent,
     ErrorEvent,
     EndEvent,
@@ -202,6 +205,15 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
     api_key = get_gnani_api_key()
     upstream: Optional[GnaniSTTStreamClient] = None
 
+    max_speech_s: Optional[float] = None
+    if "max_speech_s" in websocket.query_params:
+        try:
+            max_speech_s = float(websocket.query_params["max_speech_s"])
+        except ValueError:
+            max_speech_s = get_live_max_speech_seconds()
+    else:
+        max_speech_s = get_live_max_speech_seconds()
+
     try:
         upstream = GnaniSTTStreamClient(
             api_key=api_key or "DUMMY_KEY_FOR_TESTS",
@@ -209,6 +221,7 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
             sample_rate=16000,
             vad_threshold=0.5,
             min_silence_ms=700,
+            max_speech_s=max_speech_s,
         )
         await upstream.connect()
         await websocket.send_json({"type": "ready"})
@@ -289,11 +302,33 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
             except Exception as exc:
                 logger.warning("Upstream send failed: %s", exc)
                 await websocket.send_json({"type": "end", "reason": "upstream_closed"})
-                client_done_event.set()
                 break
+
+        # Flush ~1.5s silence frames (47 frames @ 32ms cadence = 1.504s) so upstream VAD finalises the last segment
+        if upstream and upstream.is_connected:
+            silent_frame = b"\x00" * FRAME_BYTES
+            for _ in range(47):
+                if not upstream.is_connected:
+                    break
+                try:
+                    await upstream.send_audio_frame(silent_frame)
+                    await asyncio.sleep(0.032)
+                except Exception:
+                    break
+            # Short grace window for upstream to deliver final transcript packet
+            await asyncio.sleep(0.8)
+
+        client_done_event.set()
 
     async def upstream_to_client() -> None:
         nonlocal cumulative_audio_duration_ms, current_level, current_score, current_primary_type
+
+        async def _safe_send_json(payload: Dict[str, Any]) -> None:
+            try:
+                if websocket.client_state == WebSocketState.CONNECTED:
+                    await websocket.send_json(payload)
+            except Exception:
+                pass
 
         try:
             async for ev in upstream.recv_events():
@@ -301,7 +336,11 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
                     break
 
                 if isinstance(ev, SpeechStartEvent):
-                    await websocket.send_json({"type": "speech"})
+                    await _safe_send_json({"type": "speech", "utterance_id": ev.utterance_id, "timestamp": ev.timestamp})
+                elif isinstance(ev, ProcessingEvent):
+                    await _safe_send_json({"type": "processing", "timestamp": ev.timestamp})
+                elif isinstance(ev, GenericUpstreamEvent):
+                    await _safe_send_json({"type": "upstream_raw", "raw_type": ev.raw_type, "data": ev.data, "timestamp": ev.timestamp})
                 elif isinstance(ev, TranscriptEvent):
                     seg_dur_s = round(ev.audio_duration_ms / 1000.0, 3)
                     offset_s = round(cumulative_audio_duration_ms / 1000.0, 3)
@@ -316,7 +355,7 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
                     segments.append(seg)
 
                     # Send transcript segment
-                    await websocket.send_json({
+                    await _safe_send_json({
                         "type": "transcript",
                         "index": ev.segment_index,
                         "text": ev.text,
@@ -367,26 +406,23 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
                             "likely_scam": first_crossed["likely_scam"],
                         },
                     }
-                    await websocket.send_json(risk_msg)
+                    await _safe_send_json(risk_msg)
 
                 elif isinstance(ev, ErrorEvent):
-                    await websocket.send_json({
+                    await _safe_send_json({
                         "type": "error",
                         "code": ev.code,
                         "message": ev.message,
                     })
                 elif isinstance(ev, EndEvent):
-                    await websocket.send_json({"type": "end", "reason": ev.reason})
+                    await _safe_send_json({"type": "end", "reason": ev.reason})
                     client_done_event.set()
                     break
 
         except Exception as exc:
             logger.warning("Error receiving from upstream: %s", exc)
             if not client_done_event.is_set():
-                try:
-                    await websocket.send_json({"type": "end", "reason": "upstream_closed"})
-                except Exception:
-                    pass
+                await _safe_send_json({"type": "end", "reason": "upstream_closed"})
                 client_done_event.set()
 
     # Run both loops concurrently

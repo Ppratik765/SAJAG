@@ -1,0 +1,260 @@
+[
+  {
+    "elapsed_s": 1.158,
+    "received_at": "2026-10-21T11:28:30.681Z",
+    "type": "ready",
+    "payload": {
+      "type": "ready"
+    }
+  },
+  {
+    "elapsed_s": 1.603,
+    "received_at": "2026-10-21T11:28:31.126Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:28:32.665848+00:00"
+    }
+  },
+  {
+    "elapsed_s": 9.705,
+    "received_at": "2026-10-21T11:28:39.227Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 1,
+      "text": "यह सीबीआई मुख्य मुख्यालय से चेतावनी कॉल है, आपके नाम पर मनी लॉन्ड्रिंग का केस दर्ज हुआ है।",
+      "audio_duration_ms": 5728.0,
+      "latency": 153
+    }
+  },
+  {
+    "elapsed_s": 10.095,
+    "received_at": "2026-10-21T11:28:39.618Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "suspicious",
+      "score": 6,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_01_001",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "सीबीआई",
+          "segment_index": 1,
+          "start_char": 3,
+          "end_char": 9,
+          "reviewed": true
+        },
+        {
+          "id": "sig_01_002",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "मनी लॉन्ड्रिंग",
+          "segment_index": 1,
+          "start_char": 56,
+          "end_char": 70,
+          "reviewed": true
+        },
+        {
+          "id": "sig_01_003",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "केस दर्ज",
+          "segment_index": 1,
+          "start_char": 74,
+          "end_char": 82,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 9.78,
+      "first_crossed": {
+        "suspicious": 5.73,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 10.098,
+    "received_at": "2026-10-21T11:28:39.620Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:28:40.853843+00:00"
+    }
+  },
+  {
+    "elapsed_s": 19.116,
+    "received_at": "2026-10-21T11:28:48.639Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 2,
+      "text": "सीबीआई मैंने जिंदगी में कोई गलत काम नहीं किया, आपके बैंक खाते से करोड़ों का अवैध लेन देन हुआ है",
+      "audio_duration_ms": 6048.0,
+      "latency": 149
+    }
+  },
+  {
+    "elapsed_s": 19.122,
+    "received_at": "2026-10-21T11:28:48.645Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "likely_scam",
+      "score": 7,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_02_001",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "सीबीआई",
+          "segment_index": 2,
+          "start_char": 0,
+          "end_char": 6,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 18.8,
+      "first_crossed": {
+        "suspicious": 5.73,
+        "likely_scam": 11.78
+      }
+    }
+  },
+  {
+    "elapsed_s": 19.123,
+    "received_at": "2026-10-21T11:28:48.645Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:28:50.179537+00:00"
+    }
+  },
+  {
+    "elapsed_s": 22.911,
+    "received_at": "2026-10-21T11:28:52.433Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 3,
+      "text": "सुप्रीम कोर्ट का गैर जमानती वारंट निकला है।",
+      "audio_duration_ms": 3040.0,
+      "latency": 166
+    }
+  },
+  {
+    "elapsed_s": 22.919,
+    "received_at": "2026-10-21T11:28:52.442Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "likely_scam",
+      "score": 9,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_03_001",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "कोर्ट",
+          "segment_index": 3,
+          "start_char": 8,
+          "end_char": 13,
+          "reviewed": true
+        },
+        {
+          "id": "sig_03_002",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "गैर जमानती",
+          "segment_index": 3,
+          "start_char": 17,
+          "end_char": 27,
+          "reviewed": true
+        },
+        {
+          "id": "sig_03_003",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "वारंट",
+          "segment_index": 3,
+          "start_char": 28,
+          "end_char": 33,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 22.6,
+      "first_crossed": {
+        "suspicious": 5.73,
+        "likely_scam": 11.78
+      }
+    }
+  },
+  {
+    "elapsed_s": 23.073,
+    "received_at": "2026-10-21T11:28:52.596Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:28:54.135620+00:00"
+    }
+  },
+  {
+    "elapsed_s": 31.833,
+    "received_at": "2026-10-21T11:29:01.356Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 4,
+      "text": "सर मैं क्या करूँ, कृपया मदद कीजिए, तुरंत वीडियो कॉल चालू रखें, अपने घर वालों को मत बताना।",
+      "audio_duration_ms": 6080.0,
+      "latency": 151
+    }
+  },
+  {
+    "elapsed_s": 31.847,
+    "received_at": "2026-10-21T11:29:01.369Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "likely_scam",
+      "score": 10,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_04_001",
+          "category": "URGENCY",
+          "weight": 1,
+          "evidence": "तुरंत",
+          "segment_index": 4,
+          "start_char": 35,
+          "end_char": 40,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 31.53,
+      "first_crossed": {
+        "suspicious": 5.73,
+        "likely_scam": 11.78
+      }
+    }
+  },
+  {
+    "elapsed_s": 32.044,
+    "received_at": "2026-10-21T11:29:01.567Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:29:03.102360+00:00"
+    }
+  }
+]

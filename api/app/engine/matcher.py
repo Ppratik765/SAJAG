@@ -174,7 +174,7 @@ class Matcher:
             d_len = len(d_words)
             for i in range(n - d_len + 1):
                 if sent_words[i : i + d_len] == d_words:
-                    before = sent_words[max(0, i - 4) : i]
+                    before = sent_words[max(0, i - 10) : i]
                     is_neg_before = any(w in NEGATION_TOKENS for w in before)
                     after = sent_words[i + d_len : min(n, i + d_len + 3)]
                     is_neg_after = any(w in {"mat", "मत", "न", "नहीं", "kabhi", "कभी"} for w in after)
@@ -205,6 +205,15 @@ class Matcher:
             s_end += 1
 
         return tokens[s_start : s_end + 1]
+
+    def _get_sentence_window_tokens(
+        self, tokens: List[Dict[str, Any]], current_sentence: int, window_size: int = 2
+    ) -> List[Dict[str, Any]]:
+        has_multiple_sentences = (tokens[-1]["sentence_idx"] != tokens[0]["sentence_idx"])
+        if has_multiple_sentences:
+            min_sent = max(0, current_sentence - window_size)
+            return [t for t in tokens if min_sent <= t["sentence_idx"] <= current_sentence]
+        return tokens
 
     def _is_authority_advisory_sentence(
         self, sentence_tokens: List[Dict[str, Any]], is_authority_claim: bool = False
@@ -319,8 +328,23 @@ class Matcher:
                 sent_tokens = self._get_sentence_tokens(tokens, tok_start, tok_end, num_tokens)
                 has_unnegated_demand = self._has_unnegated_demand_in_sentence(sent_tokens)
 
-                # Resolution Step 1: Explicit Negated Directive governing this exact category / verb
-                if pat["category"] in {"OTP_PIN_REQUEST", "MONEY_TRANSFER", "SECRECY", "THREAT_ARREST", "ISOLATION"}:
+                window_tokens = self._get_sentence_window_tokens(tokens, current_sentence, window_size=2)
+                window_str = " " + " ".join(t["text"] for t in window_tokens) + " "
+                sent_str = " " + " ".join(t["text"] for t in sent_tokens) + " "
+
+                # Demand verbs (OTP_PIN_REQUEST, MONEY_TRANSFER, PRIZE_REFUND) governed by advisory negation or local negation
+                if pat["category"] in {"OTP_PIN_REQUEST", "MONEY_TRANSFER", "PRIZE_REFUND"}:
+                    directives = (
+                        self.advisory_negated_directives
+                        if pat["category"] == "OTP_PIN_REQUEST"
+                        else self.advisory_money_negated_directives
+                    )
+                    # 1. Governed by explicit directive in sentence or preceding 2 sentences
+                    if not has_unnegated_demand:
+                        if any(adv in sent_str or adv in window_str for adv in directives):
+                            continue
+
+                    # 2. Local negation inside current sentence
                     before_indices = [
                         ti for ti in range(max(0, tok_start - 10), tok_start)
                         if tokens[ti]["sentence_idx"] == current_sentence
@@ -329,60 +353,23 @@ class Matcher:
                         ti for ti in range(tok_end + 1, min(num_tokens, tok_end + 9))
                         if tokens[ti]["sentence_idx"] == current_sentence
                     ]
-
-                    before_words = [tokens[ti]["text"] for ti in before_indices]
-                    before_str = " " + " ".join(before_words) + " "
                     after_words = [tokens[ti]["text"] for ti in after_indices]
                     after_str = " " + " ".join(after_words) + " "
 
-                    has_negation = False
+                    # Check warning verbs immediately following credential / payment demand
+                    has_local_negation = False
+                    for adv_post in [
+                        "share mat", "शेयर मत", "साझा मत", "मत देना", "मत बताना", "मत करना", "mat karna",
+                        "न दें", "शेयर न", "साझा न", "कभी मत", "kabhi mat", "नहीं मांगता", "नहीं मांगते",
+                    ]:
+                        if adv_post in after_str:
+                            post_idx = after_str.find(adv_post)
+                            intervening_post = after_str[:post_idx].split()
+                            if not any(w in {"bataiye", "batao", "bhejiye", "bhejo", "dijiye", "enter", "share", "tell"} for w in intervening_post):
+                                has_local_negation = True
+                                break
 
-                    # Check explicit negated directives preceding the pattern (from playbook)
-                    if pat["category"] in {"OTP_PIN_REQUEST", "SECRECY", "ISOLATION"}:
-                        directives = self.advisory_negated_directives
-                    elif pat["category"] == "MONEY_TRANSFER":
-                        directives = self.advisory_money_negated_directives
-                    else:
-                        directives = set()
-
-                    if directives:
-                        for adv in directives:
-                            if adv in before_str:
-                                adv_norm = adv.split()
-                                adv_len = len(adv_norm)
-                                for bi in range(len(before_words) - adv_len + 1):
-                                    if before_words[bi:bi+adv_len] == adv_norm:
-                                        intervening = before_words[bi+adv_len:]
-                                        has_intervening_demand = any(
-                                            w in {"bataiye", "batao", "bhejiye", "bhejo", "dijiye", "enter", "share", "tell"}
-                                            for w in intervening
-                                        )
-                                        if not has_intervening_demand:
-                                            has_negation = True
-                                            break
-                                if has_negation:
-                                    break
-
-                    # For SECRECY: if sharing/telling relates to credentials, it is a credential security advisory
-                    if not has_negation and pat["category"] == "SECRECY":
-                        if any(w in before_str for w in ["otp", "pin", "password", "cvv", "ओटीपी", "पिन", "पासवर्ड", "कोड"]):
-                            has_negation = True
-
-                    # Check Hindi warning verbs immediately following credential / coordinate list / secrecy
-                    if not has_negation and pat["category"] in {"OTP_PIN_REQUEST", "MONEY_TRANSFER", "SECRECY"}:
-                        for adv_post in [
-                            "share mat", "शेयर मत", "साझा मत", "मत देना", "मत बताना", "मत करना", "mat karna",
-                            "न दें", "शेयर न", "साझा न", "कभी मत", "kabhi mat", "नहीं मांगता", "नहीं मांगते",
-                        ]:
-                            if adv_post in after_str:
-                                post_idx = after_str.find(adv_post)
-                                intervening_post = after_str[:post_idx].split()
-                                if not any(w in {"bataiye", "batao", "bhejiye", "bhejo", "dijiye", "enter", "share", "tell"} for w in intervening_post):
-                                    has_negation = True
-                                    break
-
-                    # Check standard negation tokens for OTP/MONEY_TRANSFER/SECRECY/ISOLATION
-                    if not has_negation and pat["category"] in {"OTP_PIN_REQUEST", "MONEY_TRANSFER", "SECRECY", "ISOLATION"}:
+                    if not has_local_negation:
                         std_before = [
                             ti for ti in range(max(0, tok_start - 5), tok_start)
                             if tokens[ti]["sentence_idx"] == current_sentence
@@ -393,8 +380,6 @@ class Matcher:
                         ]
                         for ti in std_before + std_after:
                             tok_word = tokens[ti]["text"]
-
-                            # Check excluded combos like 'mat batana' (secrecy) or 'do not tell' (secrecy)
                             is_combo = False
                             if ti + 1 < num_tokens:
                                 combo = f"{tok_word} {tokens[ti+1]['text']}"
@@ -404,55 +389,48 @@ class Matcher:
                                 combo_prev = f"{tokens[ti-1]['text']} {tok_word}"
                                 if combo_prev in EXCLUDED_NEGATION_COMBOS:
                                     is_combo = True
-
-                            if is_combo:
-                                continue
-
-                            if tok_word in NEGATION_TOKENS:
-                                has_negation = True
+                            if not is_combo and tok_word in NEGATION_TOKENS:
+                                has_local_negation = True
                                 break
 
-                    # For THREAT_ARREST: check explicit institutional / arrest negated directives from playbook
-                    if pat["category"] == "THREAT_ARREST":
-                        sent_words = [t["text"] for t in sent_tokens]
-                        sent_str = " " + " ".join(sent_words) + " "
-                        for adv_arr in self.advisory_arrest_negated_directives:
-                            if adv_arr in sent_str:
-                                has_negation = True
-                                break
-
-                    # Step 1 conclusion: If explicit negated directive governs this match, suppress it
-                    if has_negation:
+                    if has_local_negation:
                         continue
 
-                # Resolution Step 2: Demand-to-listener present without negation -> NEVER SUPPRESS
-                if has_unnegated_demand:
-                    # Proceed to match without any advisory suppression
-                    pass
-                else:
-                    # Resolution Step 3: Otherwise existing advisory frame rules
-                    # Authority Claims inside advisory preambles or institutional context
-                    if pat["category"] == "AUTHORITY_CLAIM":
+                # AUTHORITY_CLAIM inside advisory preambles or institutional context
+                if pat["category"] == "AUTHORITY_CLAIM":
+                    if not has_unnegated_demand:
                         post_auth_tokens = [tokens[ti]["text"] for ti in range(tok_end + 1, min(num_tokens, tok_end + 5))]
                         post_auth_str = " ".join(post_auth_tokens)
                         if any(pw in post_auth_str for pw in ["never", "will never", "and courts never", "kabhi nahi", "कभी नहीं", "do not"]):
                             continue
 
-                        sent_words = [t["text"] for t in sent_tokens]
-                        sent_str = " " + " ".join(sent_words) + " "
-                        if any(aw in sent_str for aw in self.advisory_preamble_phrases):
+                        if any(aw in sent_str or aw in window_str for aw in self.advisory_preamble_phrases):
                             continue
 
                         if self._is_authority_advisory_sentence(sent_tokens, is_authority_claim=True):
                             continue
 
+                # THREAT_ARREST and ISOLATION in institutional advisory frames
+                if pat["category"] in {"THREAT_ARREST", "ISOLATION"}:
+                    if not has_unnegated_demand:
+                        if any(adv in sent_str or adv in window_str for adv in self.advisory_arrest_negated_directives):
+                            continue
+                        if any(pr in sent_str or pr in window_str for pr in self.advisory_preamble_phrases):
+                            continue
+                        if self._is_authority_advisory_sentence(sent_tokens):
+                            continue
+
+                # SECRECY: Only suppressed when advising not to share credentials (OTP, PIN, password, code, details)
+                if pat["category"] == "SECRECY":
+                    if any(w in sent_str for w in [
+                        "otp", "pin", "password", "cvv", "code", "codes", "details", "credential", "credentials",
+                        "ओटीपी", "पिन", "पासवर्ड", "कोड", "जानकारी", "विवरण"
+                    ]):
+                        continue
+
                 # Context Rule: Urgency inside reporting/helpline frames
                 if pat["category"] == "URGENCY":
-                    surrounding_tokens = [
-                        tokens[ti]["text"] for ti in range(max(0, tok_start - 4), min(num_tokens, tok_end + 5))
-                    ]
-                    surrounding_str = " ".join(surrounding_tokens)
-                    if any(rw in surrounding_str for rw in [
+                    if any(rw in sent_str or rw in window_str for rw in [
                         "report", "helpline", "1930", "cybercrime", "cyber crime", "portal",
                         "रिपोर्ट", "शिकायत", "हेल्पलाइन", "पोर्टल", "one nine three zero"
                     ]):
@@ -492,6 +470,7 @@ class Matcher:
                     "reviewed": pat["reviewed"],
                     "segment_index": segment_index,
                 })
+
         # Context Rule: Spoken digit sequence following code request
         has_code_request = any(
             m["category"] == "OTP_PIN_REQUEST" for m in raw_matches
@@ -569,7 +548,7 @@ class Matcher:
         is_advisory_call = any(
             hdr in padded_norm for hdr in self.advisory_preamble_phrases
         ) and any(
-            adv in padded_norm for adv in self.advisory_negated_directives
+            adv in padded_norm for adv in (self.advisory_negated_directives | self.advisory_arrest_negated_directives | self.advisory_money_negated_directives)
         )
 
         if is_advisory_call:
@@ -598,8 +577,9 @@ class Matcher:
             if m["needs_request_context"] and not m["has_request_context"]:
                 weight = 1
 
-            if delivery_downgrade and m["category"] == "OTP_PIN_REQUEST":
+            if delivery_downgrade and m["category"] in {"OTP_PIN_REQUEST", "PARCEL"}:
                 weight = 1
+
 
             sig_id = f"sig_{segment_index:02d}_{i+1:03d}"
             signals.append(

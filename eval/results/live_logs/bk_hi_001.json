@@ -1,0 +1,229 @@
+[
+  {
+    "elapsed_s": 0.546,
+    "received_at": "2026-10-21T11:30:00.135Z",
+    "type": "ready",
+    "payload": {
+      "type": "ready"
+    }
+  },
+  {
+    "elapsed_s": 0.997,
+    "received_at": "2026-10-21T11:30:00.587Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:30:02.109856+00:00"
+    }
+  },
+  {
+    "elapsed_s": 9.74,
+    "received_at": "2026-10-21T11:30:09.330Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 1,
+      "text": "नमस्कार, मैं भारतीय स्टेट बैंक मुख्य शाखा से सीनियर मैनेजर बात कर रहा हूँ, हाँ जी सर, क्या बात है?",
+      "audio_duration_ms": 6176.0,
+      "latency": 179
+    }
+  },
+  {
+    "elapsed_s": 9.742,
+    "received_at": "2026-10-21T11:30:09.332Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 9.73,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 10.092,
+    "received_at": "2026-10-21T11:30:09.682Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:30:11.205543+00:00"
+    }
+  },
+  {
+    "elapsed_s": 18.898,
+    "received_at": "2026-10-21T11:30:18.488Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 2,
+      "text": "आपका बैंक खाता के वाई सी अपडेट न होने के कारण आज रात बारह बजे हमेशा के लिए ब्लॉक हो जाएगा",
+      "audio_duration_ms": 6272.0,
+      "latency": 176
+    }
+  },
+  {
+    "elapsed_s": 18.905,
+    "received_at": "2026-10-21T11:30:18.495Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "suspicious",
+      "score": 3,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_02_001",
+          "category": "ACCOUNT_THREAT",
+          "weight": 2,
+          "evidence": "के वाई सी",
+          "segment_index": 2,
+          "start_char": 15,
+          "end_char": 24,
+          "reviewed": true
+        },
+        {
+          "id": "sig_02_002",
+          "category": "URGENCY",
+          "weight": 1,
+          "evidence": "आज रात",
+          "segment_index": 2,
+          "start_char": 46,
+          "end_char": 52,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 18.89,
+      "first_crossed": {
+        "suspicious": 12.45,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 18.906,
+    "received_at": "2026-10-21T11:30:18.495Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:30:20.006874+00:00"
+    }
+  },
+  {
+    "elapsed_s": 27.995,
+    "received_at": "2026-10-21T11:30:27.585Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 3,
+      "text": "खाता बंद मत कीजिए, मेरी पेंशन उसी खाते में आती है परेशान मत होइए मैं यही से ऑनलाइन अपडेट कर देता हूँ",
+      "audio_duration_ms": 6016.0,
+      "latency": 131
+    }
+  },
+  {
+    "elapsed_s": 28.001,
+    "received_at": "2026-10-21T11:30:27.591Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "suspicious",
+      "score": 4,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_03_001",
+          "category": "ACCOUNT_THREAT",
+          "weight": 2,
+          "evidence": "खाता बंद",
+          "segment_index": 3,
+          "start_char": 0,
+          "end_char": 8,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 27.99,
+      "first_crossed": {
+        "suspicious": 12.45,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 28.01,
+    "received_at": "2026-10-21T11:30:27.600Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:30:29.107401+00:00"
+    }
+  },
+  {
+    "elapsed_s": 36.839,
+    "received_at": "2026-10-21T11:30:36.429Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 4,
+      "text": "आपके मोबाइल पर छह अंकों का ओटीपी आया होगा तुरंत बताइए मैसेज आया है",
+      "audio_duration_ms": 6016.0,
+      "latency": 176
+    }
+  },
+  {
+    "elapsed_s": 37.036,
+    "received_at": "2026-10-21T11:30:36.626Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "likely_scam",
+      "score": 9,
+      "primary_type": "bank_kyc",
+      "new_signals": [
+        {
+          "id": "sig_04_001",
+          "category": "OTP_PIN_REQUEST",
+          "weight": 4,
+          "evidence": "ओटीपी",
+          "segment_index": 4,
+          "start_char": 27,
+          "end_char": 32,
+          "reviewed": true
+        },
+        {
+          "id": "sig_04_002",
+          "category": "URGENCY",
+          "weight": 1,
+          "evidence": "तुरंत",
+          "segment_index": 4,
+          "start_char": 42,
+          "end_char": 47,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 36.99,
+      "first_crossed": {
+        "suspicious": 12.45,
+        "likely_scam": 24.48
+      }
+    }
+  },
+  {
+    "elapsed_s": 37.037,
+    "received_at": "2026-10-21T11:30:36.627Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:30:37.924038+00:00"
+    }
+  }
+]

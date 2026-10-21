@@ -38,7 +38,26 @@ FRAME_INTERVAL_S = 0.032  # 32 ms per frame at 16 kHz
 DEFAULT_WS_URL = os.environ.get("SAJAG_LIVE_WS_URL", "ws://127.0.0.1:8000/ws/live")
 
 
-def load_and_normalize_wav(wav_path: Path) -> tuple[bytes, float, int]:
+def _redact_event(data: Any) -> Any:
+    """Recursively redact IDs and sensitive tokens."""
+    if isinstance(data, dict):
+        res = {}
+        for k, v in data.items():
+            if k in ("request_id", "segment_id", "utterance_id", "api_key", "x-api-key-id"):
+                res[k] = "<id-redacted>"
+            else:
+                res[k] = _redact_event(v)
+        return res
+    elif isinstance(data, list):
+        return [_redact_event(x) for x in data]
+    return data
+
+
+def load_and_normalize_wav(
+    wav_path: Path,
+    resample_method: str = "interp",
+    append_silence_s: float = 0.0,
+) -> tuple[bytes, float, int]:
     """Read a WAV file, downsample/resample to 16 kHz mono signed 16-bit PCM LE."""
     with wave.open(str(wav_path), "rb") as wf:
         n_channels = wf.getnchannels()
@@ -66,17 +85,31 @@ def load_and_normalize_wav(wav_path: Path) -> tuple[bytes, float, int]:
     # Resample to 16,000 Hz if necessary
     target_rate = 16000
     if framerate != target_rate:
-        target_len = int(round(len(samples) * target_rate / framerate))
-        x_orig = np.linspace(0, len(samples) - 1, len(samples))
-        x_target = np.linspace(0, len(samples) - 1, target_len)
-        samples = np.interp(x_target, x_orig, samples)
+        if resample_method == "scipy":
+            import math
+            from scipy.signal import resample_poly
+            gcd = math.gcd(target_rate, framerate)
+            up = target_rate // gcd
+            down = framerate // gcd
+            samples = resample_poly(samples, up, down).astype(np.float32)
+        else:
+            target_len = int(round(len(samples) * target_rate / framerate))
+            x_orig = np.linspace(0, len(samples) - 1, len(samples))
+            x_target = np.linspace(0, len(samples) - 1, target_len)
+            samples = np.interp(x_target, x_orig, samples)
+
+    # Append trailing silence if requested
+    if append_silence_s > 0:
+        silence_samples = int(round(append_silence_s * target_rate))
+        samples = np.concatenate([samples, np.zeros(silence_samples, dtype=np.float32)])
 
     # Hard clip to [-1.0, 1.0] and convert to int16
     samples = np.clip(samples, -1.0, 1.0)
     pcm16 = (samples * 32767.0).astype(np.int16)
     pcm16_bytes = pcm16.tobytes()
 
-    return pcm16_bytes, duration_s, target_rate
+    effective_duration_s = len(samples) / target_rate
+    return pcm16_bytes, effective_duration_s, target_rate
 
 
 async def replay_clip(
@@ -85,12 +118,19 @@ async def replay_clip(
     language_code: str,
     *,
     base_ws_url: str = DEFAULT_WS_URL,
+    append_silence_s: float = 0.0,
+    resample_method: str = "interp",
 ) -> Dict[str, Any]:
     """Stream a single WAV clip through /ws/live at real-time cadence and record metrics."""
     logger.info("=== Starting replay: %s (%s, %s) ===", clip_id, language_code, wav_path.name)
-    pcm_bytes, duration_s, sample_rate = load_and_normalize_wav(wav_path)
+    pcm_bytes, duration_s, sample_rate = load_and_normalize_wav(
+        wav_path,
+        resample_method=resample_method,
+        append_silence_s=append_silence_s,
+    )
 
-    ws_url = f"{base_ws_url}?lang={language_code}"
+    sep = "&" if "?" in base_ws_url else "?"
+    ws_url = f"{base_ws_url}{sep}lang={language_code}"
     result: Dict[str, Any] = {
         "clip_id": clip_id,
         "wav_file": wav_path.name,
@@ -106,6 +146,9 @@ async def replay_clip(
         "status": "pending",
     }
 
+    raw_events: List[Dict[str, Any]] = []
+    replay_start_time = time.time()
+
     try:
         async with websockets.connect(
             ws_url,
@@ -116,6 +159,13 @@ async def replay_clip(
             # 1. Wait for ready event
             ready_msg = await asyncio.wait_for(ws.recv(), timeout=15.0)
             ready_data = json.loads(ready_msg)
+            now = time.time()
+            raw_events.append({
+                "elapsed_s": round(now - replay_start_time, 3),
+                "received_at": time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(now)) + f".{int((now % 1) * 1000):03d}Z",
+                "type": ready_data.get("type"),
+                "payload": _redact_event(ready_data),
+            })
             if ready_data.get("type") != "ready":
                 result["status"] = f"error_on_ready: {ready_data}"
                 return result
@@ -138,6 +188,21 @@ async def replay_clip(
                         data = json.loads(raw)
                         ev_type = data.get("type")
                         result["messages_received"] += 1
+                        now = time.time()
+
+                        redacted = _redact_event(data)
+                        raw_events.append({
+                            "elapsed_s": round(now - replay_start_time, 3),
+                            "received_at": time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(now)) + f".{int((now % 1) * 1000):03d}Z",
+                            "type": ev_type,
+                            "payload": redacted,
+                        })
+                        logger.info(
+                            "[WS event] +%0.3fs type=%s: %s",
+                            round(now - replay_start_time, 3),
+                            ev_type,
+                            json.dumps(redacted),
+                        )
 
                         if ev_type == "speech":
                             logger.debug("[WS speech_start]")
@@ -228,6 +293,13 @@ async def replay_clip(
     except Exception as exc:
         logger.exception("Error during live replay of %s: %s", clip_id, exc)
         result["status"] = f"exception: {exc}"
+    finally:
+        # Save raw upstream event log
+        logs_dir = REPO_ROOT / "eval" / "results" / "live_logs"
+        logs_dir.mkdir(parents=True, exist_ok=True)
+        log_file = logs_dir / f"{clip_id}.json"
+        log_file.write_text(json.dumps(raw_events, indent=2, ensure_ascii=False), encoding="utf-8")
+        logger.info("Saved raw event log to %s (%d events)", log_file, len(raw_events))
 
     return result
 
@@ -240,6 +312,8 @@ async def main():
     parser.add_argument("--lang", default="hi-IN", help="Language code")
     parser.add_argument("--ws-url", default=DEFAULT_WS_URL, help="WebSocket URL for /ws/live")
     parser.add_argument("--out", default=str(REPO_ROOT / "eval" / "results" / "live_ttd.json"), help="Output JSON path")
+    parser.add_argument("--append-silence-s", type=float, default=0.0, help="Append N seconds of silence to the clip")
+    parser.add_argument("--resample-method", default="interp", choices=["interp", "scipy"], help="Resampling method")
     args = parser.parse_args()
 
     # Pre-declared clips for M4b
@@ -288,6 +362,8 @@ async def main():
             wav_path=wav_path,
             language_code=lang,
             base_ws_url=args.ws_url,
+            append_silence_s=args.append_silence_s,
+            resample_method=args.resample_method,
         )
         res["split"] = item["split"]
         res["label"] = item["label"]

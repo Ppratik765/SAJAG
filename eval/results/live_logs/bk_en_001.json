@@ -1,0 +1,187 @@
+[
+  {
+    "elapsed_s": 0.647,
+    "received_at": "2026-10-21T11:31:28.736Z",
+    "type": "ready",
+    "payload": {
+      "type": "ready"
+    }
+  },
+  {
+    "elapsed_s": 1.1,
+    "received_at": "2026-10-21T11:31:29.189Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:31:30.727598+00:00"
+    }
+  },
+  {
+    "elapsed_s": 9.945,
+    "received_at": "2026-10-21T11:31:38.034Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 1,
+      "text": "good afternoon sir this is state bank of india customer service head office calling yes how may i help you",
+      "audio_duration_ms": 6176.0,
+      "latency": 145
+    }
+  },
+  {
+    "elapsed_s": 9.946,
+    "received_at": "2026-10-21T11:31:38.035Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 9.92,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 10.12,
+    "received_at": "2026-10-21T11:31:38.210Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:31:39.746366+00:00"
+    }
+  },
+  {
+    "elapsed_s": 18.879,
+    "received_at": "2026-10-21T11:31:46.969Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 2,
+      "text": "your savings bank account will be blocked tonight at eight pm due to mandatory kyc expiry",
+      "audio_duration_ms": 6112.0,
+      "latency": 146
+    }
+  },
+  {
+    "elapsed_s": 18.881,
+    "received_at": "2026-10-21T11:31:46.970Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 18.85,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 18.882,
+    "received_at": "2026-10-21T11:31:46.971Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:31:48.507907+00:00"
+    }
+  },
+  {
+    "elapsed_s": 27.758,
+    "received_at": "2026-10-21T11:31:55.847Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 3,
+      "text": "salary account cannot be blocked how do i fix it i will update it immediately from the portal please share the six digit",
+      "audio_duration_ms": 6016.0,
+      "latency": 150
+    }
+  },
+  {
+    "elapsed_s": 27.761,
+    "received_at": "2026-10-21T11:31:55.850Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 27.73,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 27.761,
+    "received_at": "2026-10-21T11:31:55.850Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:31:57.382792+00:00"
+    }
+  },
+  {
+    "elapsed_s": 36.547,
+    "received_at": "2026-10-21T11:32:04.636Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 4,
+      "text": "verification otp received on your mobile let me check the text message the otp is",
+      "audio_duration_ms": 6016.0,
+      "latency": 155
+    }
+  },
+  {
+    "elapsed_s": 36.554,
+    "received_at": "2026-10-21T11:32:04.643Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 2,
+      "primary_type": "none",
+      "new_signals": [
+        {
+          "id": "sig_04_001",
+          "category": "OTP_PIN_REQUEST",
+          "weight": 1,
+          "evidence": "otp",
+          "segment_index": 4,
+          "start_char": 13,
+          "end_char": 16,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 36.52,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 36.554,
+    "received_at": "2026-10-21T11:32:04.643Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:32:06.172945+00:00"
+    }
+  }
+]

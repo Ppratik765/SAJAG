@@ -1,0 +1,249 @@
+[
+  {
+    "elapsed_s": 0.943,
+    "received_at": "2026-10-21T11:30:45.037Z",
+    "type": "ready",
+    "payload": {
+      "type": "ready"
+    }
+  },
+  {
+    "elapsed_s": 1.429,
+    "received_at": "2026-10-21T11:30:45.523Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:30:47.024355+00:00"
+    }
+  },
+  {
+    "elapsed_s": 10.143,
+    "received_at": "2026-10-21T11:30:54.237Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 1,
+      "text": "नमस्ते मैं दिल्ली पुलिस क्राइम ब्रांच से सब इंस्पेक्टर अजय बात कर रहा हूँ पुलिस ने मेरे नंबर",
+      "audio_duration_ms": 6176.0,
+      "latency": 175
+    }
+  },
+  {
+    "elapsed_s": 10.148,
+    "received_at": "2026-10-21T11:30:54.242Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "suspicious",
+      "score": 4,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_01_001",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "पुलिस",
+          "segment_index": 1,
+          "start_char": 18,
+          "end_char": 23,
+          "reviewed": true
+        },
+        {
+          "id": "sig_01_002",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "क्राइम ब्रांच",
+          "segment_index": 1,
+          "start_char": 24,
+          "end_char": 37,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 10.09,
+      "first_crossed": {
+        "suspicious": 6.18,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 10.149,
+    "received_at": "2026-10-21T11:30:54.243Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:30:55.777289+00:00"
+    }
+  },
+  {
+    "elapsed_s": 18.913,
+    "received_at": "2026-10-21T11:31:03.007Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 2,
+      "text": "नंबर पर क्यों कॉल किया, आपके आधार नंबर पर गैर कानूनी पार्सल मिला है जिसमें नशीली दवाएं हैं आप",
+      "audio_duration_ms": 6016.0,
+      "latency": 150
+    }
+  },
+  {
+    "elapsed_s": 18.92,
+    "received_at": "2026-10-21T11:31:03.014Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "suspicious",
+      "score": 6,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_02_001",
+          "category": "PARCEL",
+          "weight": 2,
+          "evidence": "पार्सल",
+          "segment_index": 2,
+          "start_char": 53,
+          "end_char": 59,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 18.86,
+      "first_crossed": {
+        "suspicious": 6.18,
+        "likely_scam": null
+      }
+    }
+  },
+  {
+    "elapsed_s": 18.921,
+    "received_at": "2026-10-21T11:31:03.015Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:31:04.548225+00:00"
+    }
+  },
+  {
+    "elapsed_s": 27.728,
+    "received_at": "2026-10-21T11:31:11.822Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 3,
+      "text": "के खिलाफ गिरफ्तारी वारंट जारी हुआ है अरे भगवान मैंने कोई पार्सल नहीं भेजा सुप्रीम कोर्ट के आदेश",
+      "audio_duration_ms": 6016.0,
+      "latency": 150
+    }
+  },
+  {
+    "elapsed_s": 27.742,
+    "received_at": "2026-10-21T11:31:11.836Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 11,
+      "primary_type": "courier_parcel",
+      "new_signals": [
+        {
+          "id": "sig_03_001",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "गिरफ्तारी",
+          "segment_index": 3,
+          "start_char": 9,
+          "end_char": 18,
+          "reviewed": true
+        },
+        {
+          "id": "sig_03_002",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "वारंट",
+          "segment_index": 3,
+          "start_char": 19,
+          "end_char": 24,
+          "reviewed": true
+        },
+        {
+          "id": "sig_03_003",
+          "category": "PARCEL",
+          "weight": 2,
+          "evidence": "पार्सल",
+          "segment_index": 3,
+          "start_char": 57,
+          "end_char": 63,
+          "reviewed": true
+        },
+        {
+          "id": "sig_03_004",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "कोर्ट",
+          "segment_index": 3,
+          "start_char": 82,
+          "end_char": 87,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 27.68,
+      "first_crossed": {
+        "suspicious": 6.18,
+        "likely_scam": 18.21
+      }
+    }
+  },
+  {
+    "elapsed_s": 27.743,
+    "received_at": "2026-10-21T11:31:11.837Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:31:13.354852+00:00"
+    }
+  },
+  {
+    "elapsed_s": 36.519,
+    "received_at": "2026-10-21T11:31:20.613Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 4,
+      "text": "देश पर आपको डिजिटल अरेस्ट में रखा गया है कमरा बंद कर लीजिए और किसी को मत बताना, वीडियो कॉल मत काटना।",
+      "audio_duration_ms": 6016.0,
+      "latency": 96
+    }
+  },
+  {
+    "elapsed_s": 36.533,
+    "received_at": "2026-10-21T11:31:20.627Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 11,
+      "primary_type": "courier_parcel",
+      "new_signals": [],
+      "elapsed_s": 36.48,
+      "first_crossed": {
+        "suspicious": 6.18,
+        "likely_scam": 18.21
+      }
+    }
+  },
+  {
+    "elapsed_s": 36.565,
+    "received_at": "2026-10-21T11:31:20.659Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-10-21T11:31:22.199691+00:00"
+    }
+  }
+]

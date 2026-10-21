@@ -75,6 +75,10 @@ def get_live_idle_timeout_seconds() -> float:
     return float(os.environ.get("LIVE_IDLE_TIMEOUT_SECONDS", "20"))
 
 
+def get_live_max_speech_seconds() -> float:
+    return float(os.environ.get("LIVE_MAX_SPEECH_SECONDS", "6.0"))
+
+
 def get_admin_token() -> str:
     return os.environ.get("ADMIN_TOKEN", "")
 

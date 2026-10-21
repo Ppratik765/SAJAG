@@ -25,7 +25,9 @@ eval/.cache/
 eval/results/*.json
 !eval/results/latest.json
 !eval/results/live_ttd.json
+!eval/results/live_logs/
 scripts/out/
+scratch/
 
 # OS / editor
 .DS_Store
