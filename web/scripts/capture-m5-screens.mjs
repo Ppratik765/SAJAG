@@ -132,6 +132,63 @@ async function main() {
 
     await ctx.close();
     console.log("\nPart 2 Playwright verification completed successfully!");
+
+    // 2. Part 3 Parent Mode 360px mobile view (spec 7.4)
+    console.log("\n2. Capturing Parent mode screens at 360px (spec 7.4)...");
+    const mobile360Vp = { width: 360, height: 800 };
+    const parentStates = [
+      { name: "parent-idle.png", mock: "idle", expectedText: "फ़ोन स्पीकर पर रखें" },
+      { name: "parent-safe.png", mock: "safe", expectedText: "कोई ठगी नहीं मिली" },
+      { name: "parent-suspicious.png", mock: "suspicious", expectedText: "सावधान रहें!" },
+      { name: "parent-scam.png", mock: "scam", expectedText: "ठगी है, तुरंत फोन काटें!" },
+    ];
+
+    for (const state of parentStates) {
+      const pCtx = await browser.newContext({
+        viewport: mobile360Vp,
+        isMobile: true,
+        hasTouch: true,
+      });
+      const pPage = await pCtx.newPage();
+      await pPage.goto(`${BASE_URL}/parent?mock=${state.mock}`, { waitUntil: "networkidle" });
+      await pPage.evaluate(() => document.fonts.ready);
+      await pPage.waitForTimeout(400);
+
+      // Verify no horizontal overflow at 360px
+      const hasOverflow = await pPage.evaluate(() => {
+        return document.documentElement.scrollWidth > window.innerWidth;
+      });
+      if (hasOverflow) {
+        throw new Error(`[FAIL] Horizontal overflow detected on /parent?mock=${state.mock} at 360px!`);
+      }
+      console.log(`[PASS] Zero horizontal scroll at 360px for parent (${state.mock})`);
+
+      // Verify expected Hindi copy
+      const content = await pPage.textContent("body");
+      if (!content.includes(state.expectedText)) {
+        throw new Error(`Expected text '${state.expectedText}' not found in /parent?mock=${state.mock}`);
+      }
+
+      // If scam, verify WhatsApp button
+      if (state.mock === "scam") {
+        const waBtn = pPage.locator("#parent-whatsapp-btn");
+        await waBtn.waitFor({ state: "visible", timeout: 3000 });
+        const href = await waBtn.getAttribute("href");
+        if (!href || !href.startsWith("https://wa.me/?text=")) {
+          throw new Error(`Invalid WhatsApp href: ${href}`);
+        }
+        if (href.includes("transcript") || href.includes("नमस्ते") || href.includes("सब-इंस्पेक्टर")) {
+          throw new Error(`WhatsApp link must NEVER contain transcript content: ${href}`);
+        }
+        console.log(`[PASS] WhatsApp family alert link verified: ${href.substring(0, 70)}...`);
+      }
+
+      const outPath = path.join(M5_SCREENS_DIR, state.name);
+      await pPage.screenshot({ path: outPath, fullPage: false });
+      console.log(`Captured: ${state.name} (360x800, mocked state: ${state.mock})`);
+      await pCtx.close();
+    }
+    console.log("\nPart 3 Parent mode Playwright verification completed successfully!");
   } finally {
     await browser.close();
     if (serverProcess) {

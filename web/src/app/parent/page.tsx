@@ -1,11 +1,412 @@
-import { PlaceholderPage } from "@/components/common/PlaceholderPage";
+"use client";
+
+import React, { useState, useEffect, useRef, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import {
+  Mic,
+  Square,
+  ShieldCheck,
+  AlertTriangle,
+  PhoneOff,
+  Share2,
+  Volume2,
+  RefreshCw,
+  ArrowLeft,
+} from "lucide-react";
+import { VerdictStamp, RiskLevel } from "@/components/ui/VerdictStamp";
+import { Framer } from "@/lib/audio/framer";
+import { floatToPcm16 } from "@/lib/audio/pcm";
+import { resampleTo16k } from "@/lib/audio/resample";
+import { getActiveMicPreset } from "@/lib/audio/constraints";
+
+type ParentSessionState = "idle" | "connecting" | "listening" | "ended" | "error";
+
+const SCAM_TYPE_NAMES: Record<string, { hi: string; en: string }> = {
+  digital_arrest: { hi: "डिजिटल अरेस्ट ठगी", en: "Digital Arrest Scam" },
+  bank_kyc: { hi: "बैंक केवाईसी एक्सपायरी फ्रॉड", en: "Bank KYC Expiry Fraud" },
+  upi_refund: { hi: "यूपीआई रिफंड फ्रॉड", en: "UPI Refund Scam" },
+  utility_disconnect: { hi: "बिजली बिल डिस्कनेक्शन ठगी", en: "Electricity Bill Disconnection" },
+  courier_parcel: { hi: "कस्टम्स / अवैध पार्सल ठगी", en: "Customs / Illegal Parcel" },
+  tech_support_remote: { hi: "फर्जी तकनीकी सहायता", en: "Fake Tech Support" },
+  family_emergency: { hi: "पारिवारिक आपातकाल ठगी", en: "Family Emergency Scam" },
+  lottery_prize: { hi: "लॉटरी / इनाम ठगी", en: "Lottery / Prize Scam" },
+  investment_task: { hi: "फर्जी निवेश टास्क", en: "Investment / Part-time Task" },
+  unknown_suspicious: { hi: "संदिग्ध कॉल", en: "Suspicious Call" },
+  none: { hi: "कोई ठगी नहीं मिली", en: "No Scam Detected" },
+};
+
+function ParentContent() {
+  const searchParams = useSearchParams();
+  const mockParam = searchParams.get("mock");
+
+  const [sessionState, setSessionState] = useState<ParentSessionState>("idle");
+  const [level, setLevel] = useState<RiskLevel>("safe");
+  const [primaryType, setPrimaryType] = useState<string>("none");
+  const [audioUnavailable, setAudioUnavailable] = useState(false);
+
+  // Audio refs & playback tracking
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const workletNodeRef = useRef<AudioWorkletNode | null>(null);
+  const websocketRef = useRef<WebSocket | null>(null);
+  const currentLevelRef = useRef<RiskLevel>("safe");
+  const userGestureStarted = useRef<boolean>(false);
+  const lastAlertTimes = useRef<{ alert_scam: number; alert_suspicious: number }>({
+    alert_scam: 0,
+    alert_suspicious: 0,
+  });
+
+  // Play warning audio (spec 7.3 & 7.4)
+  const playWarning = useCallback((kind: "alert_suspicious" | "alert_scam") => {
+    if (!userGestureStarted.current) return;
+
+    const now = Date.now();
+    const lastPlayed = lastAlertTimes.current[kind] || 0;
+    if (now - lastPlayed < 60000) return;
+    lastAlertTimes.current[kind] = now;
+
+    const src = `/audio/warnings/hi-IN/${kind}.mp3`;
+    try {
+      const audio = new Audio(src);
+      audio.onerror = () => setAudioUnavailable(true);
+      const p = audio.play();
+      if (p !== undefined) {
+        p.catch(() => setAudioUnavailable(true));
+      }
+    } catch {
+      setAudioUnavailable(true);
+    }
+  }, []);
+
+  // Mock states for evaluation and screenshots
+  useEffect(() => {
+    if (!mockParam) return;
+
+    userGestureStarted.current = true;
+    if (mockParam === "idle") {
+      setSessionState("idle");
+      setLevel("safe");
+      setPrimaryType("none");
+    } else if (mockParam === "safe" || mockParam === "listening") {
+      setSessionState("listening");
+      setLevel("safe");
+      setPrimaryType("none");
+    } else if (mockParam === "suspicious") {
+      setSessionState("listening");
+      setLevel("suspicious");
+      setPrimaryType("bank_kyc");
+    } else if (mockParam === "scam") {
+      setSessionState("listening");
+      setLevel("likely_scam");
+      setPrimaryType("digital_arrest");
+    }
+  }, [mockParam]);
+
+  const stopAudio = useCallback(() => {
+    if (workletNodeRef.current) {
+      workletNodeRef.current.disconnect();
+      workletNodeRef.current = null;
+    }
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((t) => t.stop());
+      mediaStreamRef.current = null;
+    }
+    if (audioContextRef.current && audioContextRef.current.state !== "closed") {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+    }
+    if (websocketRef.current) {
+      websocketRef.current.close();
+      websocketRef.current = null;
+    }
+  }, []);
+
+  const handleStop = useCallback(() => {
+    stopAudio();
+    setSessionState("ended");
+  }, [stopAudio]);
+
+  const handleStart = async () => {
+    if (mockParam) return;
+    stopAudio();
+    setSessionState("connecting");
+    setLevel("safe");
+    currentLevelRef.current = "safe";
+    setPrimaryType("none");
+    userGestureStarted.current = true;
+
+    try {
+      const preset = getActiveMicPreset();
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: preset.constraints,
+      });
+      mediaStreamRef.current = stream;
+
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const audioCtx = new AudioCtx();
+      audioContextRef.current = audioCtx;
+      if (audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+
+      await audioCtx.audioWorklet.addModule("/worklets/audio-stream-processor.js");
+      const workletNode = new AudioWorkletNode(audioCtx, "audio-stream-processor");
+      workletNodeRef.current = workletNode;
+      const sourceNode = audioCtx.createMediaStreamSource(stream);
+      sourceNode.connect(workletNode);
+
+      const framer = new Framer();
+      const wsUrl = process.env.NEXT_PUBLIC_API_WS_URL || "ws://127.0.0.1:8000";
+      const ws = new WebSocket(`${wsUrl}/ws/live?lang=hi-IN`);
+      websocketRef.current = ws;
+
+      workletNode.port.onmessage = (event) => {
+        if (ws.readyState !== WebSocket.OPEN) return;
+        const rawSamples = event.data;
+        const resampled = resampleTo16k(rawSamples, audioCtx.sampleRate);
+        const pcm16 = floatToPcm16(resampled);
+        const frames = framer.push(pcm16);
+        for (const frame of frames) {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(frame.buffer);
+          }
+        }
+      };
+
+      ws.onmessage = (event) => {
+        if (typeof event.data !== "string") return;
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === "ready") {
+            setSessionState("listening");
+          } else if (data.type === "risk") {
+            const prevLevel = currentLevelRef.current;
+            currentLevelRef.current = data.level;
+            setLevel(data.level);
+            if (data.primary_type && data.primary_type !== "none") {
+              setPrimaryType(data.primary_type);
+            }
+
+            if (data.level === "likely_scam" || data.level === "scam") {
+              if (prevLevel !== "likely_scam" && prevLevel !== "scam") {
+                playWarning("alert_scam");
+              }
+            } else if (data.level === "suspicious") {
+              if (prevLevel === "safe") {
+                playWarning("alert_suspicious");
+              }
+            }
+          }
+        } catch {}
+      };
+
+      ws.onerror = () => {
+        setSessionState("error");
+        stopAudio();
+      };
+      ws.onclose = () => {
+        if (sessionState === "listening" || sessionState === "connecting") {
+          setSessionState("ended");
+        }
+      };
+    } catch {
+      setSessionState("error");
+      stopAudio();
+    }
+  };
+
+  const isScam = level === "likely_scam" || level === "scam";
+  const isSuspicious = level === "suspicious";
+  const isSafe = level === "safe";
+
+  // Build WhatsApp URL with scam type name and app link, NO transcript (spec 7.4)
+  const scamDisplayName = SCAM_TYPE_NAMES[primaryType]?.hi || (isScam ? "संभावित ठगी" : "संदिग्ध कॉल");
+  const waShareText = `सजग चेतावनी: मुझे एक संदिग्ध कॉल आ रही है (${scamDisplayName})। कृपया सतर्क रहें और मुझे सीधे फोन करें। https://sajag.ai/report?type=${primaryType}&level=${level}&lang=hi-IN`;
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(waShareText)}`;
+
+  return (
+    <main
+      className="min-h-screen w-full flex flex-col justify-between overflow-x-hidden select-none transition-colors duration-300"
+      style={{
+        backgroundColor:
+          sessionState === "idle"
+            ? "var(--bg)"
+            : isScam
+            ? "#b91c1c" // Vermilion full screen
+            : isSuspicious
+            ? "#d97706" // Marker yellow full screen
+            : "#15803d", // Green full screen
+        color: sessionState === "idle" ? "var(--ink)" : "#ffffff",
+      }}
+    >
+      {/* Top Bar Navigation */}
+      <header className="p-3 sm:p-5 flex items-center justify-between border-b" style={{ borderColor: sessionState === "idle" ? "var(--line)" : "rgba(255,255,255,0.2)" }}>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-base sm:text-lg font-bold font-display hover:opacity-80 transition-opacity shrink-0"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>मुख्य पृष्ठ</span>
+        </Link>
+        <span className="text-sm sm:text-base font-bold uppercase tracking-wider font-display opacity-90 text-right">
+          माता-पिता मोड • PARENT MODE
+        </span>
+      </header>
+
+      {/* Main Full-Screen Status Field */}
+      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 text-center max-w-xl mx-auto w-full space-y-6 sm:space-y-8">
+        {/* 1. IDLE STATE */}
+        {sessionState === "idle" && (
+          <div className="space-y-8 w-full">
+            <div className="w-24 h-24 mx-auto rounded-full bg-red-100 dark:bg-red-950/60 text-red-600 flex items-center justify-center shadow-md">
+              <Mic className="w-12 h-12" />
+            </div>
+
+            <div className="space-y-4">
+              <h1 className="text-3xl sm:text-4xl font-extrabold font-display leading-tight">
+                फ़ोन स्पीकर पर रखें
+              </h1>
+              <p className="text-2xl leading-relaxed text-[var(--ink-muted)]">
+                बातचीत शुरू होने पर नीचे दिया गया बड़ा बटन दबाएं।
+              </p>
+            </div>
+
+            <button
+              id="parent-start-btn"
+              data-testid="parent-start-btn"
+              type="button"
+              onClick={handleStart}
+              className="w-full py-6 px-6 rounded-2xl bg-[#b91c1c] text-white text-2xl sm:text-3xl font-extrabold shadow-xl hover:opacity-95 active:scale-98 transition-all flex items-center justify-center gap-4"
+            >
+              <Mic className="w-8 h-8" />
+              <span>सुनना शुरू करें</span>
+            </button>
+          </div>
+        )}
+
+        {/* 2. CONNECTING STATE */}
+        {sessionState === "connecting" && (
+          <div className="space-y-6">
+            <div className="w-16 h-16 mx-auto border-4 border-white border-t-transparent rounded-full animate-spin" />
+            <p className="text-3xl font-bold">जुड़ रहे हैं...</p>
+          </div>
+        )}
+
+        {/* 3. ACTIVE LISTENING: GREEN / YELLOW / VERMILION COLOR FIELD */}
+        {(sessionState === "listening" || sessionState === "ended") && (
+          <div className="space-y-6 sm:space-y-8 w-full flex flex-col items-center">
+            {/* Status Icon */}
+            {isScam ? (
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white text-[#b91c1c] flex items-center justify-center shadow-2xl animate-pulse">
+                <PhoneOff className="w-14 h-14 sm:w-16 sm:h-16" />
+              </div>
+            ) : isSuspicious ? (
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white text-[#d97706] flex items-center justify-center shadow-2xl">
+                <AlertTriangle className="w-14 h-14 sm:w-16 sm:h-16" />
+              </div>
+            ) : (
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white text-[#15803d] flex items-center justify-center shadow-2xl">
+                <ShieldCheck className="w-14 h-14 sm:w-16 sm:h-16" />
+              </div>
+            )}
+
+            {/* Large Verdict Headline (>= 28px) */}
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-5xl font-black font-display tracking-tight leading-tight">
+                {isScam
+                  ? "ठगी है, तुरंत फोन काटें!"
+                  : isSuspicious
+                  ? "सावधान रहें!"
+                  : "कोई ठगी नहीं मिली"}
+              </h1>
+              <p className="text-2xl sm:text-3xl font-bold opacity-95">
+                {isScam
+                  ? "पैसे न भेजें, कोई कोड न बताएं।"
+                  : isSuspicious
+                  ? "अधिकारी बनकर दबाव बनाया जा रहा है।"
+                  : "बातचीत सुरक्षित प्रतीत हो रही है।"}
+              </p>
+            </div>
+
+            {/* Giant Rubber Stamp with white badge backing for high contrast */}
+            <div className="py-2 px-5 rounded-2xl bg-white/95 shadow-xl border border-white/40 scale-105 sm:scale-115">
+              <VerdictStamp level={level} size="giant" lang="hi" showSplatter={false} />
+            </div>
+
+            {/* Action Buttons: Tell my Family (WhatsApp) & Stop */}
+            <div className="w-full space-y-4 pt-2">
+              {/* WhatsApp Family Alert Button (Spec 7.4) */}
+              <a
+                id="parent-whatsapp-btn"
+                data-testid="parent-whatsapp-btn"
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-5 px-6 rounded-2xl bg-white text-emerald-800 text-2xl font-black shadow-xl hover:bg-emerald-50 active:scale-98 transition-all flex items-center justify-center gap-3 border-2 border-emerald-900/20"
+              >
+                <Share2 className="w-7 h-7" />
+                <span>परिवार को बताएं (WhatsApp)</span>
+              </a>
+
+              {sessionState === "listening" && (
+                <button
+                  id="parent-stop-btn"
+                  data-testid="parent-stop-btn"
+                  type="button"
+                  onClick={handleStop}
+                  className="w-full py-4 px-6 rounded-2xl bg-black/30 text-white text-xl font-bold border-2 border-white/40 hover:bg-black/40 transition-all flex items-center justify-center gap-2"
+                >
+                  <Square className="w-5 h-5 fill-current" />
+                  <span>सुनना रोकें • Stop</span>
+                </button>
+              )}
+
+              {sessionState === "ended" && (
+                <button
+                  type="button"
+                  onClick={handleStart}
+                  className="w-full py-4 px-6 rounded-2xl bg-white text-[#b91c1c] text-xl font-bold shadow-md hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+                >
+                  <RefreshCw className="w-5 h-5" />
+                  <span>नई कॉल शुरू करें</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 4. ERROR STATE */}
+        {sessionState === "error" && (
+          <div className="space-y-6 w-full">
+            <div className="w-20 h-20 mx-auto rounded-full bg-red-100 text-red-600 flex items-center justify-center">
+              <AlertTriangle className="w-10 h-10" />
+            </div>
+            <h1 className="text-3xl font-bold">माइक्रोफ़ोन से संपर्क नहीं हो सका</h1>
+            <p className="text-2xl opacity-90">कृपया माइक की अनुमति दें और पुनः प्रयास करें।</p>
+            <button
+              type="button"
+              onClick={handleStart}
+              className="w-full py-5 px-6 rounded-2xl bg-[#b91c1c] text-white text-2xl font-bold"
+            >
+              पुनः प्रयास करें
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Footer Info */}
+      <footer className="p-4 text-center text-lg opacity-80" style={{ borderColor: "rgba(255,255,255,0.2)" }}>
+        <span>राष्ट्रीय साइबर हेल्पलाइन: <strong>1930</strong> • सजग सहायता</span>
+      </footer>
+    </main>
+  );
+}
 
 export default function ParentPage() {
   return (
-    <PlaceholderPage
-      title="Parent Mode • माता-पिता मोड"
-      milestone="M5"
-      description="Elder-friendly interface: a single giant listening button, full-screen color alerts, Hindi spoken warnings via Timbre, and one-tap WhatsApp family alert."
-    />
+    <Suspense fallback={<div className="p-8 text-center text-2xl">लोड हो रहा है...</div>}>
+      <ParentContent />
+    </Suspense>
   );
 }
