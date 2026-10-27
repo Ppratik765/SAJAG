@@ -22,6 +22,7 @@ import { CallSheet, CallSegment, CallSignal, CallMarginNoteItem } from "@/compon
 import { LevelStrip } from "@/components/ui/LevelStrip";
 import { VerdictStamp, RiskLevel } from "@/components/ui/VerdictStamp";
 import { CallTimeline, TimelineSignal } from "@/components/ui/CallTimeline";
+import { ResultCard } from "@/components/ui/ResultCard";
 import { getActiveMicPreset } from "@/lib/audio/constraints";
 import { resampleTo16k } from "@/lib/audio/resample";
 import { floatToPcm16 } from "@/lib/audio/pcm";
@@ -107,12 +108,78 @@ function LiveContent() {
   const websocketRef = useRef<WebSocket | null>(null);
   const framerRef = useRef<Framer | null>(null);
   const speechTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const lastWarningPlayTime = useRef<number>(0);
+  const currentLevelRef = useRef<RiskLevel>("safe");
+  const selectedLangRef = useRef<string>("hi-IN");
+  const lastAlertTimes = useRef<{ alert_scam: number; alert_suspicious: number }>({
+    alert_scam: 0,
+    alert_suspicious: 0,
+  });
+  const userGestureStarted = useRef<boolean>(false);
+  const [audioUnavailable, setAudioUnavailable] = useState<boolean>(false);
+
+  useEffect(() => {
+    selectedLangRef.current = selectedLang;
+  }, [selectedLang]);
+
+  const resolveWarningLang = (code: string): string => {
+    const isIndic =
+      code.startsWith("hi") ||
+      code.startsWith("ta") ||
+      code.startsWith("te") ||
+      code.startsWith("kn") ||
+      code.startsWith("ml") ||
+      code.startsWith("mr") ||
+      code.startsWith("bn") ||
+      code.startsWith("gu") ||
+      code.startsWith("pa");
+    return isIndic ? "hi-IN" : "en-IN";
+  };
+
+  // Real warning audio playback (spec 7.3 & M5 Part 2)
+  const playWarning = useCallback(
+    (kind: "alert_suspicious" | "alert_scam", langCode: string) => {
+      // Autoplay policy: only play after user's Start gesture
+      if (!userGestureStarted.current) return;
+
+      // Respect Mute
+      if (isMuted) return;
+
+      // Cooldown: never the same alert more than once per 60s
+      const now = Date.now();
+      const lastPlayed = lastAlertTimes.current[kind] || 0;
+      if (now - lastPlayed < 60000) return;
+      lastAlertTimes.current[kind] = now;
+
+      // Resolve language with Indic -> hi-IN fallback
+      const resolvedLang = resolveWarningLang(langCode);
+      const src = `/audio/warnings/${resolvedLang}/${kind}.mp3`;
+
+      try {
+        const audio = new Audio(src);
+        audio.onerror = () => {
+          setAudioUnavailable(true);
+        };
+        const p = audio.play();
+        if (p !== undefined) {
+          p.catch(() => {
+            setAudioUnavailable(true);
+          });
+        }
+      } catch {
+        setAudioUnavailable(true);
+      }
+    },
+    [isMuted]
+  );
+
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // 1. Mock fixture preview handler (dev & screenshots)
   useEffect(() => {
     if (!mockParam) return;
+
+    // Enable simulated user gesture for mock mode
+    userGestureStarted.current = true;
 
     if (mockParam === "listening") {
       setSessionState("listening");
@@ -174,23 +241,6 @@ function LiveContent() {
     }
   }, [mockParam]);
 
-  // Warning audio playback stub (safely no-ops if file missing, ready for M5)
-  const playWarning = useCallback((kind: "alert_suspicious" | "alert_scam", lang: string) => {
-    const now = Date.now();
-    // Do not play more than once every 60s
-    if (now - lastWarningPlayTime.current < 60000) return;
-    lastWarningPlayTime.current = now;
-
-    try {
-      const audio = new Audio(`/audio/warnings/${lang}/${kind}.mp3`);
-      audio.play().catch(() => {
-        // Safe no-op when M5 clip files are not generated yet
-      });
-    } catch {
-      // Safe no-op
-    }
-  }, []);
-
   // Cleanup helper
   const stopAudio = useCallback(() => {
     if (timerIntervalRef.current) {
@@ -240,6 +290,8 @@ function LiveContent() {
     setPrimaryType("none");
     setFirstCrossed({});
     setRemainingSeconds(180);
+    currentLevelRef.current = "safe";
+    userGestureStarted.current = true;
 
     try {
       // 1. Get mic media stream with active DSP preset
@@ -323,7 +375,8 @@ function LiveContent() {
               return [...existing, newSeg].sort((a, b) => a.index - b.index);
             });
           } else if (data.type === "risk") {
-            const prevLevel = level;
+            const prevLevel = currentLevelRef.current;
+            currentLevelRef.current = data.level;
             setLevel(data.level);
             setScore(data.score);
             if (data.primary_type && data.primary_type !== "none") {
@@ -336,11 +389,11 @@ function LiveContent() {
             // Audio warning check
             if (data.level === "likely_scam" || data.level === "scam") {
               if (prevLevel !== "likely_scam" && prevLevel !== "scam") {
-                playWarning("alert_scam", selectedLang.split("-")[0]);
+                playWarning("alert_scam", selectedLangRef.current);
               }
             } else if (data.level === "suspicious") {
               if (prevLevel === "safe") {
-                playWarning("alert_suspicious", selectedLang.split("-")[0]);
+                playWarning("alert_suspicious", selectedLangRef.current);
               }
             }
 
@@ -716,83 +769,28 @@ function LiveContent() {
             </div>
           </div>
 
-          {/* CRITICAL WARNING BANNER WHEN LIKELY SCAM */}
-          {(level === "likely_scam" || level === "scam") && (
-            <div className="p-5 rounded-md border-2 border-[var(--alarm)] bg-[var(--alarm)]/10 space-y-4 animate-in fade-in">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3">
-                  <ShieldAlert className="w-7 h-7 text-[var(--alarm)] shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="text-lg font-display font-extrabold text-[var(--alarm-text)]">
-                      {activeLang === "hi"
-                        ? "तुरंत फोन काट दें! ठगी के स्पष्ट संकेत मिले हैं"
-                        : "Hang up now! High risk of fraud detected"}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[var(--ink)] mt-1 font-medium">
-                      {SCAM_TYPE_LABELS[primaryType]?.[activeLang] || "Suspected Scam"}:{" "}
-                      {activeLang === "hi"
-                        ? "कोई भी अधिकारी फोन पर पैसे या ओटीपी नहीं मांगता।"
-                        : "No legitimate official or bank demands money transfer or OTP over the phone."}
-                    </p>
-                  </div>
-                </div>
-
-                <VerdictStamp level={level} size="sm" lang={activeLang} showSplatter={false} />
-              </div>
-
-              {/* Actionable "What to do now" */}
-              <div className="bg-[var(--sheet)] p-3.5 rounded border border-[var(--alarm)]/30 space-y-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-[var(--alarm-text)] block">
-                  {activeLang === "hi" ? "अभी क्या करें:" : "What to do immediately:"}
-                </span>
-                <ul className="text-xs text-[var(--ink)] space-y-1 list-disc list-inside">
-                  <li>
-                    <strong>{activeLang === "hi" ? "फोन काटें:" : "Hang up:"}</strong>{" "}
-                    {activeLang === "hi"
-                      ? "कॉल जारी न रखें, डरने की कोई बात नहीं है।"
-                      : "Disconnect the call now. Real police or courts never 'digitally arrest'."}
-                  </li>
-                  <li>
-                    <strong>{activeLang === "hi" ? "गोपनीयता:" : "Never share:"}</strong>{" "}
-                    {activeLang === "hi"
-                      ? "ओटीपी, पासवर्ड, कार्ड नंबर या यूपीआई पिन कभी न दें।"
-                      : "Do not share OTP, card details, or UPI PIN under any pretext."}
-                  </li>
-                  <li>
-                    <strong>{activeLang === "hi" ? "पैसे न भेजें:" : "No money transfer:"}</strong>{" "}
-                    {activeLang === "hi"
-                      ? "किसी भी 'सुरक्षित' या वेरिफिकेशन खाते में पैसे न भेजें।"
-                      : "Never send money to any 'verification account'."}
-                  </li>
-                  <li>
-                    <strong>{activeLang === "hi" ? "हेल्पलाइन:" : "Helpline:"}</strong>{" "}
-                    {activeLang === "hi"
-                      ? "साइबर अपराध की शिकायत 1930 पर दर्ज करें।"
-                      : "Report cyber fraud immediately at national helpline 1930."}
-                  </li>
-                </ul>
-              </div>
-
-              {/* Warn My Family Button */}
-              <div className="pt-1 flex flex-wrap gap-3">
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded font-display font-bold text-sm bg-[#25D366] text-white hover:opacity-95 shadow-xs"
-                >
-                  <Share2 className="w-4 h-4" />
-                  <span>{activeLang === "hi" ? "परिवार को सतर्क करें" : "Warn my family"}</span>
-                </a>
-
-                <Link
-                  href={`/report?type=${primaryType}&level=${level}&lang=${selectedLang}`}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded text-xs font-bold border border-[var(--line)] bg-[var(--sheet)] text-[var(--ink)] hover:border-[var(--stamp)]"
-                >
-                  <span>{activeLang === "hi" ? "रिपोर्ट कार्ड देखें" : "View share card"}</span>
-                </Link>
-              </div>
+          {/* Audio Unavailable Notice (never silently fail, spec 7.3) */}
+          {audioUnavailable && (
+            <div
+              className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 text-amber-800 dark:text-amber-200 text-xs flex items-center gap-2"
+              data-testid="audio-unavailable-banner"
+            >
+              <Info className="w-4 h-4 shrink-0 text-amber-600" />
+              <span>Voice alert audio unavailable • आवाज चेतावनी ऑडियो अनुपलब्ध</span>
             </div>
+          )}
+
+          {/* Result Card (Shared by Check/Paste/Live Summary with Listen Button, Spec 7.5) */}
+          {(level === "likely_scam" || level === "scam" || level === "suspicious" || sessionState === "ended") && (
+            <ResultCard
+              level={level}
+              score={score}
+              primaryType={primaryType}
+              signals={signals}
+              languageCode={selectedLang}
+              activeLang={activeLang}
+              showShare={true}
+            />
           )}
 
           {/* The Call Sheet with Rolling Transcript */}

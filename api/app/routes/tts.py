@@ -60,6 +60,13 @@ def _check_rate_limit(client_ip: str) -> None:
     _ip_rate_limits[client_ip] = history
 
 
+def _read_from_cache(cache_path: Path) -> bytes | None:
+    """Read cached audio bytes if file exists and is not empty."""
+    if cache_path.is_file() and cache_path.stat().st_size > 0:
+        return cache_path.read_bytes()
+    return None
+
+
 @router.post("/warning")
 async def warning_tts_route(request: Request) -> Response:
     """Synthesize voice warning or scam explanation from reviewed templates only.
@@ -148,8 +155,9 @@ async def warning_tts_route(request: Request) -> Response:
     # Content-addressed cache check (0 credits)
     key_hash = _cache_key(text_to_speak, language_code, voice, model, speed, container, sample_rate, bitrate)
     cache_path = CACHE_DIR / f"{key_hash}.mp3"
-    if cache_path.is_file() and cache_path.stat().st_size > 0:
-        return Response(content=cache_path.read_bytes(), media_type="audio/mpeg", headers={"X-Cache": "HIT"})
+    cached_bytes = _read_from_cache(cache_path)
+    if cached_bytes is not None:
+        return Response(content=cached_bytes, media_type="audio/mpeg", headers={"X-Cache": "HIT"})
 
     # Check daily budget cap before synthesis
     try:

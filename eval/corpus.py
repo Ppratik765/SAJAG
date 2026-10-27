@@ -40,6 +40,8 @@ VALID_SCAM_TYPES = {
 
 VALID_LEGIT_KINDS = {
     "bank_advisory",
+    "police_advisory",
+    "telecom_advisory",
     "delivery_otp",
     "family_money",
     "customer_care",
@@ -58,8 +60,10 @@ RE_PAN = re.compile(r"\b[A-Z]{5}\d{4}[A-Z]\b")
 RE_AADHAAR = re.compile(r"\b\d{4}\s?\d{4}\s?\d{4}\b")
 
 
-def compute_split(script_id: str) -> Literal["dev", "test", "holdout", "fresh_holdout", "adv_holdout"]:
+def compute_split(script_id: str) -> Literal["dev", "test", "holdout", "fresh_holdout", "adv_holdout", "final_holdout"]:
     """Deterministically assign 70% dev / 30% test based on sha256(id), or holdout for holdout scripts."""
+    if script_id.startswith("final_holdout_"):
+        return "final_holdout"
     if script_id.startswith("fresh_holdout_"):
         return "fresh_holdout"
     if script_id.startswith("holdout_"):
@@ -98,7 +102,7 @@ class Script(BaseModel):
     legit_kind: str | None = None
     difficulty: Literal["easy", "medium", "hard"] = "medium"
     turns: list[ScriptTurn] = Field(min_length=2)
-    split: Literal["dev", "test", "holdout", "fresh_holdout", "adv_holdout"]
+    split: Literal["dev", "test", "holdout", "fresh_holdout", "adv_holdout", "final_holdout"]
 
     @model_validator(mode="after")
     def validate_script_rules(self) -> Script:

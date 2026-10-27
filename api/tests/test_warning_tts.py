@@ -24,7 +24,7 @@ async def test_warning_tts_valid_combos():
     transport = httpx.ASGITransport(app=app)
     mock_audio = b"\xff\xfb\x90\x44" + b"\x00" * 200  # Fake mp3 frame
     
-    with patch("app.routes.tts.synthesize", new_callable=AsyncMock) as mock_synth:
+    with patch("app.routes.tts._read_from_cache", return_value=None), patch("app.routes.tts.synthesize", new_callable=AsyncMock) as mock_synth:
         mock_synth.return_value = mock_audio
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
             # 1. alert_scam hi-IN
@@ -122,7 +122,7 @@ async def test_warning_tts_rejects_unsupported_language():
 @pytest.mark.asyncio
 async def test_warning_tts_budget_exhausted():
     transport = httpx.ASGITransport(app=app)
-    with patch("app.routes.tts.check_tts_budget") as mock_check:
+    with patch("app.routes.tts._read_from_cache", return_value=None), patch("app.routes.tts.check_tts_budget") as mock_check:
         mock_check.side_effect = BudgetExhausted("Daily TTS budget exhausted", kind="tts")
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
             resp = await client.post(

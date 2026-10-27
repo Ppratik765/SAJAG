@@ -5,6 +5,7 @@ import { useI18n } from "@/lib/i18n/context";
 import { CallSheet, CallSegment, CallSignal, CallMarginNoteItem } from "@/components/ui/CallSheet";
 import { LevelStrip } from "@/components/ui/LevelStrip";
 import { VerdictStamp, RiskLevel } from "@/components/ui/VerdictStamp";
+import { ResultCard } from "@/components/ui/ResultCard";
 import { analyzeText, FullAnalysisResponse } from "@/lib/api/analyze";
 import { CATEGORY_PLAIN_NOTES, SCAM_TYPE_NAMES, ADVICE_TEXTS } from "@/lib/engine/labels";
 import {
@@ -231,44 +232,16 @@ export default function PastePage() {
 
           {/* Result Summary Card (Visible when result exists) */}
           {result && (
-            <div className="bg-[var(--sheet)] border border-[var(--line)] rounded-2xl p-5 shadow-xs space-y-4 animate-in fade-in">
-              <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
-                <div className="flex items-center gap-2">
-                  {riskLevel === "scam" || riskLevel === "likely_scam" ? (
-                    <ShieldAlert size={20} className="text-[var(--alarm)] shrink-0" />
-                  ) : (
-                    <ShieldCheck size={20} className="text-[var(--safe)] shrink-0" />
-                  )}
-                  <div>
-                    <h3 className="text-sm font-bold text-[var(--ink)]">{scamTypeName}</h3>
-                    <p className="text-xs text-[var(--ink-muted)] font-mono">
-                      Risk Score: {result.score} • {result.signals.length} warning marks
-                    </p>
-                  </div>
-                </div>
-
-                <VerdictStamp level={riskLevel} size="sm" lang={activeLang} />
-              </div>
-
-              {/* Actionable Advice List */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-bold text-[var(--ink)]">Recommended Action:</h4>
-                <div className="space-y-1.5">
-                  {result.advice_keys.map((key) => {
-                    const advice = ADVICE_TEXTS[key]?.[activeLang] || key;
-                    return (
-                      <div
-                        key={key}
-                        className="text-xs text-[var(--ink)] flex items-start gap-2 bg-[var(--bg)]/70 p-2.5 rounded-lg border border-[var(--line)]/50"
-                      >
-                        <PhoneOff size={14} className="text-[var(--alarm)] shrink-0 mt-0.5" />
-                        <span className="leading-snug">{advice}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+            <ResultCard
+              level={riskLevel}
+              score={result.score}
+              primaryType={result.primary_type}
+              signals={result.signals}
+              adviceKeys={result.advice_keys}
+              languageCode={result.language_code || (activeLang === "hi" ? "hi-IN" : "en-IN")}
+              activeLang={activeLang}
+              showShare={true}
+            />
           )}
         </div>
 
