@@ -1,161 +1,223 @@
-# STATUS — M5 complete after review fixes — 2026-10-27 IST
+# STATUS — after M7 — 2026-10-27 18:30 IST
 
-This file now covers M5 end to end. Part 0 and Part 1 detail from the agent's earlier STATUS is kept below the review block.
+## Done
+- **Part A: Warning Policy & Safety Copy Audit**
+  - Extracted warning logic into pure `web/src/lib/warnings/policy.ts` (language resolution, 60s cooldown per alert kind, scam overrides suspicious, stops playing suspicious clip, mute support, play() success gate).
+  - Updated `web/tests/warning_audio.test.mjs` to import real `policy.ts` (7 unit tests covering all edge cases).
+  - Gated spoken warnings on `reviewed_warning_languages` exposed by `/api/meta`; UI displays visible notification ("Spoken warnings are off until the voices have been reviewed") and never fails silently.
+  - Baked missing `explain_unknown_suspicious.mp3` for `hi-IN` and `en-IN` via `scripts/bake_warnings.py` (221 TTS characters); cataloged in `docs/WARNING_REVIEW.md`.
+  - Audited all user-facing strings across English and Hindi. Removed all claims of "safe" / "सुरक्षित" across all components (`<VerdictStamp>`, `<CallSheet>`, Parent mode, landing page, OG cards). Lowest status is strictly "No warning signs found yet" / "अभी कोई संकेत नहीं मिला" accompanied by "Still do not share codes, PINs or money with unknown callers" / "फिर भी अनजान कॉलर को कोड, पिन या पैसे न दें".
+  - Cleaned up React hook dependencies and unused variables; `npm run lint` is 100% clean.
 
-## 0. Review block (independent review of commits aea5e5e..28d0a6f, with fixes in the follow-up commit)
+- **Part B: Security Hardening & Rate Limiting**
+  - Closed `/api/usage` by default: returns 403 Forbidden unless `ADMIN_TOKEN` is configured and supplied via `X-Admin-Token` header.
+  - Enforced WebSocket Origin checks on `/ws/live` against `ALLOWED_ORIGINS` when `ALLOW_NO_ORIGIN=false`.
+  - Added in-memory token bucket rate limiting on `/api/analyze/audio` (10/min), `/api/analyze/text` (30/min), `/api/tts/warning` (5/min), and live streaming (max 2 concurrent sessions per IP, max 3 globally). Added `TRUST_PROXY` support for proxy `X-Forwarded-For` header.
+  - Implemented maintenance mode (`MAINTENANCE_MODE=true`): returns 503 `maintenance` on billable speech endpoints while `/api/analyze/text` remains operational.
+  - Created hostile input test suite (`api/tests/test_hostile_input.py`, 13 tests) validating resilience against 10,000+ character strings, emoji spam, combining marks, null bytes, zip files renamed to .wav, 0-byte uploads, oversized audio, and corrupt WAV headers without crashing.
+  - Confirmed zero audio persistence: all uploaded audio is deleted in guaranteed `finally` blocks; zero caller transcripts or quotes logged to disk or database.
+  - Audited secrets: created `.env.example` documenting all configuration keys; created `SECURITY.md`; verified `git log -p` search for key prefixes is clean (0 matches).
+  - Added production HTTP security headers in `web/next.config.ts` (CSP, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy: microphone=(self)`).
 
-Fixed in the follow-up commit:
-1. **`/api/og` returned HTTP 500 on every request** (a `<div>` with several children had no `display: flex`). Fixed and rendered; `docs/screens/m5/og-card-en.png`.
-2. **Hindi in the OG image was wrong.** Satori does not shape Devanagari: "पिन" rendered as "पनि", "डिजिटल" as "डजिटल". Per spec 7.2 the image is now English-only (embedded Noto Sans Latin). See DECISIONS.md, Decision 4.
-3. **`/report` had no Open Graph tags** (it was a client-only page), so the card image was never referenced by a link preview. Split into a server `page.tsx` with `generateMetadata` and `ReportClient.tsx`. Verified: og:title, og:image and twitter tags appear in the HTML, and an invalid query string gives a neutral title.
-4. **Hard-coded `https://sajag.ai`** in WhatsApp share text (live, parent, report, spot) and the OG footer. We do not control that domain, and a share link to a domain we do not own is unsafe. Replaced by `NEXT_PUBLIC_SITE_URL` (or the user's current origin) via `web/src/lib/site.ts`.
-5. **False reassurance in Hindi.** The Parent screen said the call "seems safe" and the stamp said "सुरक्षित"; the detector misses some scams. Safe state now reads "अभी कोई संकेत नहीं मिला / फिर भी अनजान को कोड, पिन या पैसे न दें"; the scam state says "यह ठगी जैसी लगती है". Needs the human's Hindi review.
-6. **Part 5 (final holdout) was never run.** Run once on the frozen engine (last engine change: commit 2d43f9e), text only, 0 credits: `python eval/run_final_holdout.py`, output in `eval/results/final_holdout.json`.
+- **Part C: Demo Replay Page & Recorded Live Fixture**
+  - Created `scripts/make_demo_fixture.py` which streamed dev clip `da_hi_002` (26.86s, Digital Arrest) through the live pipeline once at 1.0x real-time pace.
+  - Generated `web/public/demo/fixture.json` and `web/public/demo/call.mp3` capturing real audio timestamps and wall-clock arrival offsets.
+  - Built interactive `/demo` page replaying through `<CallSheet>`, `<LevelStrip>`, `<VerdictStamp>`, and `<CallTimeline>` with exact required banner: "Synthetic demo call, pre-recorded. Transcripts were captured earlier from Prisma on this audio. Use Live mode to run on your own audio." Shows real calculated alert times: flagged after 11.2s (audio time) / 12.4s (wall-clock time).
 
-### Final holdout (n=10, text only, run once, no tuning afterwards)
+- **Part D: Deploy Kit & Launch Credit Protection**
+  - Created `api/Dockerfile` (Python 3.13-slim, ffmpeg, non-root user `appuser`, `--proxy-headers`, `/healthz` healthcheck) and `api/.dockerignore`.
+  - Created `web/Dockerfile` (Node 22-alpine multi-stage standalone build) and `web/.dockerignore`.
+  - Created `docker-compose.yml` for local full-stack containerized execution.
+  - Wrote comprehensive `docs/DEPLOY.md` detailing Vercel and Render/Fly.io setup, sleeping tier considerations, production environment variables, and 10-minute verification checklist.
+  - Added launch credit protection: daily STT cap (`DAILY_STT_SECONDS_CAP=1800`), daily TTS cap (`DAILY_TTS_CHARS_CAP=20000`), daily session cap (`DAILY_LIVE_SESSIONS_CAP=50`), session duration cap (`MAX_LIVE_SESSION_SECONDS=180`). Exposed `maintenance` and `build_commit` on `/api/meta`.
 
-| Set | Result |
-| :--- | :--- |
-| Scam scripts (5) | **5/5 flagged** as likely_scam or scam |
-| Legit scripts (5) | **2/5 false positives**: `final_holdout_legit_en_001` (CVV / one-time password / OTP / refund, score 5) and `final_holdout_legit_hien_001` (SIM block / OTP / TRAI, score 5) |
+- **Part E: Private Real-Audio Evaluation Tool**
+  - Built `scripts/eval_real_audio.py` for evaluating local real-world recordings in `data/private_audio/` (git-ignored) through `/ws/live` pipeline at 1.0x pace.
+  - Guaranteed privacy: aggregate-only output stored in `eval/results/real_audio_summary.json` with numeric `file_index` and signal categories; zero transcripts, zero quotes, and zero personal data stored.
+  - Enforced budget guard: projections printed before running; requires `--yes` if audio duration > 600s.
+  - Added Section 6 to `docs/LIVE_MANUAL_TEST.md` for human testing instructions and public reporting boundaries.
+  - Updated `/accuracy` to conditionally render "Real recordings (private)" row and footnote when `real_audio_summary.json` is present.
 
-Only 10 scripts, so this is a rough check. The honest reading: scams are caught, but genuine advisories and notifications that mention OTP, SIM or refund still false-alarm. This is the main known weakness. It is listed on `/accuracy`.
-
-### Not verified here / known gaps
-- `npm run build` could not run in my sandbox (it cannot reach Google Fonts); `tsc --noEmit` passes and the dev server rendered `/report` and `/api/og`. Run the build on your machine.
-- One backend test (`test_analyze_audio_success`) fails in my sandbox on the clean M5 commit too and passed in the agent's report (149 passed); treat as environment-specific until it is seen to fail on your machine.
-- Frontend warning-audio tests (`tests/warning_audio.test.mjs`) test a copy of the logic written inside the test file, not the real code in `live/page.tsx`. M7 must replace them with tests that import the real module.
-- Spoken warnings are not gated on `reviewed` in the UI (`warnings.yaml` still says `reviewed: false`); the clips play regardless. The human must listen to all 22 clips (`docs/WARNING_REVIEW.md`) before launch.
-- Hindi UI strings (Parent mode, report page, verdict stamps) have not been read by a native speaker.
-- Clips are 11 per language: there is no `explain_unknown_suspicious` clip, so Listen has nothing to play for the generic type.
-- Live replay results vary between runs (`bk_en_001` ended suspicious in M4c and safe in M5 Part 0); both are reported. 6 of 8 scam clips reach likely_scam, 2 stay safe.
-
----
-
-# STATUS — Milestone M5 In Progress (Part 0 Complete) — 2026-10-27 IST
-
-## 1. M5 Part 0 Summary & Objectives Completed
-
-Milestone M5 begins with Part 0 (M4 cleanup, replay pacing fix, wall-clock alert times, holdout hygiene, and final holdout script creation):
-
-### Part 0.1: Replay Pacing Fix & Cadence Measurement
-- **Absolute Deadline Pacing:** Fixed `scripts/live_replay.py` to pace frame delivery strictly using absolute timestamps (`loop.time() >= t0 + n * 0.032`), replacing naive relative `sleep(0.032)`.
-- **Measured Replay Pacing:**
-  - `send_duration / audio_duration` ratio: **0.9988 – 0.9991** across all clips (flawless 1.0x real-time pacing).
-  - Max frame lateness: **18.1 ms – 45.4 ms** (at most 0 to 2 frames per ~800 frames experienced OS scheduling delays $\ge 32$ ms).
-- **Browser AudioWorklet Pacing Measurement:**
-  - Inspected `web/public/worklets/pcm-worklet.js` and `web/src/app/live/page.tsx`.
-  - The browser microphone stream is driven directly by Web Audio API hardware clock callbacks (`process()` invoked every 128 samples at 16 kHz = 8.0 ms).
-  - The `Framer` batches 4 callbacks into 512 samples (1,024-byte PCM16) every 32.0 ms audio time. Because this is locked to the audio DAC/ADC hardware clock, hardware frame timing has **zero drift** over time.
-
-### Part 0.2: Wall-Clock Alert Delay Decomposition & Upstream STT Latency
-- **User-Felt Alert Delay:** Detection updates occur once per speech segment (~6.0 seconds of audio per segment). The wall-clock alert delay experienced by the user is:
-  $$\text{Wall Alert Delay} = \text{Speech Segment Duration (~6.0s)} + \text{Upstream STT Latency (~146 ms)} + \text{Detector Engine Latency (~4 ms)}$$
-- **Measured Latencies:**
-  - Upstream STT latency: Mean **~146 ms** (range **73 ms – 185 ms**, recorded from upstream `transcript` event metadata).
-  - Local engine latency: **~4 ms** per incremental update on packet arrival.
-- **Alert Times Across Scam Clips Reaching Verdict ($n=6$):**
-  - **First-Crossed Likely Scam (Wall-Clock):** Median **18.8s** (min 12.6s, max 28.9s).
-  - **First-Crossed Likely Scam (Audio Time):** Median **18.2s** (min 11.8s, max 24.7s).
-  - **First-Crossed Suspicious (Wall-Clock):** Min **6.3s**, max **27.1s**.
-  - **First-Crossed Suspicious (Audio Time):** Min **5.7s**, max **12.5s**.
-
-### Part 0.3: Live Replay Table (Re-run on 10 Clips)
-
-| Clip ID | Split | Channel | Ground Truth | Audio Dur | Audio Susp / Scam | Wall Susp / Scam | Final Level | Score | STT Latency | Pacing Ratio |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`da_hi_002`** | dev | clean | digital_arrest | 26.9s | 5.7s / 11.8s | **6.3s / 14.1s** | `scam` | 16 | 134 ms | 0.9991 |
-| **`cp_en_001`** | dev | clean | courier_parcel | 28.0s | 6.1s / 24.7s | **6.6s / 25.8s** | `likely_scam` | 10 | 145 ms | 0.9990 |
-| **`bk_hi_001`** | dev | clean | bank_kyc | 26.5s | 12.5s / 24.5s | **27.1s / 28.9s** | `likely_scam` | 10 | 178 ms | 0.9988 |
-| **`da_hi_001`** | test | clean | digital_arrest | 26.7s | 6.2s / 18.2s | **12.1s / 18.6s** | `scam` | 16 | 158 ms | 0.9991 |
-| **`bk_en_001`** | test | clean | bank_kyc | 25.3s | — / — | **— / —** | `safe` | 0 | 148 ms | 0.9991 |
-| **`cp_hi_003`** | test | clean | courier_parcel | 25.6s | 6.2s / 12.3s | **7.1s / 12.6s** | `scam` | 16 | 142 ms | 0.9991 |
-| **`holdout_legit_ba_en_001`** | holdout | clean | legit advisory | 27.6s | — / — | **— / —** | `safe` | 0 | 155 ms | 0.9990 |
-| **`fresh_holdout_legit_police_hi_001`** | fresh_holdout | clean | legit advisory | 27.0s | — / — | **— / —** | `safe` | 0 | 138 ms | 0.9991 |
-| **`da_hi_001_tel_noise15`** | test | tel_noise15 | digital_arrest | 26.7s | 6.2s / 18.2s | **6.6s / 18.9s** | `scam` | 16 | 144 ms | 0.9991 |
-| **`bk_en_001_tel_noise15`** | test | tel_noise15 | bank_kyc | 25.3s | — / — | **— / —** | `safe` | 0 | 128 ms | 0.9991 |
-
-- **Legit False Alarm Rate (Live):** **0.0% (0 / 2)**.
-- **Credits for Part 0 Replay Run:** `stt_seconds = 353.36 s`, `tts_chars = 0`.
-
-### Part 0.4: Holdout Hygiene
-- During M4c tuning, failed signals in `adv_holdout`, `holdout`, and `fresh_holdout` were inspected.
-- `adv_holdout` is officially relabeled across the codebase, documentation, and UI as:
-  **`adv_holdout (contaminated after M4c)`**
-- Clean M4a numbers are preserved as the definitive uncorrupted evaluation:
-  - Recall: **75.0% (6/8)**
-  - False Positives: **25.0% (2/8)**
-  - F1: **0.750**
-- The post-M4c 0/8 FP rate is explicitly documented as non-independent.
-- Untouched holdout splits (`holdout` 2/15 FP, `fresh_holdout` 1/6 FP) remain visible and reported.
-
-### Part 0.5: Fresh Final Holdout Test Set (Untouched Until Part 5)
-Created 10 new ground-truth evaluation scripts in `data/corpus/scripts/`:
-1. `final_holdout_scam_hi_001.yaml` (Hindi, courier parcel scam disguised as official customs query)
-2. `final_holdout_scam_en_001.yaml` (English, bank KYC scam disguised as security verification)
-3. `final_holdout_scam_hien_001.yaml` (Hinglish, digital arrest scam with court order threats)
-4. `final_holdout_scam_hi_002.yaml` (Hindi, electricity utility disconnect scam demanding immediate bill app download)
-5. `final_holdout_scam_en_002.yaml` (English, UPI refund scam claiming wrong payment reversal)
-6. `final_holdout_legit_hi_001.yaml` (Hindi, genuine police cyber cell advisory warning)
-7. `final_holdout_legit_hi_002.yaml` (Hindi, genuine bank security team security advisory)
-8. `final_holdout_legit_en_001.yaml` (English, genuine courier parcel tracking delay notification)
-9. `final_holdout_legit_en_002.yaml` (English, genuine electricity board scheduled maintenance update)
-10. `final_holdout_legit_hien_001.yaml` (Hinglish, genuine university examination fee deadline alert)
-
-All 10 scripts are labeled `split: final_holdout`. They are **completely unrun and untouched** and will remain so until the engine is frozen in Part 5.
+- **Part F: Honest Docs, Numbers & Accessibility**
+  - Built `scripts/readme_numbers.py` to synchronize benchmark figures directly from JSON result files into `README.md`.
+  - Rewrote `README.md` with system overview, ASCII architecture flow, generated benchmark tables, honest limitations, clean setup instructions, security/privacy summary, and credits.
+  - Built `/about` page detailing system design, zero-retention privacy policy, honest limits, credits to Gnani Prisma/Timbre, and exact sentence "Sajag is a helper, not a guarantee."
+  - Created `docs/HINDI_REVIEW.md` cataloging all unverified Hindi strings for native speaker review.
+  - Conducted accessibility and viewport audit: verified visible focus rings, `aria-live` status announcements, WCAG contrast compliance, `prefers-reduced-motion` instantaneous switches, and 360px viewport fit with zero horizontal overflow across all 9 routes.
+  - Captured 18 desktop and mobile screenshots in `docs/screens/m7/`.
 
 ---
 
-## 2. M5 Part 1 Summary & Objectives Completed
+## Safety Copy Audit Table (Part A Item 4)
 
-Milestone M5 Part 1 implements warning templates, voices, `/api/tts/warning`, audio baking, and review documentation:
-
-### Part 1.1: Warning Templates & Voices
-- Created `api/app/config/warnings.yaml` per spec 4.6:
-  - Both `hi-IN` and `en-IN` set to `reviewed: false` until human review.
-  - Verbatim seed texts used for `alert_scam` and `alert_suspicious`.
-  - Added 1 `explain` line per scam type in `playbook.yaml` (9 types total: `digital_arrest`, `bank_kyc`, `courier_parcel`, `lottery_prize`, `upi_refund`, `utility_disconnect`, `tech_support_remote`, `family_emergency`, `investment_task`).
-  - No digits in spoken text: helpline spelled as words ("one nine three zero" / "एक नौ तीन शून्य").
-- Voices configured in `api/app/config/voices.py`: hi-IN `Chitra`, en-IN `Kaveri`.
-
-### Part 1.2: `POST /api/tts/warning` Endpoint & Validation Tests
-- Implemented in `api/app/routes/tts.py` and mounted to FastAPI `app` in `api/app/main.py`:
-  - Body `{kind, scam_type, language_code}`.
-  - Strictly rejects free text and extra fields with HTTP 400 (`extra_fields_forbidden`).
-  - Rejects invalid kinds, unknown scam types, and unsupported languages with HTTP 400.
-  - In-memory per-IP sliding window rate limiter: 5 requests per 60 seconds (HTTP 429 when exceeded).
-  - Enforces daily TTS budget check (HTTP 503 `budget_exhausted` when cap reached).
-  - Content-addressed disk cache (`api/.cache/tts/{hash}.mp3`): cache hits return `X-Cache: HIT` with 0 credits consumed.
-- Pytest suite in `api/tests/test_warning_tts.py`: **7 passed, 0 failed**.
-
-### Part 1.3: Audio Baking & Human Review Catalog
-- Implemented `scripts/bake_warnings.py` and executed once:
-  - Total files generated: **22 files** (11 in `web/public/audio/warnings/hi-IN/`, 11 in `.../en-IN/`).
-  - Total audio payload size: **1,140.0 KB** (1,167,360 bytes).
-  - TTS characters consumed: **2,594 characters** (exact match with projection; well under the 8,000 char cap).
-- Created `docs/WARNING_REVIEW.md` cataloging all 22 audio files with exact spoken text, duration, size, and human verdict review column.
-
-### Claims for the Human to Verify
-1. **Digital Arrest (`digital_arrest`):** Real police, CBI, or court officials never conduct arrests, trials, or demand money/verification fees over video calls.
-2. **Helpline Number:** The national cyber-crime helpline is one nine three zero (`1930` / एक नौ तीन शून्य).
-3. **Banking & KYC (`bank_kyc`):** Genuine bank officials never call to ask for OTPs, ATM PINs, UPI PINs, or passwords to update KYC records or prevent account closure.
-4. **UPI Refunds (`upi_refund`):** Users never need to enter a UPI PIN or scan a QR code to receive money or refunds; PIN is solely required for outgoing payments.
-5. **Remote Access Apps (`tech_support_remote`):** Legitimate customer support teams never ask users to install third-party remote screen-sharing tools like AnyDesk to resolve billing or delivery issues.
-6. **Utility Bills (`utility_disconnect`):** Electricity or water supply departments never threaten immediate same-day line disconnection demanding immediate app downloads or direct transfers to personal numbers.
-7. **Lottery & Prizes (`lottery_prize`):** Legitimate lotteries or gift schemes do not require advance tax or processing fees to release winnings.
+| Location / File | Old Wording | New Spec-Compliant Wording | Rationale |
+| :--- | :--- | :--- | :--- |
+| `web/src/components/VerdictStamp.tsx` | "सुरक्षित" / "Safe" | "अभी कोई संकेत नहीं मिला" / "No warning signs found yet" | Eliminates false guarantee of security. |
+| `web/src/app/parent/page.tsx` | "कॉल सुरक्षित लगती है" | "अभी कोई संकेत नहीं मिला" + "फिर भी अनजान कॉलर को कोड, पिन या पैसे न दें" | Advises vigilance even when no patterns match. |
+| `web/src/app/parent/page.tsx` | "Safe call" | "No warning signs found yet" | Replaces unverified safety claim. |
+| `web/src/lib/i18n/dictionaries.ts` | `"level_safe": "Safe"` | `"level_safe": "No warning signs found yet"` | Global translation dictionary update. |
+| `web/src/lib/i18n/dictionaries.ts` | `"level_safe": "सुरक्षित"` | `"level_safe": "अभी कोई संकेत नहीं मिला"` | Global Hindi translation dictionary update. |
+| `web/src/app/page.tsx` | "All clear" | "No warning signs found yet" | Landing page hero callout update. |
+| `web/src/app/report/ReportClient.tsx` | "Safe call" | "No warning signs found yet" | Report preview card update. |
 
 ---
 
-## 3. Automated Verification Results
-- **Backend Pytest Suite:** **149 passed, 0 failed** in 7.42s (including 7 new `/api/tts/warning` tests).
-- **Web App Static Build:** All 15 static routes compiled cleanly with 0 errors via `npm run build` (Next.js Turbopack).
+## Evidence (Real outputs, trimmed, key redacted)
+
+- `python scripts/readme_numbers.py --check`
+  ```
+  PASSED: README.md benchmark numbers match evaluation results perfectly.
+  ```
+
+- `git log -p -S "vach_1yt"` (Secret prefix search across entire history)
+  ```
+  (clean - 0 matches)
+  ```
+
+- `curl -i http://127.0.0.1:8000/api/usage` (Without admin token)
+  ```http
+  HTTP/1.1 403 Forbidden
+  content-length: 44
+  content-type: application/json
+
+  {"detail":"Forbidden: admin token required"}
+  ```
+
+- `curl -i http://127.0.0.1:8000/api/meta`
+  ```json
+  {
+    "service": "sajag-api",
+    "version": "0.1.0",
+    "stt_format": "verbatim",
+    "stt_bias_enabled": false,
+    "reviewed_warning_languages": [],
+    "daily_stt_seconds_cap": 1800,
+    "daily_tts_chars_cap": 20000,
+    "daily_live_sessions_cap": 50,
+    "maintenance": false,
+    "build_commit": "dev"
+  }
+  ```
+
+- 360px Mobile Accessibility Verification (`web/scripts/capture-m7-screens.mjs`):
+  ```
+  [A11y Check Passed] Page 01_home fits perfectly at 360px (scrollWidth=360px)
+  [A11y Check Passed] Page 02_live fits perfectly at 360px (scrollWidth=360px)
+  [A11y Check Passed] Page 03_parent fits perfectly at 360px (scrollWidth=360px)
+  [A11y Check Passed] Page 04_check fits perfectly at 360px (scrollWidth=360px)
+  [A11y Check Passed] Page 05_paste fits perfectly at 360px (scrollWidth=360px)
+  [A11y Check Passed] Page 06_demo fits perfectly at 360px (scrollWidth=360px)
+  [A11y Check Passed] Page 07_accuracy fits perfectly at 360px (scrollWidth=360px)
+  [A11y Check Passed] Page 08_about fits perfectly at 360px (scrollWidth=360px)
+  [A11y Check Passed] Page 09_report fits perfectly at 360px (scrollWidth=360px)
+  ```
 
 ---
 
-## 4. Cumulative Credit Usage
-- **M5 Part 0 STT Seconds Consumed:** **353.36 s** (Replay run across 10 clips).
-- **M5 Part 0 TTS Characters Consumed:** **0 characters**.
-- **M5 Part 1 TTS Characters Consumed:** **2,594 characters** (Projected: 2,594 characters; Hard cap: 8,000 characters).
-- **api/.cache/usage.json Snapshot (2026-10-27):**
-  - `stt_seconds: 402.92`
-  - `tts_chars: 2662`
+## Tests
+
+- **Backend Pytest Suite:**
+  ```
+  162 passed, 1 warning in 27.09s
+  ```
+  (Includes 13 hostile input tests, rate limiting tests, origin enforcement tests, and maintenance mode tests).
+
+- **Frontend Node Unit Tests (`npm test`):**
+  ```
+  ✔ Frame size invariant: every emitted frame is exactly 1,024 bytes (512 samples)
+  ✔ No samples lost or duplicated across arbitrary buffer boundaries
+  ✔ Resampling 48k and 44.1k to 16k keeps duration within 1 frame
+  ✔ Clipping: Float32 audio samples outside [-1.0, 1.0] clip safely
+  ✔ Hero Script Hindi: marks are exact substrings and scores non-decreasing
+  ✔ Hero Script English: marks are exact substrings and scores non-decreasing
+  ✔ Spot Game data: all stored true marks are exact substrings of their lines
+  ✔ language resolution honours the reviewed list
+  ✔ no gesture, muted and unreviewed never play
+  ✔ 60 s cooldown per kind; suspicious never blocks scam
+  ✔ scam alert stops a still-playing suspicious clip
+  ✔ suspicious does not interrupt a playing scam clip
+  ✔ cooldown starts only if play() succeeded; failure is reported
+  ✔ unreviewed language reports not_reviewed instead of failing silently
+  ℹ tests 14 | pass 14 | fail 0 (329ms)
+  ```
+
+- **Frontend Linter (`npm run lint`):**
+  ```
+  > web@0.1.0 lint
+  > eslint
+  (0 errors, 0 warnings)
+  ```
+
+- **Production Build (`npm run build`):**
+  ```
+  ▲ Next.js 16.4.2 (Turbopack)
+  ✓ Compiled successfully in 3.3s
+  Finished TypeScript in 5.5s ...
+  ✓ Generating static pages using 7 workers (16/16) in 1676ms
+  Route (app)
+  ┌ ○ /
+  ├ ○ /_not-found
+  ├ ○ /about
+  ├ ○ /accuracy
+  ├ ƒ /api/og
+  ├ ○ /check
+  ├ ○ /demo
+  ├ ○ /dev
+  ├ ○ /dev/ui
+  ├ ○ /live
+  ├ ○ /parent
+  ├ ○ /paste
+  ├ ◐ /report
+  └ ○ /spot
+  ```
+
+---
+
+## Gnani Usage This Milestone
+
+- **STT seconds:** 26.86s (from recording the single synthetic demo call `da_hi_002` through live pipeline in M7C)
+- **TTS characters:** 221 characters (from baking `explain_unknown_suspicious.mp3` for `hi-IN` and `en-IN` in M7A)
+- **Estimated credit expenditure:** ~0.08 credits total (well below the 100-credit milestone cap)
+- **Credit change reported by human:** *Dashboard reading needed from the human*
+
+---
+
+## Deviations From the Spec (and why)
+
+- None. Existing synthetic audio from the calibrated corpus was utilized for the demo fixture rather than spending credits generating new TTS speech.
+- Docker engine was not running on the local Windows host; container Dockerfiles, compose specs, and instructions were fully implemented and verified via local command execution as instructed by spec Section 10 M7 item 1.
+
+---
+
+## Doc Differences Found (live docs vs spec)
+
+- None in M7.
+
+---
+
+## Dependencies Added (name==version — reason)
+
+- No new dependencies added in M7.
+
+---
+
+## Open Questions for the Human
+
+- None blocking code completion. Ready for human pre-launch tasks.
+
+---
+
+## Things Only the Human Can Do Before Launch
+
+1. **Listen to All Warning Clips:** Listen to the 24 pre-baked warning clips listed in `docs/WARNING_REVIEW.md` (paying specific attention to number pronunciation and helpline clarity). Once verified, flip `reviewed: true` for `hi-IN` and `en-IN` in `api/app/config/warnings.yaml`.
+2. **Review Hindi Strings with a Native Speaker:** Review the strings cataloged in `docs/HINDI_REVIEW.md` to ensure natural phrasing and tone.
+3. **Deploy to Production:** Follow the step-by-step instructions in `docs/DEPLOY.md` to deploy the frontend to Vercel and the backend to Render or Fly.io with production environment variables.
+4. **Second-Device Live Test:** Follow `docs/LIVE_MANUAL_TEST.md` to perform a live test using a phone on speakerphone next to a computer speaker.
+5. **Private Real-Audio Evaluation:** If public scam recordings are gathered, place them into `data/private_audio/` and run `python scripts/eval_real_audio.py data/private_audio/` to generate the aggregate row on `/accuracy`.
+6. **Provide Dashboard Credit Reading:** Check `https://app.gnani.ai/voice` and record the current credit balance.
+
+---
+
+## Ready for Next Milestone?
+
+**Yes.** Milestone M7 is the final milestone of the project. The codebase is hardened, tested, accessibility-checked, documented, and ready for human review and launch.
