@@ -1,0 +1,37 @@
+# Warning templates for audio playback (spec 4.6)
+# Languages: hi-IN and en-IN have reviewed: false until human review.
+# Spoken text rules:
+#   - No digits in spoken text (helpline spelled as words).
+#   - One or two short sentences per explain line.
+#   - Plain, clear words for Indian families.
+
+languages:
+  hi-IN:
+    reviewed: false
+    alert_scam: "सावधान! यह कॉल ठगी जैसी लगती है। कोई भी कोड या पिन न बताएं, और पैसे न भेजें। अभी फोन काट दें।"
+    alert_suspicious: "सावधान रहें। इस कॉल में ठगी के कुछ संकेत हैं। कोई भी कोड, पिन या पैसे न दें।"
+    explain:
+      digital_arrest: "असली पुलिस या कोर्ट कभी वीडियो कॉल पर गिरफ्तारी की धमकी देकर पैसे नहीं मांगते। फोन काट दें और साइबर हेल्पलाइन एक नौ तीन शून्य पर संपर्क करें।"
+      bank_kyc: "बैंक कभी भी फोन पर पासवर्ड, पिन या ओटीपी नहीं मांगते और न ही खाता बंद करने की धमकी देते हैं। अपनी बैंक शाखा से संपर्क करें।"
+      courier_parcel: "पार्सल या कस्टम के नाम पर गैरकानूनी सामान बताकर पैसे मांगना ठगी है। किसी अनजान खाते में पैसे ट्रांसफर न करें।"
+      lottery_prize: "किसी भी लॉटरी या इनाम के पैसे पाने के लिए पहले शुल्क या टैक्स देना ठगी का तरीका है। कोई भी भुगतान न करें।"
+      upi_refund: "पैसे या रिफंड प्राप्त करने के लिए कभी भी यूपीआई पिन दर्ज करने की आवश्यकता नहीं होती। पिन सिर्फ पैसे भेजने के लिए होता है।"
+      utility_disconnect: "बिजली या पानी का कनेक्शन तुरंत काटने की धमकी देकर अनजान ऐप डाउनलोड कराना ठगी है। हमेशा आधिकारिक बिलिंग पोर्टल का उपयोग करें।"
+      tech_support_remote: "किसी अनजान कॉलर के कहने पर मोबाइल या कंप्यूटर में रिमोट ऐप जैसे एनीडेस्क कभी डाउनलोड न करें। वे आपका खाता खाली कर सकते हैं।"
+      family_emergency: "किसी रिश्तेदार के मुसीबत या अस्पताल में होने का दावा करने वाली कॉल पर तुरंत पैसे न भेजें। पहले सीधे उस परिजन को फोन करके जांचें।"
+      investment_task: "ऑनलाइन टास्क या घर बैठे भारी मुनाफे के वादे अक्सर फर्जी निवेश घोटाले होते हैं। अनजान ग्रुप्स में पैसे कभी न लगाएं।"
+
+  en-IN:
+    reviewed: false
+    alert_scam: "Warning. This call looks like a scam. Do not share any code or PIN, and do not send money. Hang up now."
+    alert_suspicious: "Be careful. This call has some signs of a scam. Do not share any code or PIN, and do not send money."
+    explain:
+      digital_arrest: "Real police and court officials never demand money or conduct arrests over video calls. Hang up and contact the cyber helpline one nine three zero."
+      bank_kyc: "Banks never ask for passwords, PINs, or OTPs over the phone to update KYC. Contact your official bank branch directly."
+      courier_parcel: "Demanding money or customs clearance fees for seized parcels over the phone is a common scam. Do not transfer any funds."
+      lottery_prize: "Demanding advance fees or processing charges to claim a lottery prize or gift is a scam. Never pay to receive prize money."
+      upi_refund: "You never need to enter a UPI PIN or scan a QR code to receive money or refunds. PIN is only for sending money."
+      utility_disconnect: "Threatening immediate disconnection of electricity or water to force app downloads is a scam. Pay bills only via official portals."
+      tech_support_remote: "Never download remote access apps like AnyDesk at the request of an unknown caller. They can view your screen and steal your funds."
+      family_emergency: "Do not send money in panic if a caller claims a family member is in trouble. Call your relative directly to verify."
+      investment_task: "Promises of high guaranteed returns for completing online tasks or trading are investment scams. Do not deposit funds into unknown accounts."

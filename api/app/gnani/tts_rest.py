@@ -112,19 +112,28 @@ async def synthesize(
         "Content-Type": "application/json",
     }
 
+    if container.lower() == "mp3":
+        audio_config = {
+            "sample_rate": sample_rate,
+            "container": "mp3",
+            "bitrate": bitrate,
+        }
+    else:
+        audio_config = {
+            "sample_rate": sample_rate,
+            "num_channels": 1,
+            "sample_width": 2,
+            "encoding": "linear_pcm",
+            "container": container.lower(),
+        }
+
     body = {
         "text": cleaned_text,
         "model": model,
         "voice": voice,
         "language": language,
         "speed": speed,
-        "audio_config": {
-            "sample_rate": sample_rate,
-            "num_channels": 1,
-            "sample_width": 2,
-            "encoding": "linear_pcm" if container.lower() == "wav" else "mp3",
-            "container": container.lower(),
-        },
+        "audio_config": audio_config,
     }
 
     should_close_client = False

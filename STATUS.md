@@ -72,16 +72,56 @@ All 10 scripts are labeled `split: final_holdout`. They are **completely unrun a
 
 ---
 
-## 2. Automated Verification Results
-- **Backend Pytest Suite:** All tests passing.
+## 2. M5 Part 1 Summary & Objectives Completed
+
+Milestone M5 Part 1 implements warning templates, voices, `/api/tts/warning`, audio baking, and review documentation:
+
+### Part 1.1: Warning Templates & Voices
+- Created `api/app/config/warnings.yaml` per spec 4.6:
+  - Both `hi-IN` and `en-IN` set to `reviewed: false` until human review.
+  - Verbatim seed texts used for `alert_scam` and `alert_suspicious`.
+  - Added 1 `explain` line per scam type in `playbook.yaml` (9 types total: `digital_arrest`, `bank_kyc`, `courier_parcel`, `lottery_prize`, `upi_refund`, `utility_disconnect`, `tech_support_remote`, `family_emergency`, `investment_task`).
+  - No digits in spoken text: helpline spelled as words ("one nine three zero" / "एक नौ तीन शून्य").
+- Voices configured in `api/app/config/voices.py`: hi-IN `Chitra`, en-IN `Kaveri`.
+
+### Part 1.2: `POST /api/tts/warning` Endpoint & Validation Tests
+- Implemented in `api/app/routes/tts.py` and mounted to FastAPI `app` in `api/app/main.py`:
+  - Body `{kind, scam_type, language_code}`.
+  - Strictly rejects free text and extra fields with HTTP 400 (`extra_fields_forbidden`).
+  - Rejects invalid kinds, unknown scam types, and unsupported languages with HTTP 400.
+  - In-memory per-IP sliding window rate limiter: 5 requests per 60 seconds (HTTP 429 when exceeded).
+  - Enforces daily TTS budget check (HTTP 503 `budget_exhausted` when cap reached).
+  - Content-addressed disk cache (`api/.cache/tts/{hash}.mp3`): cache hits return `X-Cache: HIT` with 0 credits consumed.
+- Pytest suite in `api/tests/test_warning_tts.py`: **7 passed, 0 failed**.
+
+### Part 1.3: Audio Baking & Human Review Catalog
+- Implemented `scripts/bake_warnings.py` and executed once:
+  - Total files generated: **22 files** (11 in `web/public/audio/warnings/hi-IN/`, 11 in `.../en-IN/`).
+  - Total audio payload size: **1,140.0 KB** (1,167,360 bytes).
+  - TTS characters consumed: **2,594 characters** (exact match with projection; well under the 8,000 char cap).
+- Created `docs/WARNING_REVIEW.md` cataloging all 22 audio files with exact spoken text, duration, size, and human verdict review column.
+
+### Claims for the Human to Verify
+1. **Digital Arrest (`digital_arrest`):** Real police, CBI, or court officials never conduct arrests, trials, or demand money/verification fees over video calls.
+2. **Helpline Number:** The national cyber-crime helpline is one nine three zero (`1930` / एक नौ तीन शून्य).
+3. **Banking & KYC (`bank_kyc`):** Genuine bank officials never call to ask for OTPs, ATM PINs, UPI PINs, or passwords to update KYC records or prevent account closure.
+4. **UPI Refunds (`upi_refund`):** Users never need to enter a UPI PIN or scan a QR code to receive money or refunds; PIN is solely required for outgoing payments.
+5. **Remote Access Apps (`tech_support_remote`):** Legitimate customer support teams never ask users to install third-party remote screen-sharing tools like AnyDesk to resolve billing or delivery issues.
+6. **Utility Bills (`utility_disconnect`):** Electricity or water supply departments never threaten immediate same-day line disconnection demanding immediate app downloads or direct transfers to personal numbers.
+7. **Lottery & Prizes (`lottery_prize`):** Legitimate lotteries or gift schemes do not require advance tax or processing fees to release winnings.
+
+---
+
+## 3. Automated Verification Results
+- **Backend Pytest Suite:** **149 passed, 0 failed** in 7.42s (including 7 new `/api/tts/warning` tests).
 - **Web App Static Build:** All 15 static routes compiled cleanly with 0 errors via `npm run build` (Next.js Turbopack).
 
 ---
 
-## 3. Cumulative Credit Usage
+## 4. Cumulative Credit Usage
 - **M5 Part 0 STT Seconds Consumed:** **353.36 s** (Replay run across 10 clips).
 - **M5 Part 0 TTS Characters Consumed:** **0 characters**.
-- **M5 Part 1 Projected TTS Characters:** **~4,200 characters** (budget hard cap: 8,000 characters).
+- **M5 Part 1 TTS Characters Consumed:** **2,594 characters** (Projected: 2,594 characters; Hard cap: 8,000 characters).
 - **api/.cache/usage.json Snapshot (2026-10-27):**
   - `stt_seconds: 402.92`
-  - `tts_chars: 34`
+  - `tts_chars: 2662`
