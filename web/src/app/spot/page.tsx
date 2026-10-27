@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { siteUrl } from "@/lib/site";
 import Link from "next/link";
 import { Share2, RotateCcw, ArrowRight } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
@@ -101,7 +102,7 @@ export default function SpotGamePage() {
   // Handle Share: Web Share API with WhatsApp fallback
   const handleShare = () => {
     const total = allTrueMarks.length;
-    const url = typeof window !== "undefined" ? window.location.href : "https://sajag.ai/spot";
+    const url = `${siteUrl()}/spot`;
     const shareText = activeCall.isGenuine
       ? `I correctly spotted a genuine advisory call with 0 scam traps on Sajag! Can you? ${url}`
       : `I caught ${foundMarksCount} of ${total} warning signs in this fake scam call. Can you? ${url}`;

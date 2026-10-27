@@ -1,3 +1,37 @@
+# STATUS — M5 complete after review fixes — 2026-10-27 IST
+
+This file now covers M5 end to end. Part 0 and Part 1 detail from the agent's earlier STATUS is kept below the review block.
+
+## 0. Review block (independent review of commits aea5e5e..28d0a6f, with fixes in the follow-up commit)
+
+Fixed in the follow-up commit:
+1. **`/api/og` returned HTTP 500 on every request** (a `<div>` with several children had no `display: flex`). Fixed and rendered; `docs/screens/m5/og-card-en.png`.
+2. **Hindi in the OG image was wrong.** Satori does not shape Devanagari: "पिन" rendered as "पनि", "डिजिटल" as "डजिटल". Per spec 7.2 the image is now English-only (embedded Noto Sans Latin). See DECISIONS.md, Decision 4.
+3. **`/report` had no Open Graph tags** (it was a client-only page), so the card image was never referenced by a link preview. Split into a server `page.tsx` with `generateMetadata` and `ReportClient.tsx`. Verified: og:title, og:image and twitter tags appear in the HTML, and an invalid query string gives a neutral title.
+4. **Hard-coded `https://sajag.ai`** in WhatsApp share text (live, parent, report, spot) and the OG footer. We do not control that domain, and a share link to a domain we do not own is unsafe. Replaced by `NEXT_PUBLIC_SITE_URL` (or the user's current origin) via `web/src/lib/site.ts`.
+5. **False reassurance in Hindi.** The Parent screen said the call "seems safe" and the stamp said "सुरक्षित"; the detector misses some scams. Safe state now reads "अभी कोई संकेत नहीं मिला / फिर भी अनजान को कोड, पिन या पैसे न दें"; the scam state says "यह ठगी जैसी लगती है". Needs the human's Hindi review.
+6. **Part 5 (final holdout) was never run.** Run once on the frozen engine (last engine change: commit 2d43f9e), text only, 0 credits: `python eval/run_final_holdout.py`, output in `eval/results/final_holdout.json`.
+
+### Final holdout (n=10, text only, run once, no tuning afterwards)
+
+| Set | Result |
+| :--- | :--- |
+| Scam scripts (5) | **5/5 flagged** as likely_scam or scam |
+| Legit scripts (5) | **2/5 false positives**: `final_holdout_legit_en_001` (CVV / one-time password / OTP / refund, score 5) and `final_holdout_legit_hien_001` (SIM block / OTP / TRAI, score 5) |
+
+Only 10 scripts, so this is a rough check. The honest reading: scams are caught, but genuine advisories and notifications that mention OTP, SIM or refund still false-alarm. This is the main known weakness. It is listed on `/accuracy`.
+
+### Not verified here / known gaps
+- `npm run build` could not run in my sandbox (it cannot reach Google Fonts); `tsc --noEmit` passes and the dev server rendered `/report` and `/api/og`. Run the build on your machine.
+- One backend test (`test_analyze_audio_success`) fails in my sandbox on the clean M5 commit too and passed in the agent's report (149 passed); treat as environment-specific until it is seen to fail on your machine.
+- Frontend warning-audio tests (`tests/warning_audio.test.mjs`) test a copy of the logic written inside the test file, not the real code in `live/page.tsx`. M7 must replace them with tests that import the real module.
+- Spoken warnings are not gated on `reviewed` in the UI (`warnings.yaml` still says `reviewed: false`); the clips play regardless. The human must listen to all 22 clips (`docs/WARNING_REVIEW.md`) before launch.
+- Hindi UI strings (Parent mode, report page, verdict stamps) have not been read by a native speaker.
+- Clips are 11 per language: there is no `explain_unknown_suspicious` clip, so Listen has nothing to play for the generic type.
+- Live replay results vary between runs (`bk_en_001` ended suspicious in M4c and safe in M5 Part 0); both are reported. 6 of 8 scam clips reach likely_scam, 2 stay safe.
+
+---
+
 # STATUS — Milestone M5 In Progress (Part 0 Complete) — 2026-10-27 IST
 
 ## 1. M5 Part 0 Summary & Objectives Completed

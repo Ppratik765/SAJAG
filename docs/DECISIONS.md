@@ -67,3 +67,16 @@ This document records key engineering and configuration decisions backed by data
 1. **Hinglish STT Language:** `en-IN` (maps to `en-IN` on Gnani API).
 2. **STT Formatting:** `verbatim`.
 3. **Word Boosting:** OFF (`bias_score=0.0`).
+
+---
+
+## Decision 4: OG share image is English-only (M5 review)
+
+- **Finding:** `next/og` (Satori) does not shape Devanagari. Rendering the Hindi card showed vowel signs on the wrong consonant ("पिन" rendered as "पनि", "डिजिटल" as "डजिटल"). A mangled Hindi preview is worse than none.
+- **Decision:** `/api/og` always renders English text with an embedded Noto Sans Latin font. Hindi stays on the `/report` page itself, where the browser shapes it correctly. The `lang` parameter is accepted and ignored.
+- **Also fixed:** the route returned HTTP 500 on every request (a `<div>` with several children had no `display: flex`). `/report` now has server-side `generateMetadata` so the OG image is actually referenced by link previews.
+- **Share links** use `NEXT_PUBLIC_SITE_URL` (or the origin the user is on). An earlier hard-coded `sajag.ai` was removed because we do not control that domain.
+
+## Decision 5: Hindi verdict wording must not reassure (M5 review)
+
+- The Parent screen said "बातचीत सुरक्षित प्रतीत हो रही है" (the call seems safe) and the Hindi stamp said "सुरक्षित". The detector misses some scams (see /accuracy), so the safe state now reads "अभी कोई संकेत नहीं मिला" with "फिर भी अनजान को कोड, पिन या पैसे न दें", and the scam state says "यह ठगी जैसी लगती है" instead of asserting "ठगी है". Human Hindi review still pending.

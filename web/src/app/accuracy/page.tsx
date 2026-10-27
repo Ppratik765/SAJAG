@@ -431,11 +431,25 @@ export default function AccuracyPage() {
                     <td className="py-2.5 text-amber-700 dark:text-amber-400 font-medium">2 / 8 (25.0%)*</td>
                     <td className="py-2.5 font-mono text-xs">0.750</td>
                   </tr>
+                  <tr className="py-2">
+                    <td className="py-2.5 font-medium">
+                      <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300">
+                        FINAL HOLDOUT (run once)
+                      </span>
+                    </td>
+                    <td className="py-2.5">10</td>
+                    <td className="py-2.5 font-semibold">100.0% (5/5)</td>
+                    <td className="py-2.5 text-rose-700 dark:text-rose-400 font-medium">2 / 5 (40.0%)</td>
+                    <td className="py-2.5 font-mono text-xs">0.833</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
             <p className="text-[11px] mt-2 text-muted-foreground" style={{ color: "var(--muted)" }}>
               * Clean M4a numbers preserved (6/8 recall, 2/8 legit FP). During M4c, inspection of failed signals contaminated this split; post-tuning 0/8 FP was not an independent test.
+            </p>
+            <p className="text-[11px] mt-1 text-muted-foreground" style={{ color: "var(--muted)" }}>
+              Final holdout: 10 new scripts (5 scam, 5 legit), written before the engine was frozen and run once, text only, with no tuning afterwards. Only 10 scripts, so treat it as a rough check, not a rate. Two genuine advisory or notification scripts were flagged, so false alarms on real advisories remain a known weakness.
             </p>
           </div>
         </div>

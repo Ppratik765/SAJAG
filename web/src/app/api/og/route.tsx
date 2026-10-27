@@ -1,5 +1,8 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+
 
 const ALLOWED_TYPES: Record<string, { en: string; hi: string }> = {
   digital_arrest: { en: "Digital Arrest Scam", hi: "डिजिटल अरेस्ट ठगी" },
@@ -16,8 +19,32 @@ const ALLOWED_TYPES: Record<string, { en: string; hi: string }> = {
 
 const ALLOWED_LEVELS = new Set(["suspicious", "likely_scam", "scam"]);
 
+// Never invent a domain: show the host only when the deploy sets NEXT_PUBLIC_SITE_URL.
+const siteHost = (process.env.NEXT_PUBLIC_SITE_URL || "").replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+const FONT_FILES: { file: string; weight: 400 | 700; name: string }[] = [
+  { file: "noto-sans-devanagari-latin-400-normal.woff", weight: 400, name: "SajagLatin" },
+  { file: "noto-sans-devanagari-latin-700-normal.woff", weight: 700, name: "SajagLatin" },
+];
+const FONT_DIR = path.join(process.cwd(), "src", "app", "api", "og", "fonts");
+
+async function loadFonts() {
+  return Promise.all(
+    FONT_FILES.map(async (f) => {
+      const buf = await readFile(path.join(FONT_DIR, f.file));
+      return {
+        name: f.name,
+        data: buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer,
+        weight: f.weight,
+        style: "normal" as const,
+      };
+    })
+  );
+}
+
 export async function GET(req: NextRequest) {
   try {
+    const fonts = await loadFonts();
     const { searchParams } = new URL(req.url);
     const rawType = searchParams.get("type") || "digital_arrest";
     const rawLevel = searchParams.get("level") || "likely_scam";
@@ -26,7 +53,11 @@ export async function GET(req: NextRequest) {
     // Strict allowlist validation: fallback to neutral safe strings on unknown inputs
     const typeKey = rawType in ALLOWED_TYPES ? rawType : "unknown_suspicious";
     const levelKey = ALLOWED_LEVELS.has(rawLevel) ? rawLevel : "likely_scam";
-    const isHindi = rawLang === "hi" || rawLang === "hi-IN";
+    // The OG renderer (Satori) does not shape Devanagari: vowel signs such as the short i matra land after
+// the wrong consonant ("पिन" renders as "पनि"). A broken Hindi preview would be worse than none, so the
+// image is always English. Hindi stays on the /report page itself. See docs/DECISIONS.md.
+void rawLang;
+const isHindi = false;
 
     const typeInfo = ALLOWED_TYPES[typeKey];
     const typeLabel = isHindi ? typeInfo.hi : typeInfo.en;
@@ -66,7 +97,7 @@ export async function GET(req: NextRequest) {
             justifyContent: "space-between",
             backgroundColor: "#fbfaf8",
             padding: "48px 56px",
-            fontFamily: "system-ui, -apple-system, sans-serif",
+            fontFamily: "SajagLatin",
             border: `16px solid ${bannerColor}`,
           }}
         >
@@ -78,7 +109,7 @@ export async function GET(req: NextRequest) {
                   backgroundColor: bannerColor,
                   color: "#ffffff",
                   fontSize: 24,
-                  fontWeight: 900,
+                  fontWeight: 700,
                   padding: "8px 20px",
                   borderRadius: "8px",
                   letterSpacing: "0.08em",
@@ -91,7 +122,7 @@ export async function GET(req: NextRequest) {
             <div
               style={{
                 fontSize: 28,
-                fontWeight: 900,
+                fontWeight: 700,
                 color: "#1c1917",
                 display: "flex",
                 alignItems: "center",
@@ -99,8 +130,6 @@ export async function GET(req: NextRequest) {
               }}
             >
               <span>SAJAG</span>
-              <span style={{ color: "#78716c", fontWeight: 400 }}>•</span>
-              <span style={{ color: "#b91c1c" }}>सजग</span>
             </div>
           </div>
 
@@ -109,7 +138,7 @@ export async function GET(req: NextRequest) {
             <div
               style={{
                 fontSize: 20,
-                fontWeight: 800,
+                fontWeight: 700,
                 color: "#78716c",
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
@@ -120,7 +149,7 @@ export async function GET(req: NextRequest) {
             <div
               style={{
                 fontSize: 52,
-                fontWeight: 900,
+                fontWeight: 700,
                 color: "#1c1917",
                 lineHeight: 1.15,
               }}
@@ -170,14 +199,25 @@ export async function GET(req: NextRequest) {
               fontWeight: 600,
             }}
           >
-            <div>National Cyber-Crime Helpline: <strong style={{ color: "#b91c1c" }}>1930</strong></div>
-            <div>Verify calls at <strong style={{ color: "#1c1917" }}>sajag.ai</strong></div>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <span>{isHindi ? "राष्ट्रीय साइबर क्राइम हेल्पलाइन:" : "National Cyber-Crime Helpline:"}</span>
+              <strong style={{ color: "#b91c1c" }}>1930</strong>
+            </div>
+            {siteHost ? (
+              <div style={{ display: "flex", gap: "8px" }}>
+                <span>{isHindi ? "कॉल जांचें:" : "Check calls at"}</span>
+                <strong style={{ color: "#1c1917" }}>{siteHost}</strong>
+              </div>
+            ) : (
+              <div style={{ display: "flex" }}>Sajag</div>
+            )}
           </div>
         </div>
       ),
       {
         width: 1200,
         height: 630,
+        fonts,
       }
     );
   } catch (err: unknown) {

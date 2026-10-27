@@ -10,6 +10,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : undefined,
   title: "Sajag — Scam-call shield for Indian families",
   description:
     "Sajag listens to suspicious calls, marks warning signs on a live paper call sheet with exact quotes, and speaks an alert aloud in your language.",

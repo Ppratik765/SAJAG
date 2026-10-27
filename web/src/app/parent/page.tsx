@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback, Suspense } from "react";
+import { siteUrl } from "@/lib/site";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -33,7 +34,7 @@ const SCAM_TYPE_NAMES: Record<string, { hi: string; en: string }> = {
   lottery_prize: { hi: "लॉटरी / इनाम ठगी", en: "Lottery / Prize Scam" },
   investment_task: { hi: "फर्जी निवेश टास्क", en: "Investment / Part-time Task" },
   unknown_suspicious: { hi: "संदिग्ध कॉल", en: "Suspicious Call" },
-  none: { hi: "कोई ठगी नहीं मिली", en: "No Scam Detected" },
+  none: { hi: "अभी कोई संकेत नहीं मिला", en: "No Scam Detected" },
 };
 
 function ParentContent() {
@@ -222,7 +223,7 @@ function ParentContent() {
 
   // Build WhatsApp URL with scam type name and app link, NO transcript (spec 7.4)
   const scamDisplayName = SCAM_TYPE_NAMES[primaryType]?.hi || (isScam ? "संभावित ठगी" : "संदिग्ध कॉल");
-  const waShareText = `सजग चेतावनी: मुझे एक संदिग्ध कॉल आ रही है (${scamDisplayName})। कृपया सतर्क रहें और मुझे सीधे फोन करें। https://sajag.ai/report?type=${primaryType}&level=${level}&lang=hi-IN`;
+  const waShareText = `सजग चेतावनी: मुझे एक संदिग्ध कॉल आ रही है (${scamDisplayName})। कृपया सतर्क रहें और मुझे सीधे फोन करें। ${siteUrl()}/report?type=${primaryType}&level=${level}&lang=hi`;
   const waUrl = `https://wa.me/?text=${encodeURIComponent(waShareText)}`;
 
   return (
@@ -315,17 +316,17 @@ function ParentContent() {
             <div className="space-y-2">
               <h1 className="text-3xl sm:text-5xl font-black font-display tracking-tight leading-tight">
                 {isScam
-                  ? "ठगी है, तुरंत फोन काटें!"
+                  ? "यह ठगी जैसी लगती है। फोन काटें!"
                   : isSuspicious
                   ? "सावधान रहें!"
-                  : "कोई ठगी नहीं मिली"}
+                  : "अभी कोई संकेत नहीं मिला"}
               </h1>
               <p className="text-2xl sm:text-3xl font-bold opacity-95">
                 {isScam
                   ? "पैसे न भेजें, कोई कोड न बताएं।"
                   : isSuspicious
-                  ? "अधिकारी बनकर दबाव बनाया जा रहा है।"
-                  : "बातचीत सुरक्षित प्रतीत हो रही है।"}
+                  ? "इस कॉल में ठगी के कुछ संकेत हैं।"
+                  : "फिर भी अनजान को कोड, पिन या पैसे न दें।"}
               </p>
             </div>
 

@@ -1,0 +1,327 @@
+{
+  "engine_last_changed_commit": "2d43f9e",
+  "n_scam": 5,
+  "n_legit": 5,
+  "scam_recall": "5/5",
+  "legit_false_positives": "2/5",
+  "items": [
+    {
+      "id": "final_holdout_legit_en_001",
+      "label": "legit",
+      "language": "en-IN",
+      "level": "likely_scam",
+      "score": 5,
+      "flagged": true,
+      "signals": [
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "CVV",
+          "weight": 1
+        },
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "one-time password",
+          "weight": 1
+        },
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "OTP",
+          "weight": 1
+        },
+        {
+          "category": "PRIZE_REFUND",
+          "evidence": "refund",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "final_holdout_legit_en_002",
+      "label": "legit",
+      "language": "en-IN",
+      "level": "safe",
+      "score": 0,
+      "flagged": false,
+      "signals": []
+    },
+    {
+      "id": "final_holdout_legit_hi_001",
+      "label": "legit",
+      "language": "hi-IN",
+      "level": "safe",
+      "score": 2,
+      "flagged": false,
+      "signals": [
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "ओटीपी",
+          "weight": 1
+        },
+        {
+          "category": "URGENCY",
+          "evidence": "तुरंत",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "final_holdout_legit_hi_002",
+      "label": "legit",
+      "language": "hi-IN",
+      "level": "safe",
+      "score": 0,
+      "flagged": false,
+      "signals": []
+    },
+    {
+      "id": "final_holdout_legit_hien_001",
+      "label": "legit",
+      "language": "hi-en",
+      "level": "likely_scam",
+      "score": 5,
+      "flagged": true,
+      "signals": [
+        {
+          "category": "ACCOUNT_THREAT",
+          "evidence": "SIM block",
+          "weight": 2
+        },
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "OTP",
+          "weight": 1
+        },
+        {
+          "category": "AUTHORITY_CLAIM",
+          "evidence": "TRAI",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "final_holdout_scam_en_001",
+      "label": "digital_arrest",
+      "language": "en-IN",
+      "level": "scam",
+      "score": 13,
+      "flagged": true,
+      "signals": [
+        {
+          "category": "THREAT_ARREST",
+          "evidence": "arrest warrant",
+          "weight": 3
+        },
+        {
+          "category": "THREAT_ARREST",
+          "evidence": "money laundering",
+          "weight": 3
+        },
+        {
+          "category": "AUTHORITY_CLAIM",
+          "evidence": "police",
+          "weight": 2
+        },
+        {
+          "category": "ISOLATION",
+          "evidence": "digital arrest",
+          "weight": 3
+        },
+        {
+          "category": "THREAT_ARREST",
+          "evidence": "arrest",
+          "weight": 3
+        },
+        {
+          "category": "URGENCY",
+          "evidence": "right now",
+          "weight": 1
+        },
+        {
+          "category": "ISOLATION",
+          "evidence": "do not disconnect",
+          "weight": 3
+        },
+        {
+          "category": "ISOLATION",
+          "evidence": "Skype call",
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "final_holdout_scam_en_002",
+      "label": "bank_kyc",
+      "language": "en-IN",
+      "level": "likely_scam",
+      "score": 8,
+      "flagged": true,
+      "signals": [
+        {
+          "category": "URGENCY",
+          "evidence": "immediately",
+          "weight": 1
+        },
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "read out the",
+          "weight": 4
+        },
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "one-time password",
+          "weight": 4
+        },
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "OTP",
+          "weight": 4
+        },
+        {
+          "category": "URGENCY",
+          "evidence": "right now",
+          "weight": 1
+        },
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "OTP",
+          "weight": 4
+        }
+      ]
+    },
+    {
+      "id": "final_holdout_scam_hi_001",
+      "label": "bank_kyc",
+      "language": "hi-IN",
+      "level": "likely_scam",
+      "score": 7,
+      "flagged": true,
+      "signals": [
+        {
+          "category": "URGENCY",
+          "evidence": "अभी",
+          "weight": 1
+        },
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "वेरिफिकेशन कोड",
+          "weight": 1
+        },
+        {
+          "category": "OTP_PIN_REQUEST",
+          "evidence": "ओटीपी",
+          "weight": 4
+        },
+        {
+          "category": "URGENCY",
+          "evidence": "तुरंत",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "final_holdout_scam_hi_002",
+      "label": "digital_arrest",
+      "language": "hi-IN",
+      "level": "scam",
+      "score": 16,
+      "flagged": true,
+      "signals": [
+        {
+          "category": "AUTHORITY_CLAIM",
+          "evidence": "सीबीआई",
+          "weight": 2
+        },
+        {
+          "category": "AUTHORITY_CLAIM",
+          "evidence": "कोर्ट",
+          "weight": 2
+        },
+        {
+          "category": "THREAT_ARREST",
+          "evidence": "अरेस्ट",
+          "weight": 3
+        },
+        {
+          "category": "THREAT_ARREST",
+          "evidence": "वारंट",
+          "weight": 3
+        },
+        {
+          "category": "SECRECY",
+          "evidence": "गोपनीय",
+          "weight": 3
+        },
+        {
+          "category": "URGENCY",
+          "evidence": "तुरंत",
+          "weight": 1
+        },
+        {
+          "category": "ISOLATION",
+          "evidence": "वीडियो कॉल",
+          "weight": 3
+        },
+        {
+          "category": "ISOLATION",
+          "evidence": "डिजिटल अरेस्ट",
+          "weight": 3
+        },
+        {
+          "category": "THREAT_ARREST",
+          "evidence": "अरेस्ट",
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "final_holdout_scam_hien_001",
+      "label": "courier_parcel",
+      "language": "hi-en",
+      "level": "scam",
+      "score": 11,
+      "flagged": true,
+      "signals": [
+        {
+          "category": "AUTHORITY_CLAIM",
+          "evidence": "Customs",
+          "weight": 2
+        },
+        {
+          "category": "PARCEL",
+          "evidence": "parcel",
+          "weight": 2
+        },
+        {
+          "category": "AUTHORITY_CLAIM",
+          "evidence": "officer",
+          "weight": 2
+        },
+        {
+          "category": "PARCEL",
+          "evidence": "parcel",
+          "weight": 2
+        },
+        {
+          "category": "PARCEL",
+          "evidence": "parcel",
+          "weight": 2
+        },
+        {
+          "category": "AUTHORITY_CLAIM",
+          "evidence": "narcotics",
+          "weight": 2
+        },
+        {
+          "category": "PARCEL",
+          "evidence": "parcel",
+          "weight": 2
+        },
+        {
+          "category": "THREAT_ARREST",
+          "evidence": "legal action",
+          "weight": 3
+        }
+      ]
+    }
+  ]
+}

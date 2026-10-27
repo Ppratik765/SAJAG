@@ -31,7 +31,7 @@ interface StampConfigItem {
 const FULL_STAMP_CONFIG: Record<RiskLevel, StampConfigItem> = {
   safe: {
     en: { word: "CLEAR", sub: "No warning signs" },
-    hi: { word: "सुरक्षित", sub: "कोई संकेत नहीं" },
+    hi: { word: "साफ़", sub: "अभी कोई संकेत नहीं" },
     color: "var(--safe)",
     borderDash: "6 3",
     rotation: -3.5,

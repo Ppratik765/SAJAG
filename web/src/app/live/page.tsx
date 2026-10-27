@@ -27,6 +27,7 @@ import { getActiveMicPreset } from "@/lib/audio/constraints";
 import { resampleTo16k } from "@/lib/audio/resample";
 import { floatToPcm16 } from "@/lib/audio/pcm";
 import { Framer } from "@/lib/audio/framer";
+import { siteUrl } from "@/lib/site";
 
 const SUPPORTED_LANGUAGES = [
   { code: "hi-IN", label: "हिन्दी (Hindi)", script: "Devanagari" },
@@ -526,8 +527,8 @@ function LiveContent() {
 
   const whatsappMessage = encodeURIComponent(
     activeLang === "hi"
-      ? `सावधान: मुझे अभी एक संदिग्ध कॉल (${scamTypeName}) आई। कृपया सतर्क रहें: किसी को भी ओटीपी या यूपीआई पिन न बताएं और पैसे न भेजें। सजग पर जांचें: https://sajag.ai`
-      : `WARNING: I just encountered a suspected call (${scamTypeName}). Please stay vigilant: never share OTP or UPI PIN, and do not transfer money. Check with Sajag: https://sajag.ai`
+      ? `सावधान: मुझे अभी एक संदिग्ध कॉल (${scamTypeName}) आई। कृपया सतर्क रहें: किसी को भी ओटीपी या यूपीआई पिन न बताएं और पैसे न भेजें। सजग पर जांचें: ${siteUrl()}`
+      : `WARNING: I just encountered a suspected call (${scamTypeName}). Please stay vigilant: never share OTP or UPI PIN, and do not transfer money. Check with Sajag: ${siteUrl()}`
   );
   const whatsappUrl = `https://wa.me/?text=${whatsappMessage}`;
 
