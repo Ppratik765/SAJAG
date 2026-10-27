@@ -1,0 +1,17 @@
+id: final_holdout_legit_en_002
+language: en-IN
+label: legit
+legit_kind: police_advisory
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: This is a public safety advisory from the Delhi Police Cyber Cell.
+- speaker: victim
+  text: Yes, hello officer, what is the notice about?
+- speaker: caller
+  text: Fraudsters are posing as police and narcotics officers threatening citizens with digital arrest. Real law enforcement agencies and judicial courts never conduct arrests over video calls and never demand money transfers.
+- speaker: victim
+  text: That is very helpful information, thank you.
+- speaker: caller
+  text: If you receive any threatening call claiming an arrest warrant, disconnect the call and report immediately to cyber crime portal or helpline one nine three zero.

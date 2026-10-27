@@ -64,6 +64,17 @@ interface LiveTtdItem {
     likely_scam: number | null;
   };
   wall_clock_latency_s: number | null;
+  wall_first_suspicious_s?: number | null;
+  wall_first_likely_scam_s?: number | null;
+  stt_latency_ms?: number[];
+  pacing?: {
+    frames: number;
+    audio_sent_s: number;
+    send_duration_s: number;
+    ratio_send_over_audio: number;
+    max_frame_lateness_ms: number;
+    frames_late_over_32ms: number;
+  };
   final_level: string;
   final_score: number;
   primary_type: string;
@@ -217,7 +228,7 @@ export default function AccuracyPage() {
       <div className="p-4 rounded-xl border mb-10 flex flex-wrap items-center justify-between gap-4 text-sm" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-amber-600" />
-          <span>Streaming Latency: <strong>~4 ms detector latency</strong> (evaluated live in M4 on /ws/live)</span>
+          <span>Latency: <strong>~4 ms</strong> (our detector, per update) • <strong>~146 ms</strong> (measured upstream STT mean)</span>
         </div>
         <div className="flex items-center gap-2">
           <FileText className="w-4 h-4 text-blue-600" />
@@ -312,17 +323,20 @@ export default function AccuracyPage() {
                     <tr className="py-2">
                       <td className="py-2.5 font-medium">
                         <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-100 text-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
-                          ADV HOLDOUT (TEXT)
+                          ADV HOLDOUT (contaminated after M4c)
                         </span>
                       </td>
                       <td className="py-2.5">16</td>
                       <td className="py-2.5 font-semibold">75.0%</td>
-                      <td className="py-2.5" style={{ color: "var(--stamp)" }}>12.5%</td>
-                      <td className="py-2.5">0.800</td>
+                      <td className="py-2.5" style={{ color: "var(--stamp)" }}>25.0% (2/8)*</td>
+                      <td className="py-2.5">0.750</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+              <p className="text-[11px] mt-2 text-muted-foreground" style={{ color: "var(--muted)" }}>
+                * Clean M4a numbers preserved. Post-M4c tuning on failure signals contaminated this split.
+              </p>
             </div>
           </div>
         )}
@@ -409,17 +423,20 @@ export default function AccuracyPage() {
                   <tr className="py-2">
                     <td className="py-2.5 font-medium">
                       <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-100 text-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
-                        ADV HOLDOUT
+                        ADV HOLDOUT (contaminated after M4c)
                       </span>
                     </td>
                     <td className="py-2.5">16</td>
                     <td className="py-2.5 font-semibold">75.0% (6/8)</td>
-                    <td className="py-2.5 text-emerald-700 dark:text-emerald-400 font-medium">0 / 8 (0.0%)</td>
-                    <td className="py-2.5 font-mono text-xs">0.857</td>
+                    <td className="py-2.5 text-amber-700 dark:text-amber-400 font-medium">2 / 8 (25.0%)*</td>
+                    <td className="py-2.5 font-mono text-xs">0.750</td>
                   </tr>
                 </tbody>
               </table>
             </div>
+            <p className="text-[11px] mt-2 text-muted-foreground" style={{ color: "var(--muted)" }}>
+              * Clean M4a numbers preserved (6/8 recall, 2/8 legit FP). During M4c, inspection of failed signals contaminated this split; post-tuning 0/8 FP was not an independent test.
+            </p>
           </div>
         </div>
       </div>
@@ -436,12 +453,27 @@ export default function AccuracyPage() {
         const minTtd = scamTimes.length > 0 ? scamTimes[0].toFixed(1) : "—";
         const maxTtd = scamTimes.length > 0 ? scamTimes[scamTimes.length - 1].toFixed(1) : "—";
 
+        const wallScamTimes = reachedLikelyScam
+          .map((c) => c.wall_first_likely_scam_s)
+          .filter((t): t is number => t !== null && t !== undefined)
+          .sort((a, b) => a - b);
+        const medianWallTtd = wallScamTimes.length > 0 ? wallScamTimes[Math.floor(wallScamTimes.length / 2)].toFixed(1) : "N/A";
+        const minWallTtd = wallScamTimes.length > 0 ? wallScamTimes[0].toFixed(1) : "—";
+        const maxWallTtd = wallScamTimes.length > 0 ? wallScamTimes[wallScamTimes.length - 1].toFixed(1) : "—";
+
         const suspTimes = scamLiveClips
           .filter((c) => c.first_crossed.suspicious !== null)
           .map((c) => c.first_crossed.suspicious as number)
           .sort((a, b) => a - b);
         const minSusp = suspTimes.length > 0 ? suspTimes[0].toFixed(1) : "—";
         const maxSusp = suspTimes.length > 0 ? suspTimes[suspTimes.length - 1].toFixed(1) : "—";
+
+        const wallSuspTimes = scamLiveClips
+          .map((c) => c.wall_first_suspicious_s)
+          .filter((t): t is number => t !== null && t !== undefined)
+          .sort((a, b) => a - b);
+        const minWallSusp = wallSuspTimes.length > 0 ? wallSuspTimes[0].toFixed(1) : "—";
+        const maxWallSusp = wallSuspTimes.length > 0 ? wallSuspTimes[wallSuspTimes.length - 1].toFixed(1) : "—";
 
         const legitLiveClips = liveTtd.filter((c) => c.label === "legit");
         const legitWithTranscripts = legitLiveClips.filter((c) => c.messages_received > 1);
@@ -456,11 +488,11 @@ export default function AccuracyPage() {
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-1 px-2.5 py-0.5 rounded-full" style={{ backgroundColor: "rgba(220, 38, 38, 0.1)", color: "var(--stamp)" }}>
                 <Radio className="w-3.5 h-3.5 animate-pulse" />
-                M4c Live Mode Benchmark • लाइव मोड समय-से-पहचान
+                M5 Live Streaming Benchmark • लाइव मोड समय-से-पहचान
               </div>
               <h2 className="text-xl font-display font-bold">Real-Time Audio Streaming (WebSocket /ws/live)</h2>
               <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>
-                Pre-declared 10 clips streamed at 32 ms frame cadence (1,024-byte PCM16 16kHz) with upstream speech segmentation (<code className="px-1 py-0.5 rounded bg-gray-100 dark:bg-gray-800">x-max-speech-s: 6.0</code>) and 1.5s silent frame disconnect flush.
+                Pre-declared 10 clips streamed at real-time 32 ms frame cadence with absolute deadline pacing (`loop.time()`), upstream speech segmentation (<code className="px-1 py-0.5 rounded bg-gray-100 dark:bg-gray-800">x-max-speech-s: 6.0</code>), and 1.5s silent frame disconnect flush.
               </p>
             </div>
             <div className="flex items-center gap-3 text-xs font-mono px-3 py-1.5 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)", color: "var(--muted)" }}>
@@ -468,33 +500,38 @@ export default function AccuracyPage() {
               <span>•</span>
               <span>Audio: {liveTtd.reduce((acc, c) => acc + c.audio_duration_s, 0).toFixed(1)}s</span>
               <span>•</span>
-              <span>Latency: ~4 ms</span>
+              <span>Pacing: 0.999x</span>
             </div>
+          </div>
+
+          {/* Alert Delay Callout */}
+          <div className="p-3.5 rounded-lg border mb-5 text-xs" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)", color: "var(--ink)" }}>
+            <span className="font-semibold text-amber-700 dark:text-amber-400">User-Felt Alert Delay:</span> Detection happens once per speech segment (about 6.0 s of audio per segment). The real caller alert delay felt at the wall-clock is segment duration (~6s) + measured upstream STT latency (~146 ms mean) + our detector latency (~4 ms per update).
           </div>
 
           {/* Quick Summary Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
             <div className="p-3 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
               <div className="text-[11px] font-semibold uppercase" style={{ color: "var(--muted)" }}>First-Crossed Likely Scam</div>
-              <div className="text-xl font-bold font-display mt-0.5" style={{ color: "var(--stamp)" }}>
-                {medianTtd}s
+              <div className="text-lg font-bold font-display mt-0.5" style={{ color: "var(--stamp)" }}>
+                Audio {medianTtd}s • Wall {medianWallTtd}s
               </div>
               <div className="text-[11px] mt-0.5" style={{ color: "var(--muted)" }}>
-                Median across n={nScam} scam clips ({minTtd}s – {maxTtd}s)
+                Median across n={nScam} scam clips (Wall: {minWallTtd}s – {maxWallTtd}s)
               </div>
             </div>
             <div className="p-3 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
               <div className="text-[11px] font-semibold uppercase" style={{ color: "var(--muted)" }}>First-Crossed Suspicious</div>
-              <div className="text-xl font-bold font-display mt-0.5 text-amber-600">
-                {minSusp}s – {maxSusp}s
+              <div className="text-lg font-bold font-display mt-0.5 text-amber-600">
+                Wall {minWallSusp}s – {maxWallSusp}s
               </div>
               <div className="text-[11px] mt-0.5" style={{ color: "var(--muted)" }}>
-                Early warning before final verdict
+                Audio range: {minSusp}s – {maxSusp}s
               </div>
             </div>
             <div className="p-3 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
               <div className="text-[11px] font-semibold uppercase" style={{ color: "var(--muted)" }}>Legit False-Alarm (Live)</div>
-              <div className="text-xl font-bold font-display mt-0.5 text-emerald-600">
+              <div className="text-lg font-bold font-display mt-0.5 text-emerald-600">
                 {legitFaRate}
               </div>
               <div className="text-[11px] mt-0.5" style={{ color: "var(--muted)" }}>
@@ -502,12 +539,12 @@ export default function AccuracyPage() {
               </div>
             </div>
             <div className="p-3 rounded-lg border" style={{ backgroundColor: "var(--paper-subtle)", borderColor: "var(--rule)" }}>
-              <div className="text-[11px] font-semibold uppercase" style={{ color: "var(--muted)" }}>Detector Latency</div>
-              <div className="text-xl font-bold font-display mt-0.5 text-blue-600">
-                ~4 ms
+              <div className="text-[11px] font-semibold uppercase" style={{ color: "var(--muted)" }}>Measured Latencies</div>
+              <div className="text-lg font-bold font-display mt-0.5 text-blue-600">
+                STT ~146 ms • Engine ~4 ms
               </div>
               <div className="text-[11px] mt-0.5" style={{ color: "var(--muted)" }}>
-                Per risk update on transcript packet
+                Upstream STT (73–185 ms) | Our detector
               </div>
             </div>
           </div>
@@ -522,8 +559,8 @@ export default function AccuracyPage() {
                   <th className="pb-2">Variant</th>
                   <th className="pb-2">Ground Truth</th>
                   <th className="pb-2">Duration</th>
-                  <th className="pb-2">FC Suspicious</th>
-                  <th className="pb-2">FC Likely Scam</th>
+                  <th className="pb-2">Audio (Susp / Scam)</th>
+                  <th className="pb-2">Wall-Clock (Susp / Scam)</th>
                   <th className="pb-2">Final Level</th>
                   <th className="pb-2">Score</th>
                 </tr>
@@ -550,11 +587,15 @@ export default function AccuracyPage() {
                       )}
                     </td>
                     <td className="py-2.5 text-xs">{item.audio_duration_s.toFixed(1)}s</td>
-                    <td className="py-2.5 text-xs font-mono text-amber-600">
-                      {item.first_crossed.suspicious !== null ? `${item.first_crossed.suspicious.toFixed(1)}s` : "—"}
+                    <td className="py-2.5 text-xs font-mono">
+                      <span className="text-amber-600">{item.first_crossed.suspicious !== null ? `${item.first_crossed.suspicious.toFixed(1)}s` : "—"}</span>
+                      {" / "}
+                      <span className="font-semibold" style={{ color: "var(--stamp)" }}>{item.first_crossed.likely_scam !== null ? `${item.first_crossed.likely_scam.toFixed(1)}s` : "—"}</span>
                     </td>
-                    <td className="py-2.5 text-xs font-mono font-semibold" style={{ color: "var(--stamp)" }}>
-                      {item.first_crossed.likely_scam !== null ? `${item.first_crossed.likely_scam.toFixed(1)}s` : "—"}
+                    <td className="py-2.5 text-xs font-mono">
+                      <span className="text-amber-600">{item.wall_first_suspicious_s !== null && item.wall_first_suspicious_s !== undefined ? `${item.wall_first_suspicious_s.toFixed(1)}s` : "—"}</span>
+                      {" / "}
+                      <span className="font-semibold" style={{ color: "var(--stamp)" }}>{item.wall_first_likely_scam_s !== null && item.wall_first_likely_scam_s !== undefined ? `${item.wall_first_likely_scam_s.toFixed(1)}s` : "—"}</span>
                     </td>
                     <td className="py-2.5">
                       <span

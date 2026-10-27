@@ -1,37 +1,39 @@
 [
   {
-    "elapsed_s": 0.739,
-    "received_at": "2026-10-21T11:32:52.513Z",
+    "elapsed_s": 3.315,
+    "received_at": "2026-10-27T06:31:22.948Z",
     "type": "ready",
     "payload": {
       "type": "ready"
     }
   },
   {
-    "elapsed_s": 1.156,
-    "received_at": "2026-10-21T11:32:52.930Z",
+    "elapsed_s": 5.447,
+    "received_at": "2026-10-27T06:31:25.080Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:32:54.461700+00:00"
-    }
+      "timestamp": "2026-10-27T06:31:25.151481+00:00"
+    },
+    "stream_elapsed_s": 2.132
   },
   {
-    "elapsed_s": 9.889,
-    "received_at": "2026-10-21T11:33:01.663Z",
+    "elapsed_s": 9.754,
+    "received_at": "2026-10-27T06:31:29.387Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 1,
       "text": "good morning this is an automated public awareness bulletin from the reserve bank of india yes i am listening",
       "audio_duration_ms": 6144.0,
-      "latency": 152
-    }
+      "latency": 181
+    },
+    "stream_elapsed_s": 6.439
   },
   {
-    "elapsed_s": 9.891,
-    "received_at": "2026-10-21T11:33:01.665Z",
+    "elapsed_s": 9.756,
+    "received_at": "2026-10-27T06:31:29.388Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -39,38 +41,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 9.86,
+      "elapsed_s": 9.74,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 6.44
   },
   {
-    "elapsed_s": 10.585,
-    "received_at": "2026-10-21T11:33:02.358Z",
+    "elapsed_s": 10.157,
+    "received_at": "2026-10-27T06:31:29.790Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:33:03.899581+00:00"
-    }
+      "timestamp": "2026-10-27T06:31:29.999662+00:00"
+    },
+    "stream_elapsed_s": 6.841
   },
   {
-    "elapsed_s": 19.344,
-    "received_at": "2026-10-21T11:33:11.118Z",
+    "elapsed_s": 16.445,
+    "received_at": "2026-10-27T06:31:36.078Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 2,
       "text": "never share your one time passwords debit card cvv or net banking credentials with anyone over phone or sms",
       "audio_duration_ms": 6496.0,
-      "latency": 177
-    }
+      "latency": 181
+    },
+    "stream_elapsed_s": 13.13
   },
   {
-    "elapsed_s": 19.346,
-    "received_at": "2026-10-21T11:33:11.120Z",
+    "elapsed_s": 16.448,
+    "received_at": "2026-10-27T06:31:36.080Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -78,38 +83,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 19.31,
+      "elapsed_s": 16.43,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 13.132
   },
   {
-    "elapsed_s": 19.347,
-    "received_at": "2026-10-21T11:33:11.120Z",
+    "elapsed_s": 16.448,
+    "received_at": "2026-10-27T06:31:36.081Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:33:12.657352+00:00"
-    }
+      "timestamp": "2026-10-27T06:31:36.244461+00:00"
+    },
+    "stream_elapsed_s": 13.133
   },
   {
-    "elapsed_s": 28.032,
-    "received_at": "2026-10-21T11:33:19.805Z",
+    "elapsed_s": 22.255,
+    "received_at": "2026-10-27T06:31:41.888Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 3,
       "text": "remember police and courts never place citizens under digital arrest",
       "audio_duration_ms": 6016.0,
-      "latency": 141
-    }
+      "latency": 149
+    },
+    "stream_elapsed_s": 18.94
   },
   {
-    "elapsed_s": 28.04,
-    "received_at": "2026-10-21T11:33:19.814Z",
+    "elapsed_s": 22.26,
+    "received_at": "2026-10-27T06:31:41.893Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -117,38 +125,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 28.01,
+      "elapsed_s": 22.24,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 18.945
   },
   {
-    "elapsed_s": 28.041,
-    "received_at": "2026-10-21T11:33:19.814Z",
+    "elapsed_s": 22.261,
+    "received_at": "2026-10-27T06:31:41.894Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:33:21.344561+00:00"
-    }
+      "timestamp": "2026-10-27T06:31:42.094689+00:00"
+    },
+    "stream_elapsed_s": 18.945
   },
   {
-    "elapsed_s": 36.921,
-    "received_at": "2026-10-21T11:33:28.695Z",
+    "elapsed_s": 28.204,
+    "received_at": "2026-10-27T06:31:47.837Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 4,
       "text": "stay vigilant in case of suspicious financial fraud report immediately to",
       "audio_duration_ms": 6016.0,
-      "latency": 144
-    }
+      "latency": 99
+    },
+    "stream_elapsed_s": 24.889
   },
   {
-    "elapsed_s": 36.927,
-    "received_at": "2026-10-21T11:33:28.700Z",
+    "elapsed_s": 28.211,
+    "received_at": "2026-10-27T06:31:47.844Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -156,21 +167,23 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 36.89,
+      "elapsed_s": 28.19,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 24.896
   },
   {
-    "elapsed_s": 36.927,
-    "received_at": "2026-10-21T11:33:28.701Z",
+    "elapsed_s": 28.212,
+    "received_at": "2026-10-27T06:31:47.845Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:33:30.235806+00:00"
-    }
+      "timestamp": "2026-10-27T06:31:48.044368+00:00"
+    },
+    "stream_elapsed_s": 24.896
   }
 ]

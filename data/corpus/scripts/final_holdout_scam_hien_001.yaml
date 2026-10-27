@@ -1,0 +1,19 @@
+id: final_holdout_scam_hien_001
+language: hi-en
+label: courier_parcel
+legit_kind: null
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: Hello sir, main Customs parcel security cell se senior inspection officer baat kar raha hoon.
+- speaker: victim
+  text: Hello, kaun sa parcel?
+- speaker: caller
+  text: Aapke naam se Thailand se ek parcel intercept hua hai jisme fake passports aur prohibited narcotics mile hain.
+- speaker: victim
+  text: Maine koi parcel nahi bheja sir, ye mera nahi hai!
+- speaker: caller
+  text: Immediate legal action avoid karne ke liye clearance verification fee transfer karein, call disconnect bilkul mat karna.
+- speaker: victim
+  text: Theek hai sir, mujhe account number dijiye.

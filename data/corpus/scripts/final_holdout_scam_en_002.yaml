@@ -1,0 +1,19 @@
+id: final_holdout_scam_en_002
+language: en-IN
+label: bank_kyc
+legit_kind: null
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: Good afternoon, this is Reserve Bank of India consumer fraud prevention division calling.
+- speaker: victim
+  text: Hello, is there a problem with my bank account?
+- speaker: caller
+  text: Fraudulent clone debit cards have attempted large unauthorized debit withdrawals from your account today.
+- speaker: victim
+  text: Oh no, how do I prevent the withdrawal?
+- speaker: caller
+  text: To halt this transaction immediately, please read out the one-time password OTP received on your mobile phone right now.
+- speaker: victim
+  text: Yes, let me unlock my phone and tell you the OTP.

@@ -1,0 +1,19 @@
+id: final_holdout_scam_hi_002
+language: hi-IN
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: यह केंद्रीय जांच ब्यूरो यानी सीबीआई स्पेशल साइबर क्राइम टास्क फोर्स से महत्वपूर्ण संदेश है।
+- speaker: victim
+  text: जी क्या हुआ, सीबीआई से फोन क्यों आया?
+- speaker: caller
+  text: आपके बैंक खाते का उपयोग राष्ट्रीय सुरक्षा से जुड़े गंभीर अपराध में हुआ है और सुप्रीम कोर्ट से आपके खिलाफ अरेस्ट वारंट जारी हुआ है।
+- speaker: victim
+  text: सर, मेरा कोई दोष नहीं है। मैं जांच में पूरा सहयोग करूँगा।
+- speaker: caller
+  text: यह अत्यधिक गोपनीय जांच है, परिवार के किसी भी सदस्य को मत बताना। तुरंत कमरे का दरवाजा बंद करें और वीडियो कॉल पर डिजिटल अरेस्ट में रहें।
+- speaker: victim
+  text: जी सर, मैं दरवाजा बंद कर लेता हूँ।

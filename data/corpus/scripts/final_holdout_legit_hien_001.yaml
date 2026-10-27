@@ -1,0 +1,17 @@
+id: final_holdout_legit_hien_001
+language: hi-en
+label: legit
+legit_kind: telecom_advisory
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: Telecom Regulatory Authority public awareness alert.
+- speaker: victim
+  text: Hello, kaun si advisory hai?
+- speaker: caller
+  text: Fraudsters SIM block ya disconnection ki dhamki dekar OTP maang rahe hain. TRAI ya telecom companies kabhi phone par verification codes share karne ko nahi kehti.
+- speaker: victim
+  text: Theek hai, main kisi unknown person ko OTP ya details nahi doonga.
+- speaker: caller
+  text: Kisi bhi suspicious link par click na karein aur fraud calls ki shikayat sanchar saathi portal par darj karein.

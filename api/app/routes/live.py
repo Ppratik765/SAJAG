@@ -264,7 +264,6 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
             timeout = min(idle_timeout_seconds, max(0.1, max_session_seconds - elapsed))
             try:
                 msg = await asyncio.wait_for(websocket.receive(), timeout=timeout)
-                logger.info("DEBUG live client received msg: %s", msg)
             except asyncio.TimeoutError:
                 # If idle timeout exceeded
                 if time.time() - last_audio_time >= idle_timeout_seconds:
@@ -273,7 +272,7 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
                     break
                 continue
             except Exception as e:
-                logger.info("DEBUG live client receive exception: %s: %s", type(e), e)
+                logger.info("live client receive ended: %s", type(e).__name__)
                 client_done_event.set()
                 break
 

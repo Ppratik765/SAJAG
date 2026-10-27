@@ -1,0 +1,17 @@
+id: final_holdout_legit_hi_002
+language: hi-IN
+label: legit
+legit_kind: police_advisory
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: पुलिस साइबर सुरक्षा सेल जनहित में जारी सतर्कता संदेश।
+- speaker: victim
+  text: जी कहिए, साइबर सुरक्षा के बारे में क्या बताना चाहते हैं?
+- speaker: caller
+  text: पुलिस, सीबीआई या अदालत कभी भी वीडियो कॉल पर किसी भी नागरिक को डिजिटल अरेस्ट नहीं करती और न ही जमानत के नाम पर पैसे ट्रांसफर करने को कहती है।
+- speaker: victim
+  text: जी, मुझे पता चला था कि ऐसे फर्जी कॉल आ रहे हैं।
+- speaker: caller
+  text: ऐसे किसी भी डराने वाले कॉल से घबराएं नहीं। फोन काटें और तुरंत राष्ट्रीय साइबर हेल्पलाइन एक नौ तीन शून्य पर अपनी शिकायत दर्ज कराएं।

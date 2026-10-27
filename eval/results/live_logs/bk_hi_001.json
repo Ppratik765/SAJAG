@@ -1,37 +1,39 @@
 [
   {
-    "elapsed_s": 0.546,
-    "received_at": "2026-10-21T11:30:00.135Z",
+    "elapsed_s": 8.995,
+    "received_at": "2026-10-27T06:28:55.087Z",
     "type": "ready",
     "payload": {
       "type": "ready"
     }
   },
   {
-    "elapsed_s": 0.997,
-    "received_at": "2026-10-21T11:30:00.587Z",
+    "elapsed_s": 19.229,
+    "received_at": "2026-10-27T06:29:05.322Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:30:02.109856+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:05.461874+00:00"
+    },
+    "stream_elapsed_s": 10.234
   },
   {
-    "elapsed_s": 9.74,
-    "received_at": "2026-10-21T11:30:09.330Z",
+    "elapsed_s": 34.484,
+    "received_at": "2026-10-27T06:29:20.576Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 1,
       "text": "नमस्कार, मैं भारतीय स्टेट बैंक मुख्य शाखा से सीनियर मैनेजर बात कर रहा हूँ, हाँ जी सर, क्या बात है?",
       "audio_duration_ms": 6176.0,
-      "latency": 179
-    }
+      "latency": 146
+    },
+    "stream_elapsed_s": 25.488
   },
   {
-    "elapsed_s": 9.742,
-    "received_at": "2026-10-21T11:30:09.332Z",
+    "elapsed_s": 34.485,
+    "received_at": "2026-10-27T06:29:20.577Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -39,38 +41,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 9.73,
+      "elapsed_s": 34.47,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 25.489
   },
   {
-    "elapsed_s": 10.092,
-    "received_at": "2026-10-21T11:30:09.682Z",
+    "elapsed_s": 34.529,
+    "received_at": "2026-10-27T06:29:20.621Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:30:11.205543+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:20.773692+00:00"
+    },
+    "stream_elapsed_s": 25.534
   },
   {
-    "elapsed_s": 18.898,
-    "received_at": "2026-10-21T11:30:18.488Z",
+    "elapsed_s": 36.058,
+    "received_at": "2026-10-27T06:29:22.151Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 2,
       "text": "आपका बैंक खाता के वाई सी अपडेट न होने के कारण आज रात बारह बजे हमेशा के लिए ब्लॉक हो जाएगा",
       "audio_duration_ms": 6272.0,
-      "latency": 176
-    }
+      "latency": 115
+    },
+    "stream_elapsed_s": 27.063
   },
   {
-    "elapsed_s": 18.905,
-    "received_at": "2026-10-21T11:30:18.495Z",
+    "elapsed_s": 36.065,
+    "received_at": "2026-10-27T06:29:22.157Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -99,38 +104,41 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 18.89,
+      "elapsed_s": 36.05,
       "first_crossed": {
         "suspicious": 12.45,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 27.069
   },
   {
-    "elapsed_s": 18.906,
-    "received_at": "2026-10-21T11:30:18.495Z",
+    "elapsed_s": 36.066,
+    "received_at": "2026-10-27T06:29:22.158Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:30:20.006874+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:22.305901+00:00"
+    },
+    "stream_elapsed_s": 27.07
   },
   {
-    "elapsed_s": 27.995,
-    "received_at": "2026-10-21T11:30:27.585Z",
+    "elapsed_s": 37.062,
+    "received_at": "2026-10-27T06:29:23.154Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 3,
       "text": "खाता बंद मत कीजिए, मेरी पेंशन उसी खाते में आती है परेशान मत होइए मैं यही से ऑनलाइन अपडेट कर देता हूँ",
       "audio_duration_ms": 6016.0,
-      "latency": 131
-    }
+      "latency": 119
+    },
+    "stream_elapsed_s": 28.066
   },
   {
-    "elapsed_s": 28.001,
-    "received_at": "2026-10-21T11:30:27.591Z",
+    "elapsed_s": 37.066,
+    "received_at": "2026-10-27T06:29:23.158Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -149,38 +157,41 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 27.99,
+      "elapsed_s": 37.05,
       "first_crossed": {
         "suspicious": 12.45,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 28.071
   },
   {
-    "elapsed_s": 28.01,
-    "received_at": "2026-10-21T11:30:27.600Z",
+    "elapsed_s": 37.067,
+    "received_at": "2026-10-27T06:29:23.159Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:30:29.107401+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:23.275796+00:00"
+    },
+    "stream_elapsed_s": 28.071
   },
   {
-    "elapsed_s": 36.839,
-    "received_at": "2026-10-21T11:30:36.429Z",
+    "elapsed_s": 37.864,
+    "received_at": "2026-10-27T06:29:23.957Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 4,
       "text": "आपके मोबाइल पर छह अंकों का ओटीपी आया होगा तुरंत बताइए मैसेज आया है",
       "audio_duration_ms": 6016.0,
-      "latency": 176
-    }
+      "latency": 88
+    },
+    "stream_elapsed_s": 28.869
   },
   {
-    "elapsed_s": 37.036,
-    "received_at": "2026-10-21T11:30:36.626Z",
+    "elapsed_s": 37.872,
+    "received_at": "2026-10-27T06:29:23.964Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -209,21 +220,23 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 36.99,
+      "elapsed_s": 37.86,
       "first_crossed": {
         "suspicious": 12.45,
         "likely_scam": 24.48
       }
-    }
+    },
+    "stream_elapsed_s": 28.876
   },
   {
-    "elapsed_s": 37.037,
-    "received_at": "2026-10-21T11:30:36.627Z",
+    "elapsed_s": 37.872,
+    "received_at": "2026-10-27T06:29:23.964Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:30:37.924038+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:24.044382+00:00"
+    },
+    "stream_elapsed_s": 28.877
   }
 ]

@@ -1,0 +1,17 @@
+id: final_holdout_legit_hi_001
+language: hi-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: नमस्कार, यह बैंक ऑफ बड़ौदा ग्राहक सुरक्षा और वित्तीय साक्षरता प्रभाग से जनहित संदेश है।
+- speaker: victim
+  text: जी नमस्कार, क्या सूचना है?
+- speaker: caller
+  text: बैंक अधिकारी कभी भी फोन या वीडियो कॉल पर आपसे पासवर्ड, एटीएम पिन या ओटीपी नहीं मांगते। किसी भी व्यक्ति को अपना गोपनीय कोड कभी न बताएं।
+- speaker: victim
+  text: जी धन्यवाद, मैं अपना पिन कभी किसी से साझा नहीं करता।
+- speaker: caller
+  text: यदि कोई बैंक के नाम पर ओटीपी मांगे तो तुरंत फोन काटें और नजदीकी शाखा में संपर्क करें। आपका दिन शुभ हो।

@@ -1,37 +1,39 @@
 [
   {
-    "elapsed_s": 1.158,
-    "received_at": "2026-10-21T11:28:30.681Z",
+    "elapsed_s": 1.951,
+    "received_at": "2026-10-27T06:27:33.894Z",
     "type": "ready",
     "payload": {
       "type": "ready"
     }
   },
   {
-    "elapsed_s": 1.603,
-    "received_at": "2026-10-21T11:28:31.126Z",
+    "elapsed_s": 2.425,
+    "received_at": "2026-10-27T06:27:34.369Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:28:32.665848+00:00"
-    }
+      "timestamp": "2026-10-27T06:27:34.529825+00:00"
+    },
+    "stream_elapsed_s": 0.475
   },
   {
-    "elapsed_s": 9.705,
-    "received_at": "2026-10-21T11:28:39.227Z",
+    "elapsed_s": 8.059,
+    "received_at": "2026-10-27T06:27:40.003Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 1,
       "text": "यह सीबीआई मुख्य मुख्यालय से चेतावनी कॉल है, आपके नाम पर मनी लॉन्ड्रिंग का केस दर्ज हुआ है।",
       "audio_duration_ms": 5728.0,
-      "latency": 153
-    }
+      "latency": 152
+    },
+    "stream_elapsed_s": 6.108
   },
   {
-    "elapsed_s": 10.095,
-    "received_at": "2026-10-21T11:28:39.618Z",
+    "elapsed_s": 8.212,
+    "received_at": "2026-10-27T06:27:40.155Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -70,38 +72,41 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 9.78,
+      "elapsed_s": 8.04,
       "first_crossed": {
         "suspicious": 5.73,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 6.261
   },
   {
-    "elapsed_s": 10.098,
-    "received_at": "2026-10-21T11:28:39.620Z",
+    "elapsed_s": 8.212,
+    "received_at": "2026-10-27T06:27:40.156Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:28:40.853843+00:00"
-    }
+      "timestamp": "2026-10-27T06:27:40.131788+00:00"
+    },
+    "stream_elapsed_s": 6.261
   },
   {
-    "elapsed_s": 19.116,
-    "received_at": "2026-10-21T11:28:48.639Z",
+    "elapsed_s": 16.092,
+    "received_at": "2026-10-27T06:27:48.035Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 2,
       "text": "सीबीआई मैंने जिंदगी में कोई गलत काम नहीं किया, आपके बैंक खाते से करोड़ों का अवैध लेन देन हुआ है",
       "audio_duration_ms": 6048.0,
-      "latency": 149
-    }
+      "latency": 151
+    },
+    "stream_elapsed_s": 14.141
   },
   {
-    "elapsed_s": 19.122,
-    "received_at": "2026-10-21T11:28:48.645Z",
+    "elapsed_s": 16.097,
+    "received_at": "2026-10-27T06:27:48.041Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -120,38 +125,41 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 18.8,
+      "elapsed_s": 15.93,
       "first_crossed": {
         "suspicious": 5.73,
         "likely_scam": 11.78
       }
-    }
+    },
+    "stream_elapsed_s": 14.147
   },
   {
-    "elapsed_s": 19.123,
-    "received_at": "2026-10-21T11:28:48.645Z",
+    "elapsed_s": 16.098,
+    "received_at": "2026-10-27T06:27:48.042Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:28:50.179537+00:00"
-    }
+      "timestamp": "2026-10-27T06:27:48.196646+00:00"
+    },
+    "stream_elapsed_s": 14.147
   },
   {
-    "elapsed_s": 22.911,
-    "received_at": "2026-10-21T11:28:52.433Z",
+    "elapsed_s": 17.045,
+    "received_at": "2026-10-27T06:27:48.989Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 3,
       "text": "सुप्रीम कोर्ट का गैर जमानती वारंट निकला है।",
       "audio_duration_ms": 3040.0,
-      "latency": 166
-    }
+      "latency": 73
+    },
+    "stream_elapsed_s": 15.095
   },
   {
-    "elapsed_s": 22.919,
-    "received_at": "2026-10-21T11:28:52.442Z",
+    "elapsed_s": 17.05,
+    "received_at": "2026-10-27T06:27:48.994Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -190,44 +198,47 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 22.6,
+      "elapsed_s": 16.88,
       "first_crossed": {
         "suspicious": 5.73,
         "likely_scam": 11.78
       }
-    }
+    },
+    "stream_elapsed_s": 15.1
   },
   {
-    "elapsed_s": 23.073,
-    "received_at": "2026-10-21T11:28:52.596Z",
+    "elapsed_s": 17.244,
+    "received_at": "2026-10-27T06:27:49.188Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:28:54.135620+00:00"
-    }
+      "timestamp": "2026-10-27T06:27:49.276251+00:00"
+    },
+    "stream_elapsed_s": 15.293
   },
   {
-    "elapsed_s": 31.833,
-    "received_at": "2026-10-21T11:29:01.356Z",
+    "elapsed_s": 23.237,
+    "received_at": "2026-10-27T06:27:55.180Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 4,
       "text": "सर मैं क्या करूँ, कृपया मदद कीजिए, तुरंत वीडियो कॉल चालू रखें, अपने घर वालों को मत बताना।",
       "audio_duration_ms": 6080.0,
-      "latency": 151
-    }
+      "latency": 159
+    },
+    "stream_elapsed_s": 21.286
   },
   {
-    "elapsed_s": 31.847,
-    "received_at": "2026-10-21T11:29:01.369Z",
+    "elapsed_s": 23.243,
+    "received_at": "2026-10-27T06:27:55.187Z",
     "type": "risk",
     "payload": {
       "type": "risk",
-      "level": "likely_scam",
-      "score": 10,
-      "primary_type": "unknown_suspicious",
+      "level": "scam",
+      "score": 16,
+      "primary_type": "digital_arrest",
       "new_signals": [
         {
           "id": "sig_04_001",
@@ -238,23 +249,45 @@
           "start_char": 35,
           "end_char": 40,
           "reviewed": true
+        },
+        {
+          "id": "sig_04_002",
+          "category": "ISOLATION",
+          "weight": 3,
+          "evidence": "वीडियो कॉल",
+          "segment_index": 4,
+          "start_char": 41,
+          "end_char": 51,
+          "reviewed": true
+        },
+        {
+          "id": "sig_04_003",
+          "category": "SECRECY",
+          "weight": 3,
+          "evidence": "घर वालों को मत बताना",
+          "segment_index": 4,
+          "start_char": 68,
+          "end_char": 88,
+          "reviewed": true
         }
       ],
-      "elapsed_s": 31.53,
+      "elapsed_s": 23.08,
       "first_crossed": {
         "suspicious": 5.73,
         "likely_scam": 11.78
       }
-    }
+    },
+    "stream_elapsed_s": 21.292
   },
   {
-    "elapsed_s": 32.044,
-    "received_at": "2026-10-21T11:29:01.567Z",
+    "elapsed_s": 23.553,
+    "received_at": "2026-10-27T06:27:55.497Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:29:03.102360+00:00"
-    }
+      "timestamp": "2026-10-27T06:27:55.634518+00:00"
+    },
+    "stream_elapsed_s": 21.603
   }
 ]

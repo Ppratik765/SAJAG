@@ -1,0 +1,17 @@
+id: final_holdout_legit_en_001
+language: en-IN
+label: legit
+legit_kind: bank_advisory
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: Good morning, this is an automated public awareness bulletin from the National Banking Security Council.
+- speaker: victim
+  text: Good morning. Is this regarding account security?
+- speaker: caller
+  text: Yes. Please remember that bank staff and automated systems will never call you asking to reveal your password, CVV, or one-time password OTP.
+- speaker: victim
+  text: Understood. I make sure never to share my security codes with anyone.
+- speaker: caller
+  text: Stay alert against fraudulent refund messages and report unauthorized transactions to your bank helpline immediately.

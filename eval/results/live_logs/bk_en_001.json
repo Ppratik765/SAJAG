@@ -1,37 +1,39 @@
 [
   {
-    "elapsed_s": 0.647,
-    "received_at": "2026-10-21T11:31:28.736Z",
+    "elapsed_s": 2.57,
+    "received_at": "2026-10-27T06:30:11.988Z",
     "type": "ready",
     "payload": {
       "type": "ready"
     }
   },
   {
-    "elapsed_s": 1.1,
-    "received_at": "2026-10-21T11:31:29.189Z",
+    "elapsed_s": 5.196,
+    "received_at": "2026-10-27T06:30:14.615Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:31:30.727598+00:00"
-    }
+      "timestamp": "2026-10-27T06:30:14.775027+00:00"
+    },
+    "stream_elapsed_s": 2.627
   },
   {
-    "elapsed_s": 9.945,
-    "received_at": "2026-10-21T11:31:38.034Z",
+    "elapsed_s": 8.999,
+    "received_at": "2026-10-27T06:30:18.418Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 1,
       "text": "good afternoon sir this is state bank of india customer service head office calling yes how may i help you",
       "audio_duration_ms": 6176.0,
-      "latency": 145
-    }
+      "latency": 150
+    },
+    "stream_elapsed_s": 6.43
   },
   {
-    "elapsed_s": 9.946,
-    "received_at": "2026-10-21T11:31:38.035Z",
+    "elapsed_s": 9.0,
+    "received_at": "2026-10-27T06:30:18.419Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -39,38 +41,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 9.92,
+      "elapsed_s": 8.98,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 6.431
   },
   {
-    "elapsed_s": 10.12,
-    "received_at": "2026-10-21T11:31:38.210Z",
+    "elapsed_s": 9.071,
+    "received_at": "2026-10-27T06:30:18.490Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:31:39.746366+00:00"
-    }
+      "timestamp": "2026-10-27T06:30:18.698056+00:00"
+    },
+    "stream_elapsed_s": 6.501
   },
   {
-    "elapsed_s": 18.879,
-    "received_at": "2026-10-21T11:31:46.969Z",
+    "elapsed_s": 15.149,
+    "received_at": "2026-10-27T06:30:24.568Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 2,
       "text": "your savings bank account will be blocked tonight at eight pm due to mandatory kyc expiry",
       "audio_duration_ms": 6112.0,
-      "latency": 146
-    }
+      "latency": 150
+    },
+    "stream_elapsed_s": 12.58
   },
   {
-    "elapsed_s": 18.881,
-    "received_at": "2026-10-21T11:31:46.970Z",
+    "elapsed_s": 15.15,
+    "received_at": "2026-10-27T06:30:24.569Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -78,38 +83,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 18.85,
+      "elapsed_s": 15.13,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 12.58
   },
   {
-    "elapsed_s": 18.882,
-    "received_at": "2026-10-21T11:31:46.971Z",
+    "elapsed_s": 15.162,
+    "received_at": "2026-10-27T06:30:24.580Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:31:48.507907+00:00"
-    }
+      "timestamp": "2026-10-27T06:30:24.772261+00:00"
+    },
+    "stream_elapsed_s": 12.592
   },
   {
-    "elapsed_s": 27.758,
-    "received_at": "2026-10-21T11:31:55.847Z",
+    "elapsed_s": 21.198,
+    "received_at": "2026-10-27T06:30:30.617Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 3,
       "text": "salary account cannot be blocked how do i fix it i will update it immediately from the portal please share the six digit",
       "audio_duration_ms": 6016.0,
-      "latency": 150
-    }
+      "latency": 159
+    },
+    "stream_elapsed_s": 18.629
   },
   {
-    "elapsed_s": 27.761,
-    "received_at": "2026-10-21T11:31:55.850Z",
+    "elapsed_s": 21.201,
+    "received_at": "2026-10-27T06:30:30.620Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -117,38 +125,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 27.73,
+      "elapsed_s": 21.18,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 18.631
   },
   {
-    "elapsed_s": 27.761,
-    "received_at": "2026-10-21T11:31:55.850Z",
+    "elapsed_s": 21.201,
+    "received_at": "2026-10-27T06:30:30.620Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:31:57.382792+00:00"
-    }
+      "timestamp": "2026-10-27T06:30:30.801607+00:00"
+    },
+    "stream_elapsed_s": 18.632
   },
   {
-    "elapsed_s": 36.547,
-    "received_at": "2026-10-21T11:32:04.636Z",
+    "elapsed_s": 27.365,
+    "received_at": "2026-10-27T06:30:36.784Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 4,
       "text": "verification otp received on your mobile let me check the text message the otp is",
       "audio_duration_ms": 6016.0,
-      "latency": 155
-    }
+      "latency": 185
+    },
+    "stream_elapsed_s": 24.796
   },
   {
-    "elapsed_s": 36.554,
-    "received_at": "2026-10-21T11:32:04.643Z",
+    "elapsed_s": 27.375,
+    "received_at": "2026-10-27T06:30:36.794Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -167,21 +178,23 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 36.52,
+      "elapsed_s": 27.36,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 24.806
   },
   {
-    "elapsed_s": 36.554,
-    "received_at": "2026-10-21T11:32:04.643Z",
+    "elapsed_s": 27.376,
+    "received_at": "2026-10-27T06:30:36.795Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:32:06.172945+00:00"
-    }
+      "timestamp": "2026-10-27T06:30:36.979008+00:00"
+    },
+    "stream_elapsed_s": 24.806
   }
 ]

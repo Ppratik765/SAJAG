@@ -1,37 +1,39 @@
 [
   {
-    "elapsed_s": 0.64,
-    "received_at": "2026-10-21T11:29:14.626Z",
+    "elapsed_s": 1.246,
+    "received_at": "2026-10-27T06:28:10.051Z",
     "type": "ready",
     "payload": {
       "type": "ready"
     }
   },
   {
-    "elapsed_s": 1.048,
-    "received_at": "2026-10-21T11:29:15.034Z",
+    "elapsed_s": 1.728,
+    "received_at": "2026-10-27T06:28:10.533Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:29:16.571581+00:00"
-    }
+      "timestamp": "2026-10-27T06:28:10.670903+00:00"
+    },
+    "stream_elapsed_s": 0.482
   },
   {
-    "elapsed_s": 9.766,
-    "received_at": "2026-10-21T11:29:23.752Z",
+    "elapsed_s": 7.799,
+    "received_at": "2026-10-27T06:28:16.604Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 1,
       "text": "good morning this is fedex international parcel security desk at mumbai airport yes what is this regarding",
       "audio_duration_ms": 6144.0,
-      "latency": 164
-    }
+      "latency": 153
+    },
+    "stream_elapsed_s": 6.553
   },
   {
-    "elapsed_s": 9.769,
-    "received_at": "2026-10-21T11:29:23.755Z",
+    "elapsed_s": 7.802,
+    "received_at": "2026-10-27T06:28:16.607Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -60,82 +62,99 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 9.76,
+      "elapsed_s": 7.79,
       "first_crossed": {
         "suspicious": 6.14,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 6.556
   },
   {
-    "elapsed_s": 10.477,
-    "received_at": "2026-10-21T11:29:24.463Z",
+    "elapsed_s": 8.208,
+    "received_at": "2026-10-27T06:28:17.013Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:29:26.001530+00:00"
-    }
+      "timestamp": "2026-10-27T06:28:17.178458+00:00"
+    },
+    "stream_elapsed_s": 6.962
   },
   {
-    "elapsed_s": 19.337,
-    "received_at": "2026-10-21T11:29:33.323Z",
+    "elapsed_s": 14.837,
+    "received_at": "2026-10-27T06:28:23.642Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 2,
       "text": "a suspicious package sent from cambodia to your name was intercepted with illicit narcotics and fake passports",
       "audio_duration_ms": 6496.0,
-      "latency": 184
-    }
+      "latency": 182
+    },
+    "stream_elapsed_s": 13.591
   },
   {
-    "elapsed_s": 19.341,
-    "received_at": "2026-10-21T11:29:33.327Z",
+    "elapsed_s": 14.841,
+    "received_at": "2026-10-27T06:28:23.646Z",
     "type": "risk",
     "payload": {
       "type": "risk",
       "level": "suspicious",
-      "score": 3,
+      "score": 5,
       "primary_type": "unknown_suspicious",
-      "new_signals": [],
-      "elapsed_s": 19.33,
+      "new_signals": [
+        {
+          "id": "sig_02_001",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "narcotics",
+          "segment_index": 2,
+          "start_char": 82,
+          "end_char": 91,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 14.83,
       "first_crossed": {
         "suspicious": 6.14,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 13.595
   },
   {
-    "elapsed_s": 19.342,
-    "received_at": "2026-10-21T11:29:33.328Z",
+    "elapsed_s": 14.842,
+    "received_at": "2026-10-27T06:28:23.647Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:29:34.860750+00:00"
-    }
+      "timestamp": "2026-10-27T06:28:23.751809+00:00"
+    },
+    "stream_elapsed_s": 13.596
   },
   {
-    "elapsed_s": 30.728,
-    "received_at": "2026-10-21T11:29:44.714Z",
+    "elapsed_s": 20.248,
+    "received_at": "2026-10-27T06:28:29.053Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 3,
       "text": "cambodia or ordered anything customs officers have registered a criminal case",
       "audio_duration_ms": 6016.0,
-      "latency": 158
-    }
+      "latency": 151
+    },
+    "stream_elapsed_s": 19.002
   },
   {
-    "elapsed_s": 30.771,
-    "received_at": "2026-10-21T11:29:44.757Z",
+    "elapsed_s": 20.255,
+    "received_at": "2026-10-27T06:28:29.059Z",
     "type": "risk",
     "payload": {
       "type": "risk",
       "level": "suspicious",
-      "score": 5,
+      "score": 6,
       "primary_type": "unknown_suspicious",
       "new_signals": [
         {
@@ -149,43 +168,46 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 30.76,
+      "elapsed_s": 20.25,
       "first_crossed": {
         "suspicious": 6.14,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 19.009
   },
   {
-    "elapsed_s": 30.771,
-    "received_at": "2026-10-21T11:29:44.757Z",
+    "elapsed_s": 20.255,
+    "received_at": "2026-10-27T06:28:29.060Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:29:46.228472+00:00"
-    }
+      "timestamp": "2026-10-27T06:28:29.211803+00:00"
+    },
+    "stream_elapsed_s": 19.009
   },
   {
-    "elapsed_s": 36.895,
-    "received_at": "2026-10-21T11:29:50.881Z",
+    "elapsed_s": 27.09,
+    "received_at": "2026-10-27T06:28:35.895Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 4,
       "text": "you must transfer forty thousand rupees as a refundable security deposit",
       "audio_duration_ms": 6016.0,
-      "latency": 152
-    }
+      "latency": 150
+    },
+    "stream_elapsed_s": 25.844
   },
   {
-    "elapsed_s": 36.904,
-    "received_at": "2026-10-21T11:29:50.890Z",
+    "elapsed_s": 27.097,
+    "received_at": "2026-10-27T06:28:35.902Z",
     "type": "risk",
     "payload": {
       "type": "risk",
       "level": "likely_scam",
-      "score": 9,
+      "score": 10,
       "primary_type": "courier_parcel",
       "new_signals": [
         {
@@ -209,21 +231,23 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 36.89,
+      "elapsed_s": 27.09,
       "first_crossed": {
         "suspicious": 6.14,
         "likely_scam": 24.67
       }
-    }
+    },
+    "stream_elapsed_s": 25.851
   },
   {
-    "elapsed_s": 36.905,
-    "received_at": "2026-10-21T11:29:50.891Z",
+    "elapsed_s": 27.098,
+    "received_at": "2026-10-27T06:28:35.903Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:29:52.421213+00:00"
-    }
+      "timestamp": "2026-10-27T06:28:36.069529+00:00"
+    },
+    "stream_elapsed_s": 25.852
   }
 ]

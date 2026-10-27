@@ -144,7 +144,15 @@ async def replay_clip(
         "signals": [],
         "messages_received": 0,
         "status": "pending",
+        # Wall-clock seconds from first audio frame sent (what the user feels)
+        "wall_first_suspicious_s": None,
+        "wall_first_likely_scam_s": None,
+        # Upstream STT `latency` field from transcript events (ms)
+        "stt_latency_ms": [],
+        # Sender pacing measurements
+        "pacing": None,
     }
+    stream_t0: Optional[float] = None  # loop.time() at first frame send
 
     raw_events: List[Dict[str, Any]] = []
     replay_start_time = time.time()
@@ -204,10 +212,18 @@ async def replay_clip(
                             json.dumps(redacted),
                         )
 
+                        wall_s = (
+                            round(asyncio.get_running_loop().time() - stream_t0, 3)
+                            if stream_t0 is not None else None
+                        )
+                        raw_events[-1]["stream_elapsed_s"] = wall_s
+
                         if ev_type == "speech":
                             logger.debug("[WS speech_start]")
                         elif ev_type == "transcript":
                             last_transcript_time = time.time()
+                            if data.get("latency") is not None:
+                                result["stt_latency_ms"].append(data.get("latency"))
                             logger.info(
                                 "[WS transcript #%d] %s (%0.1fms)",
                                 data.get("index", 0),
@@ -223,6 +239,10 @@ async def replay_clip(
 
                             result["final_level"] = level
                             result["final_score"] = score
+                            if level in ("suspicious", "likely_scam", "scam") and result["wall_first_suspicious_s"] is None:
+                                result["wall_first_suspicious_s"] = wall_s
+                            if level in ("likely_scam", "scam") and result["wall_first_likely_scam_s"] is None:
+                                result["wall_first_likely_scam_s"] = wall_s
                             result["primary_type"] = primary_type
                             if fc.get("suspicious") is not None and result["first_crossed"]["suspicious"] is None:
                                 result["first_crossed"]["suspicious"] = fc["suspicious"]
@@ -261,19 +281,40 @@ async def replay_clip(
                     receiver_done.set()
 
             async def sender():
-                offset = 0
+                nonlocal stream_t0
+                loop = asyncio.get_running_loop()
                 total_bytes = len(pcm_bytes)
-                while offset < total_bytes:
-                    frame = pcm_bytes[offset : offset + FRAME_BYTES]
+                n_frames = (total_bytes + FRAME_BYTES - 1) // FRAME_BYTES
+                max_late_s = 0.0
+                late_frames = 0  # frames sent > 32 ms (one frame) after deadline
+                t0 = loop.time()
+                stream_t0 = t0
+                for n in range(n_frames):
+                    deadline = t0 + n * FRAME_INTERVAL_S
+                    delay = deadline - loop.time()
+                    if delay > 0:
+                        await asyncio.sleep(delay)
+                    lateness = loop.time() - deadline
+                    if lateness > max_late_s:
+                        max_late_s = lateness
+                    if lateness > FRAME_INTERVAL_S:
+                        late_frames += 1
+                    frame = pcm_bytes[n * FRAME_BYTES : (n + 1) * FRAME_BYTES]
                     if len(frame) < FRAME_BYTES:
                         # Pad trailing frame with silence to keep exact 1,024-byte invariant
                         frame = frame + b"\x00" * (FRAME_BYTES - len(frame))
                     await ws.send(frame)
-                    offset += FRAME_BYTES
-                    # Maintain real-time 32 ms cadence
-                    await asyncio.sleep(FRAME_INTERVAL_S)
-
-                logger.info("All audio frames sent (%0.2fs). Waiting for trailing transcripts...", duration_s)
+                send_duration = loop.time() - t0
+                audio_sent_s = n_frames * FRAME_INTERVAL_S
+                result["pacing"] = {
+                    "frames": n_frames,
+                    "audio_sent_s": round(audio_sent_s, 3),
+                    "send_duration_s": round(send_duration, 3),
+                    "ratio_send_over_audio": round(send_duration / audio_sent_s, 4) if audio_sent_s else None,
+                    "max_frame_lateness_ms": round(max_late_s * 1000, 2),
+                    "frames_late_over_32ms": late_frames,
+                }
+                logger.info("All audio frames sent. Pacing: %s", result["pacing"])
                 sender_done.set()
 
             # Run sender and receiver
@@ -281,9 +322,9 @@ async def replay_clip(
             t_send = asyncio.create_task(sender())
 
             await t_send
-            # Allow up to 4s for trailing VAD closure and risk update
+            # Allow up to 8s for trailing VAD closure, server silence flush and risk update
             try:
-                await asyncio.wait_for(receiver_done.wait(), timeout=4.0)
+                await asyncio.wait_for(receiver_done.wait(), timeout=8.0)
             except asyncio.TimeoutError:
                 pass
 
@@ -344,6 +385,19 @@ async def main():
     else:
         clips_to_run = TARGET_CLIPS
 
+    def _usage_totals() -> Dict[str, float]:
+        usage_file = REPO_ROOT / "api" / ".cache" / "usage.json"
+        if not usage_file.is_file():
+            return {"stt_seconds": 0.0, "tts_chars": 0}
+        data = json.loads(usage_file.read_text(encoding="utf-8"))
+        return {
+            "stt_seconds": round(sum(float(d.get("stt_seconds", 0)) for d in data.values()), 2),
+            "tts_chars": sum(int(d.get("tts_chars", 0)) for d in data.values()),
+        }
+
+    usage_before = _usage_totals()
+    print(f"USAGE BEFORE (all days, api/.cache/usage.json): {usage_before}")
+
     results: List[Dict[str, Any]] = []
     total_audio_s = 0.0
 
@@ -391,6 +445,13 @@ async def main():
         print(f"Scam Time-To-Detect (audio-time to likely_scam, n={len(scam_ttd_values)}):")
         print(f"  Median: {float(np.median(scam_ttd_values)):.1f}s | Min: {min(scam_ttd_values):.1f}s | Max: {max(scam_ttd_values):.1f}s")
     print("=" * 90)
+
+    usage_after = _usage_totals()
+    print(f"USAGE AFTER  (all days, api/.cache/usage.json): {usage_after}")
+    print(
+        f"CREDITS THIS RUN: stt_seconds={usage_after['stt_seconds'] - usage_before['stt_seconds']:.2f} "
+        f"tts_chars={usage_after['tts_chars'] - usage_before['tts_chars']}"
+    )
 
     out_file = Path(args.out)
     out_file.parent.mkdir(parents=True, exist_ok=True)

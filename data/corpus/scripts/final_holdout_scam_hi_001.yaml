@@ -1,0 +1,19 @@
+id: final_holdout_scam_hi_001
+language: hi-IN
+label: bank_kyc
+legit_kind: null
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: यह भारतीय स्टेट बैंक सुरक्षा और सतर्कता विभाग से आधिकारिक सुरक्षा कॉल है।
+- speaker: victim
+  text: हाँ जी, क्या समस्या हुई है?
+- speaker: caller
+  text: आपके खाते में संदिग्ध विदेशी लेनदेन पाया गया है और बैंक सुरक्षा नियमों के अनुसार आपका खाता अभी ब्लॉक कर दिया गया है।
+- speaker: victim
+  text: अरे, मैंने तो कोई विदेश में पैसा नहीं भेजा। खाता अनब्लॉक कैसे होगा?
+- speaker: caller
+  text: खाते का सत्यापन करने के लिए आपके रजिस्टर्ड मोबाइल पर एक छह अंकों का गुप्त वेरिफिकेशन कोड भेजा गया है, वह ओटीपी तुरंत बताइए।
+- speaker: victim
+  text: जी, कोड देखकर बताता हूँ।

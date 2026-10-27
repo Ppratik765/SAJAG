@@ -1,0 +1,19 @@
+id: final_holdout_scam_en_001
+language: en-IN
+label: digital_arrest
+legit_kind: null
+difficulty: hard
+split: final_holdout
+turns:
+- speaker: caller
+  text: Good morning, this is the Cyber Crime and Public Safety Bureau calling with an urgent awareness and legal notice.
+- speaker: victim
+  text: Yes, what is this regarding?
+- speaker: caller
+  text: A non-bailable arrest warrant has been issued against your Aadhaar card for laundering illicit money through international accounts.
+- speaker: victim
+  text: What? I am a salaried person, I have nothing to do with money laundering!
+- speaker: caller
+  text: To avoid immediate police detention, you are placed under digital arrest right now. Isolate yourself in a closed room and do not disconnect this Skype call.
+- speaker: victim
+  text: Please do not arrest me, I will stay on the call.

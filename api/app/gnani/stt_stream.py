@@ -237,12 +237,8 @@ class GnaniSTTStreamClient:
                     continue
 
                 ev_type = data.get("type")
-                # Log raw upstream event (redacting ids)
-                redacted_data = {
-                    k: ("<redacted>" if k in ("request_id", "segment_id", "utterance_id", "api_key") else v)
-                    for k, v in data.items()
-                }
-                logger.info("[Gnani upstream event] type=%s payload=%s", ev_type, json.dumps(redacted_data))
+                # Log upstream event type and field names only (spec 4.1: never log transcripts or ids)
+                logger.info("[Gnani upstream event] type=%s keys=%s", ev_type, sorted(data.keys()))
 
                 if ev_type == "transcript":
                     dur = float(data.get("audio_duration_ms", 0.0))

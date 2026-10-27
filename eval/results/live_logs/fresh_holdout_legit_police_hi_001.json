@@ -1,37 +1,39 @@
 [
   {
-    "elapsed_s": 0.625,
-    "received_at": "2026-10-21T11:33:37.466Z",
+    "elapsed_s": 1.028,
+    "received_at": "2026-10-27T06:31:59.664Z",
     "type": "ready",
     "payload": {
       "type": "ready"
     }
   },
   {
-    "elapsed_s": 1.074,
-    "received_at": "2026-10-21T11:33:37.916Z",
+    "elapsed_s": 1.557,
+    "received_at": "2026-10-27T06:32:00.192Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:33:39.459137+00:00"
-    }
+      "timestamp": "2026-10-27T06:32:00.311245+00:00"
+    },
+    "stream_elapsed_s": 0.529
   },
   {
-    "elapsed_s": 9.798,
-    "received_at": "2026-10-21T11:33:46.640Z",
+    "elapsed_s": 7.741,
+    "received_at": "2026-10-27T06:32:06.377Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 1,
       "text": "नमस्ते, पुलिस साइबर सेल की ओर से यह आम जनता के लिए सुरक्षा परामर्श और जागरूकता संदेश है।",
       "audio_duration_ms": 6176.0,
-      "latency": 151
-    }
+      "latency": 158
+    },
+    "stream_elapsed_s": 6.713
   },
   {
-    "elapsed_s": 9.803,
-    "received_at": "2026-10-21T11:33:46.645Z",
+    "elapsed_s": 7.743,
+    "received_at": "2026-10-27T06:32:06.379Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -39,38 +41,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 9.78,
+      "elapsed_s": 7.72,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 6.715
   },
   {
-    "elapsed_s": 9.804,
-    "received_at": "2026-10-21T11:33:46.645Z",
+    "elapsed_s": 7.744,
+    "received_at": "2026-10-27T06:32:06.379Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:33:48.182933+00:00"
-    }
+      "timestamp": "2026-10-27T06:32:06.526508+00:00"
+    },
+    "stream_elapsed_s": 6.715
   },
   {
-    "elapsed_s": 18.641,
-    "received_at": "2026-10-21T11:33:55.482Z",
+    "elapsed_s": 13.765,
+    "received_at": "2026-10-27T06:32:12.400Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 2,
       "text": "मैं सुन रहा हूँ ध्यान दें, पुलिस या सी बी आई कभी भी वीडियो कॉल पर डिजिटल अरेस्ट नहीं कर",
       "audio_duration_ms": 6016.0,
-      "latency": 132
-    }
+      "latency": 152
+    },
+    "stream_elapsed_s": 12.737
   },
   {
-    "elapsed_s": 18.65,
-    "received_at": "2026-10-21T11:33:55.491Z",
+    "elapsed_s": 13.77,
+    "received_at": "2026-10-27T06:32:12.406Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -78,38 +83,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 18.62,
+      "elapsed_s": 13.74,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 12.742
   },
   {
-    "elapsed_s": 18.65,
-    "received_at": "2026-10-21T11:33:55.492Z",
+    "elapsed_s": 13.771,
+    "received_at": "2026-10-27T06:32:12.406Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:33:57.027026+00:00"
-    }
+      "timestamp": "2026-10-27T06:32:12.541085+00:00"
+    },
+    "stream_elapsed_s": 12.743
   },
   {
-    "elapsed_s": 27.363,
-    "received_at": "2026-10-21T11:34:04.205Z",
+    "elapsed_s": 19.637,
+    "received_at": "2026-10-27T06:32:18.273Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 3,
       "text": "और न ही जमानत के नाम पर पैसे ट्रांसफर करने को कहती है यह पूरी तरह से धोखाधड़ी है",
       "audio_duration_ms": 6016.0,
-      "latency": 152
-    }
+      "latency": 148
+    },
+    "stream_elapsed_s": 18.609
   },
   {
-    "elapsed_s": 27.378,
-    "received_at": "2026-10-21T11:34:04.220Z",
+    "elapsed_s": 19.647,
+    "received_at": "2026-10-27T06:32:18.282Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -117,38 +125,41 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 27.35,
+      "elapsed_s": 19.62,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 18.619
   },
   {
-    "elapsed_s": 27.849,
-    "received_at": "2026-10-21T11:34:04.691Z",
+    "elapsed_s": 20.039,
+    "received_at": "2026-10-27T06:32:18.674Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:34:06.236067+00:00"
-    }
+      "timestamp": "2026-10-27T06:32:18.830329+00:00"
+    },
+    "stream_elapsed_s": 19.01
   },
   {
-    "elapsed_s": 36.644,
-    "received_at": "2026-10-21T11:34:13.486Z",
+    "elapsed_s": 26.363,
+    "received_at": "2026-10-27T06:32:24.999Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 4,
       "text": "धन्यवाद सर ये जानकारी बहुत ज़रूरी थी डरे नहीं और किसी भी धमकाने वाली कॉल की शिकायत",
       "audio_duration_ms": 6336.0,
-      "latency": 177
-    }
+      "latency": 161
+    },
+    "stream_elapsed_s": 25.335
   },
   {
-    "elapsed_s": 36.651,
-    "received_at": "2026-10-21T11:34:13.492Z",
+    "elapsed_s": 26.369,
+    "received_at": "2026-10-27T06:32:25.005Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -156,21 +167,23 @@
       "score": 0,
       "primary_type": "none",
       "new_signals": [],
-      "elapsed_s": 36.62,
+      "elapsed_s": 26.34,
       "first_crossed": {
         "suspicious": null,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 25.341
   },
   {
-    "elapsed_s": 36.651,
-    "received_at": "2026-10-21T11:34:13.493Z",
+    "elapsed_s": 26.369,
+    "received_at": "2026-10-27T06:32:25.005Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:34:15.030268+00:00"
-    }
+      "timestamp": "2026-10-27T06:32:25.089620+00:00"
+    },
+    "stream_elapsed_s": 25.341
   }
 ]

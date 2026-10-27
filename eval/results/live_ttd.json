@@ -9,9 +9,9 @@
       "likely_scam": 11.78
     },
     "wall_clock_latency_s": 0.005,
-    "final_level": "likely_scam",
-    "final_score": 10,
-    "primary_type": "unknown_suspicious",
+    "final_level": "scam",
+    "final_score": 16,
+    "primary_type": "digital_arrest",
     "signals": [
       {
         "category": "AUTHORITY_CLAIM",
@@ -52,10 +52,36 @@
         "category": "URGENCY",
         "evidence": "तुरंत",
         "weight": 1
+      },
+      {
+        "category": "ISOLATION",
+        "evidence": "वीडियो कॉल",
+        "weight": 3
+      },
+      {
+        "category": "SECRECY",
+        "evidence": "घर वालों को मत बताना",
+        "weight": 3
       }
     ],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": 6.261,
+    "wall_first_likely_scam_s": 14.147,
+    "stt_latency_ms": [
+      152,
+      151,
+      73,
+      159
+    ],
+    "pacing": {
+      "frames": 840,
+      "audio_sent_s": 26.88,
+      "send_duration_s": 26.857,
+      "ratio_send_over_audio": 0.9991,
+      "max_frame_lateness_ms": 37.9,
+      "frames_late_over_32ms": 1
+    },
     "split": "dev",
     "label": "digital_arrest",
     "variant": "clean"
@@ -69,9 +95,9 @@
       "suspicious": 6.14,
       "likely_scam": 24.67
     },
-    "wall_clock_latency_s": 0.009,
+    "wall_clock_latency_s": 0.007,
     "final_level": "likely_scam",
-    "final_score": 9,
+    "final_score": 10,
     "primary_type": "courier_parcel",
     "signals": [
       {
@@ -82,6 +108,11 @@
       {
         "category": "PARCEL",
         "evidence": "parcel",
+        "weight": 2
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "narcotics",
         "weight": 2
       },
       {
@@ -102,6 +133,22 @@
     ],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": 6.556,
+    "wall_first_likely_scam_s": 25.851,
+    "stt_latency_ms": [
+      153,
+      182,
+      151,
+      150
+    ],
+    "pacing": {
+      "frames": 875,
+      "audio_sent_s": 28.0,
+      "send_duration_s": 27.981,
+      "ratio_send_over_audio": 0.9993,
+      "max_frame_lateness_ms": 25.44,
+      "frames_late_over_32ms": 0
+    },
     "split": "dev",
     "label": "courier_parcel",
     "variant": "clean"
@@ -115,7 +162,7 @@
       "suspicious": 12.45,
       "likely_scam": 24.48
     },
-    "wall_clock_latency_s": 0.187,
+    "wall_clock_latency_s": 0.007,
     "final_level": "likely_scam",
     "final_score": 9,
     "primary_type": "bank_kyc",
@@ -148,6 +195,22 @@
     ],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": 27.069,
+    "wall_first_likely_scam_s": 28.876,
+    "stt_latency_ms": [
+      146,
+      115,
+      119,
+      88
+    ],
+    "pacing": {
+      "frames": 830,
+      "audio_sent_s": 26.56,
+      "send_duration_s": 26.534,
+      "ratio_send_over_audio": 0.999,
+      "max_frame_lateness_ms": 20.24,
+      "frames_late_over_32ms": 0
+    },
     "split": "dev",
     "label": "bank_kyc",
     "variant": "clean"
@@ -161,10 +224,10 @@
       "suspicious": 6.18,
       "likely_scam": 18.21
     },
-    "wall_clock_latency_s": 0.014,
+    "wall_clock_latency_s": 0.012,
     "final_level": "scam",
-    "final_score": 11,
-    "primary_type": "courier_parcel",
+    "final_score": 20,
+    "primary_type": "digital_arrest",
     "signals": [
       {
         "category": "AUTHORITY_CLAIM",
@@ -200,10 +263,51 @@
         "category": "AUTHORITY_CLAIM",
         "evidence": "कोर्ट",
         "weight": 2
+      },
+      {
+        "category": "ISOLATION",
+        "evidence": "डिजिटल अरेस्ट",
+        "weight": 3
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "अरेस्ट",
+        "weight": 3
+      },
+      {
+        "category": "ISOLATION",
+        "evidence": "कमरा बंद",
+        "weight": 3
+      },
+      {
+        "category": "SECRECY",
+        "evidence": "किसी को मत बताना",
+        "weight": 3
+      },
+      {
+        "category": "ISOLATION",
+        "evidence": "वीडियो कॉल",
+        "weight": 3
       }
     ],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": 12.062,
+    "wall_first_likely_scam_s": 18.587,
+    "stt_latency_ms": [
+      166,
+      154,
+      105,
+      165
+    ],
+    "pacing": {
+      "frames": 835,
+      "audio_sent_s": 26.72,
+      "send_duration_s": 26.703,
+      "ratio_send_over_audio": 0.9994,
+      "max_frame_lateness_ms": 21.95,
+      "frames_late_over_32ms": 0
+    },
     "split": "test",
     "label": "digital_arrest",
     "variant": "clean"
@@ -230,6 +334,22 @@
     ],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": null,
+    "wall_first_likely_scam_s": null,
+    "stt_latency_ms": [
+      150,
+      150,
+      159,
+      185
+    ],
+    "pacing": {
+      "frames": 790,
+      "audio_sent_s": 25.28,
+      "send_duration_s": 25.264,
+      "ratio_send_over_audio": 0.9994,
+      "max_frame_lateness_ms": 23.62,
+      "frames_late_over_32ms": 0
+    },
     "split": "test",
     "label": "bank_kyc",
     "variant": "clean"
@@ -240,17 +360,22 @@
     "language_code": "hi-IN",
     "audio_duration_s": 25.58,
     "first_crossed": {
-      "suspicious": 12.35,
+      "suspicious": 6.18,
       "likely_scam": 12.35
     },
-    "wall_clock_latency_s": 0.005,
+    "wall_clock_latency_s": 0.006,
     "final_level": "scam",
-    "final_score": 14,
+    "final_score": 15,
     "primary_type": "courier_parcel",
     "signals": [
       {
         "category": "PARCEL",
         "evidence": "कूरियर",
+        "weight": 2
+      },
+      {
+        "category": "AUTHORITY_CLAIM",
+        "evidence": "कस्टम्स",
         "weight": 2
       },
       {
@@ -291,6 +416,22 @@
     ],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": 7.068,
+    "wall_first_likely_scam_s": 12.592,
+    "stt_latency_ms": [
+      156,
+      98,
+      165,
+      95
+    ],
+    "pacing": {
+      "frames": 800,
+      "audio_sent_s": 25.6,
+      "send_duration_s": 25.582,
+      "ratio_send_over_audio": 0.9993,
+      "max_frame_lateness_ms": 22.84,
+      "frames_late_over_32ms": 0
+    },
     "split": "test",
     "label": "courier_parcel",
     "variant": "clean"
@@ -311,6 +452,22 @@
     "signals": [],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": null,
+    "wall_first_likely_scam_s": null,
+    "stt_latency_ms": [
+      181,
+      181,
+      149,
+      99
+    ],
+    "pacing": {
+      "frames": 864,
+      "audio_sent_s": 27.648,
+      "send_duration_s": 27.627,
+      "ratio_send_over_audio": 0.9992,
+      "max_frame_lateness_ms": 36.06,
+      "frames_late_over_32ms": 1
+    },
     "split": "holdout",
     "label": "legit",
     "variant": "clean"
@@ -331,6 +488,22 @@
     "signals": [],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": null,
+    "wall_first_likely_scam_s": null,
+    "stt_latency_ms": [
+      158,
+      152,
+      148,
+      161
+    ],
+    "pacing": {
+      "frames": 844,
+      "audio_sent_s": 27.008,
+      "send_duration_s": 26.984,
+      "ratio_send_over_audio": 0.9991,
+      "max_frame_lateness_ms": 39.18,
+      "frames_late_over_32ms": 1
+    },
     "split": "fresh_holdout",
     "label": "legit",
     "variant": "clean"
@@ -344,10 +517,10 @@
       "suspicious": 6.18,
       "likely_scam": 18.21
     },
-    "wall_clock_latency_s": 0.01,
+    "wall_clock_latency_s": 0.009,
     "final_level": "scam",
-    "final_score": 11,
-    "primary_type": "courier_parcel",
+    "final_score": 20,
+    "primary_type": "digital_arrest",
     "signals": [
       {
         "category": "AUTHORITY_CLAIM",
@@ -383,10 +556,51 @@
         "category": "AUTHORITY_CLAIM",
         "evidence": "कोर्ट",
         "weight": 2
+      },
+      {
+        "category": "ISOLATION",
+        "evidence": "डिजिटल अरेस्ट",
+        "weight": 3
+      },
+      {
+        "category": "THREAT_ARREST",
+        "evidence": "अरेस्ट",
+        "weight": 3
+      },
+      {
+        "category": "ISOLATION",
+        "evidence": "कमरा बंद",
+        "weight": 3
+      },
+      {
+        "category": "SECRECY",
+        "evidence": "किसी को मत बताना",
+        "weight": 3
+      },
+      {
+        "category": "ISOLATION",
+        "evidence": "वीडियो कॉल",
+        "weight": 3
       }
     ],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": 6.56,
+    "wall_first_likely_scam_s": 18.913,
+    "stt_latency_ms": [
+      181,
+      157,
+      152,
+      153
+    ],
+    "pacing": {
+      "frames": 835,
+      "audio_sent_s": 26.72,
+      "send_duration_s": 26.697,
+      "ratio_send_over_audio": 0.9991,
+      "max_frame_lateness_ms": 45.96,
+      "frames_late_over_32ms": 2
+    },
     "split": "test",
     "label": "digital_arrest",
     "variant": "tel_noise15"
@@ -413,6 +627,22 @@
     ],
     "messages_received": 13,
     "status": "completed",
+    "wall_first_suspicious_s": null,
+    "wall_first_likely_scam_s": null,
+    "stt_latency_ms": [
+      153,
+      148,
+      149,
+      148
+    ],
+    "pacing": {
+      "frames": 790,
+      "audio_sent_s": 25.28,
+      "send_duration_s": 25.25,
+      "ratio_send_over_audio": 0.9988,
+      "max_frame_lateness_ms": 18.24,
+      "frames_late_over_32ms": 0
+    },
     "split": "test",
     "label": "bank_kyc",
     "variant": "tel_noise15"

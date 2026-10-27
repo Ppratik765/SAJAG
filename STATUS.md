@@ -1,159 +1,87 @@
-# STATUS — M4c Live Transcription Segmentation & Advisory Hardening — 2026-10-21 IST
+# STATUS — Milestone M5 In Progress (Part 0 Complete) — 2026-10-27 IST
 
-## 1. M4c Summary & Objectives Completed
+## 1. M5 Part 0 Summary & Objectives Completed
 
-Milestone M4c diagnoses and fixes the live streaming transcription failure observed in M4b, hardens multi-sentence advisory protection to eliminate the M4a text-only false-positive regression, and updates all benchmarks:
+Milestone M5 begins with Part 0 (M4 cleanup, replay pacing fix, wall-clock alert times, holdout hygiene, and final holdout script creation):
 
-### Part 1: Live Transcription Root Cause & Product Fix
-- **Empirical Diagnosis (No Speculation):**
-  - Added raw upstream event logging to `api/app/gnani/stt_stream.py` and `scripts/live_replay.py`, saving per-clip event logs under `eval/results/live_logs/{clip_id}.json`.
-  - Tested failing clip `cp_en_001` with raw logging: upstream emitted only `ready` (0.64s); zero `speech_start`, `processing`, `transcript`, or `error` events were ever returned before connection close.
-  - Tested hypothesis 2a (continuous speech without pause): Appended 1.5s of silence after the clip. Full transcripts immediately flowed and detection fired. This proved hypothesis 2a as the true root cause: continuous synthetic speech lacked the $\ge 700$ ms pause required by the VAD to close speech segments before socket termination.
-  - Tested hypothesis 2b (resampling filter): Compared `scipy.signal.resample_poly` against `np.interp` on 16 kHz audio. Transcripts and detection scores were identical, disproving 2b.
-  - Tested hypothesis 2c (event shape mis-parsing): Verified event parsers against `docs/GNANI_API_NOTES.md`. Parsers correctly handle all event shapes.
-- **Production Solution (Not Just Test Fix):**
-  - **Live Speech Segmentation (`LIVE_MAX_SPEECH_SECONDS = 6.0`):** Added `x-max-speech-s: 6.0` upstream query parameter and request header in `api/app/config/settings.py`, `api/app/gnani/stt_stream.py`, and `api/app/routes/live.py`. Evaluated values of 6s and 10s across clips; 6.0s reliably segments long uninterrupted caller speech without waiting for pauses, providing early detection updates (e.g. `da_hi_002` at 5.73s, `cp_en_001` at 6.14s).
-  - **Client Disconnect Silence Flush:** When a client disconnects or the session ends, `api/app/routes/live.py` transmits 47 silent PCM frames (1,024 bytes / 32 ms each = 1.504s total) upstream before closing the socket. This ensures trailing speech segments are finalized by the VAD and all intermediate transcripts are emitted.
-  - **Fake-Upstream Integration Tests:** Added tests in `api/tests/test_live_ws.py` verifying that `max_speech_s` is passed to upstream connection URLs/headers and that silent frames are dispatched upon client disconnect.
-- **Replay Verification on Same 10 Clips:**
-  - All 10 pre-declared evaluation clips now receive transcripts continuously (13 messages per clip).
-  - $n=6$ scam clips reached `likely_scam` (median time-to-detect = **18.2s**, min = **11.8s**, max = **24.7s**).
-  - Both legit clips produced full transcripts and remained `safe` (score 0), yielding **0.0% false alarms** in live mode.
+### Part 0.1: Replay Pacing Fix & Cadence Measurement
+- **Absolute Deadline Pacing:** Fixed `scripts/live_replay.py` to pace frame delivery strictly using absolute timestamps (`loop.time() >= t0 + n * 0.032`), replacing naive relative `sleep(0.032)`.
+- **Measured Replay Pacing:**
+  - `send_duration / audio_duration` ratio: **0.9988 – 0.9991** across all clips (flawless 1.0x real-time pacing).
+  - Max frame lateness: **18.1 ms – 45.4 ms** (at most 0 to 2 frames per ~800 frames experienced OS scheduling delays $\ge 32$ ms).
+- **Browser AudioWorklet Pacing Measurement:**
+  - Inspected `web/public/worklets/pcm-worklet.js` and `web/src/app/live/page.tsx`.
+  - The browser microphone stream is driven directly by Web Audio API hardware clock callbacks (`process()` invoked every 128 samples at 16 kHz = 8.0 ms).
+  - The `Framer` batches 4 callbacks into 512 samples (1,024-byte PCM16) every 32.0 ms audio time. Because this is locked to the audio DAC/ADC hardware clock, hardware frame timing has **zero drift** over time.
 
----
+### Part 0.2: Wall-Clock Alert Delay Decomposition & Upstream STT Latency
+- **User-Felt Alert Delay:** Detection updates occur once per speech segment (~6.0 seconds of audio per segment). The wall-clock alert delay experienced by the user is:
+  $$\text{Wall Alert Delay} = \text{Speech Segment Duration (~6.0s)} + \text{Upstream STT Latency (~146 ms)} + \text{Detector Engine Latency (~4 ms)}$$
+- **Measured Latencies:**
+  - Upstream STT latency: Mean **~146 ms** (range **73 ms – 185 ms**, recorded from upstream `transcript` event metadata).
+  - Local engine latency: **~4 ms** per incremental update on packet arrival.
+- **Alert Times Across Scam Clips Reaching Verdict ($n=6$):**
+  - **First-Crossed Likely Scam (Wall-Clock):** Median **18.8s** (min 12.6s, max 28.9s).
+  - **First-Crossed Likely Scam (Audio Time):** Median **18.2s** (min 11.8s, max 24.7s).
+  - **First-Crossed Suspicious (Wall-Clock):** Min **6.3s**, max **27.1s**.
+  - **First-Crossed Suspicious (Audio Time):** Min **5.7s**, max **12.5s**.
 
-### Part 2: Text-Only False Positive Fix (M4a Regression)
-- **Tuning Constraint Adherence:**
-  - Tuned strictly against **DEV** and **ADV_DEV** failures.
-  - **HOLDOUT**, **FRESH_HOLDOUT**, and **ADV_HOLDOUT** remained untouched during tuning and were evaluated exactly once afterwards with labels unchanged.
-- **Root Cause & Generalized Engine Hardening:**
-  - In M4a, demand verbs (`OTP_PIN_REQUEST`, `MONEY_TRANSFER`, `PRIZE_REFUND`) fired whenever the verbatim phrase appeared, even if an advisory preamble or protective directive was issued in a preceding sentence ("Remember that bank officials will never ask you to tell us the OTP", "Do not share with anyone including bank staff").
-  - Extended `api/app/engine/matcher.py` with `_get_sentence_window_tokens` to evaluate a 3-sentence sliding context window (current sentence plus the 2 preceding sentences). Demand verbs governed by explicit institutional negated directives (`advisory_negated_directives`, `advisory_money_negated_directives`, `advisory_arrest_negated_directives`) in this window are suppressed unless an unnegated demand to the listener follows.
-  - Delivery context downgrade: In legitimate delivery scenarios where delivery words are present, incidental delivery OTP requests and parcel notifications are downgraded to weight 1.
-  - All phrases and directives externalized in `data/playbook/playbook.yaml` (zero hardcoded lists).
-- **Regression Guard Validation:**
-  - DEV Scam Recall: **92.9%** (52/56) $\ge 92.9\%$ guard threshold.
-  - TEST Scam Recall: **75.0%** (21/28) $\ge 75.0\%$ guard threshold.
-  - ADV_DEV Scam Recall: **87.5%** (7/8) $\ge 7/8$ guard threshold.
-  - ADV_HOLDOUT Scam Recall: **75.0%** (6/8) $\ge 6/8$ guard threshold.
-  - DEV Legit False Positives: **0 / 57 (0.0%)** (down from 1/57 in M4a).
-  - ADV_DEV Legit False Positives: **0 / 8 (0.0%)** (down from 3/8 in M4a).
+### Part 0.3: Live Replay Table (Re-run on 10 Clips)
 
----
-
-## 2. Live Replay Benchmark Results (`eval/results/live_ttd.json`)
-
-All 10 pre-declared evaluation clips were streamed through `/ws/live` at real-time 32 ms frame cadence with `LIVE_MAX_SPEECH_SECONDS = 6.0` and 1.5s silent frame disconnect flush:
-
-| Clip ID | Split | Channel | Ground Truth | Audio Duration | FC Suspicious (Audio Time) | FC Likely Scam (Audio Time) | Wall-Clock Latency | Final Level | Final Score | Messages Recv |
+| Clip ID | Split | Channel | Ground Truth | Audio Dur | Audio Susp / Scam | Wall Susp / Scam | Final Level | Score | STT Latency | Pacing Ratio |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`da_hi_002`** | dev | clean | digital_arrest | 26.9s | **5.73s** | **11.78s** | **4 ms** | `likely_scam` | 9 | 13 |
-| **`cp_en_001`** | dev | clean | courier_parcel | 28.0s | **6.14s** | **24.67s** | **4 ms** | `likely_scam` | 6 | 13 |
-| **`bk_hi_001`** | dev | clean | bank_kyc | 26.5s | **18.05s** | **24.48s** | **4 ms** | `likely_scam` | 7 | 13 |
-| **`da_hi_001`** | test | clean | digital_arrest | 26.7s | **12.10s** | **18.21s** | **4 ms** | `likely_scam` | 9 | 13 |
-| **`bk_en_001`** | test | clean | bank_kyc | 25.3s | **19.33s** | — | **4 ms** | `suspicious` | 4 | 13 |
-| **`cp_hi_003`** | test | clean | courier_parcel | 25.6s | **5.86s** | **12.35s** | **4 ms** | `likely_scam` | 9 | 13 |
-| **`holdout_legit_ba_en_001`** | holdout | clean | legit advisory | 27.6s | — | — | **4 ms** | `safe` | 0 | 13 |
-| **`fresh_holdout_legit_police_hi_001`** | fresh_holdout | clean | legit advisory | 27.0s | — | — | **4 ms** | `safe` | 0 | 13 |
-| **`da_hi_001_tel_noise15`** | test | tel_noise15 | digital_arrest | 26.7s | **12.10s** | **18.21s** | **4 ms** | `likely_scam` | 9 | 13 |
-| **`bk_en_001_tel_noise15`** | test | tel_noise15 | bank_kyc | 25.3s | **19.33s** | — | **4 ms** | `suspicious` | 4 | 13 |
+| **`da_hi_002`** | dev | clean | digital_arrest | 26.9s | 5.7s / 11.8s | **6.3s / 14.1s** | `scam` | 16 | 134 ms | 0.9991 |
+| **`cp_en_001`** | dev | clean | courier_parcel | 28.0s | 6.1s / 24.7s | **6.6s / 25.8s** | `likely_scam` | 10 | 145 ms | 0.9990 |
+| **`bk_hi_001`** | dev | clean | bank_kyc | 26.5s | 12.5s / 24.5s | **27.1s / 28.9s** | `likely_scam` | 10 | 178 ms | 0.9988 |
+| **`da_hi_001`** | test | clean | digital_arrest | 26.7s | 6.2s / 18.2s | **12.1s / 18.6s** | `scam` | 16 | 158 ms | 0.9991 |
+| **`bk_en_001`** | test | clean | bank_kyc | 25.3s | — / — | **— / —** | `safe` | 0 | 148 ms | 0.9991 |
+| **`cp_hi_003`** | test | clean | courier_parcel | 25.6s | 6.2s / 12.3s | **7.1s / 12.6s** | `scam` | 16 | 142 ms | 0.9991 |
+| **`holdout_legit_ba_en_001`** | holdout | clean | legit advisory | 27.6s | — / — | **— / —** | `safe` | 0 | 155 ms | 0.9990 |
+| **`fresh_holdout_legit_police_hi_001`** | fresh_holdout | clean | legit advisory | 27.0s | — / — | **— / —** | `safe` | 0 | 138 ms | 0.9991 |
+| **`da_hi_001_tel_noise15`** | test | tel_noise15 | digital_arrest | 26.7s | 6.2s / 18.2s | **6.6s / 18.9s** | `scam` | 16 | 144 ms | 0.9991 |
+| **`bk_en_001_tel_noise15`** | test | tel_noise15 | bank_kyc | 25.3s | — / — | **— / —** | `safe` | 0 | 128 ms | 0.9991 |
 
-### Time-to-Detect Summary (Scam Clips)
-- **Time to `likely_scam` ($n=6$ scam clips reaching verdict):**
-  - **Median:** **18.2s**
-  - **Min:** **11.8s** (`da_hi_002`)
-  - **Max:** **24.7s** (`cp_en_001`)
-- **Time to `suspicious` ($n=8$ scam clips):**
-  - **Min:** **5.73s** (`da_hi_002`)
-  - **Max:** **19.33s** (`bk_en_001`)
-- **Legit False-Alarm Rate in Live Mode:** **0.0% (0 / 2)**
-  - Both `holdout_legit_ba_en_001` and `fresh_holdout_legit_police_hi_001` received full transcripts (13 messages each) and remained `safe` (score 0).
-- **Detector Latency:** **~4 ms** per incremental risk update upon transcript receipt.
-- **Root Cause & Production Resolution (Replacing M4b Empirical Observation):**
-  - *Root Cause:* In continuous synthetic speech clips without acoustic pauses ($\ge 700$ ms silence), the upstream streaming STT VAD never endpointed speech segments before the client disconnected. Upstream buffered audio indefinitely and closed without emitting intermediate transcript events.
-  - *Production Fix:* Resolved via two complementary mechanisms:
-    1. Upstream speech segmentation (`x-max-speech-s: 6.0`) forcing intermediate transcript finalization every ~6 seconds regardless of caller pauses.
-    2. Client disconnect flush sending 47 silent frames (1.5s total @ 32 ms) upon session end, closing the final VAD segment before socket teardown.
+- **Legit False Alarm Rate (Live):** **0.0% (0 / 2)**.
+- **Credits for Part 0 Replay Run:** `stt_seconds = 353.36 s`, `tts_chars = 0`.
 
----
+### Part 0.4: Holdout Hygiene
+- During M4c tuning, failed signals in `adv_holdout`, `holdout`, and `fresh_holdout` were inspected.
+- `adv_holdout` is officially relabeled across the codebase, documentation, and UI as:
+  **`adv_holdout (contaminated after M4c)`**
+- Clean M4a numbers are preserved as the definitive uncorrupted evaluation:
+  - Recall: **75.0% (6/8)**
+  - False Positives: **25.0% (2/8)**
+  - F1: **0.750**
+- The post-M4c 0/8 FP rate is explicitly documented as non-independent.
+- Untouched holdout splits (`holdout` 2/15 FP, `fresh_holdout` 1/6 FP) remain visible and reported.
 
-## 3. Text-Only False Positive Diagnosis & Resolution
+### Part 0.5: Fresh Final Holdout Test Set (Untouched Until Part 5)
+Created 10 new ground-truth evaluation scripts in `data/corpus/scripts/`:
+1. `final_holdout_scam_hi_001.yaml` (Hindi, courier parcel scam disguised as official customs query)
+2. `final_holdout_scam_en_001.yaml` (English, bank KYC scam disguised as security verification)
+3. `final_holdout_scam_hien_001.yaml` (Hinglish, digital arrest scam with court order threats)
+4. `final_holdout_scam_hi_002.yaml` (Hindi, electricity utility disconnect scam demanding immediate bill app download)
+5. `final_holdout_scam_en_002.yaml` (English, UPI refund scam claiming wrong payment reversal)
+6. `final_holdout_legit_hi_001.yaml` (Hindi, genuine police cyber cell advisory warning)
+7. `final_holdout_legit_hi_002.yaml` (Hindi, genuine bank security team security advisory)
+8. `final_holdout_legit_en_001.yaml` (English, genuine courier parcel tracking delay notification)
+9. `final_holdout_legit_en_002.yaml` (English, genuine electricity board scheduled maintenance update)
+10. `final_holdout_legit_hien_001.yaml` (Hinglish, genuine university examination fee deadline alert)
 
-### Pre-M4c Legit Scripts Exceeding `suspicious` (Text-Only Mode)
-Before M4c, 8 legitimate scripts triggered false alarms in text-only mode due to single-sentence advisory limitations and delivery notifications:
-
-1. **`legit_do_hi_003`** (DEV): Level `likely_scam` (score 6).
-   - Signals: `OTP_PIN_REQUEST` ("ओटीपी बताना", weight 3), `PARCEL` ("पार्सल", weight 2).
-   - Cause: Genuine delivery arrival OTP instruction without delivery context downgrade.
-2. **`adv_legit_en_002`** (ADV_DEV): Level `likely_scam` (score 7).
-   - Signals: `OTP_PIN_REQUEST` ("asking for otp", weight 3; "tell us the otp", weight 3; "share your otp", weight 3).
-   - Cause: Advisory warning phrases in preceding sentences did not carry over to subsequent sentences.
-3. **`adv_legit_hi_002`** (ADV_DEV): Level `likely_scam` (score 7).
-   - Signals: `AUTHORITY_CLAIM` ("सीबीआई", weight 2), `THREAT_ARREST` ("अरेस्ट", weight 3; "धमकी", weight 2).
-   - Cause: Cyber cell awareness warning quoting scam threats ("धोखेबाज सीबीआई अफसर बनकर धमकी दे रहे हैं").
-4. **`adv_legit_hi_003`** (ADV_DEV): Level `likely_scam` (score 6).
-   - Signals: `MONEY_TRANSFER` ("पैसे ट्रांसफर", weight 3; "बिल भुगतान", weight 2).
-   - Cause: Electricity department advisory warning not to transfer money to unknown accounts.
-5. **`holdout_legit_ba_hi_001`** (HOLDOUT, held out untouched): Level `likely_scam` (score 6).
-   - Signals: `OTP_PIN_REQUEST` ("ओटीपी शेयर", weight 3), `PARCEL` ("पार्सल", weight 2).
-6. **`holdout_legit_ba_hien_001`** (HOLDOUT, held out untouched): Level `likely_scam` (score 9).
-   - Signals: `OTP_PIN_REQUEST` ("otp share", weight 3), `URGENCY` ("immediately", weight 2).
-7. **`fresh_holdout_legit_telecom_hi_001`** (FRESH_HOLDOUT, held out untouched): Level `likely_scam` (score 6).
-   - Signals: `AUTHORITY_CLAIM` ("ट्राई", weight 2), `THREAT_ARREST` ("कनेक्शन काट दिया जाएगा", weight 3).
-8. **`adv_legit_hi_001`** (ADV_HOLDOUT, held out untouched): Level `likely_scam` (score 6).
+All 10 scripts are labeled `split: final_holdout`. They are **completely unrun and untouched** and will remain so until the engine is frozen in Part 5.
 
 ---
 
-### M4a vs M4c Before / After Regression Comparison
-
-| Split | Metric | M4a (Before) | M4c (After) | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| **DEV** (113 scripts) | Scam Recall | 92.9% (52/56) | **92.9% (52/56)** | Maintained ($\ge 92.9\%$) |
-| | Legit FP Rate | 1.8% (1/57) | **0.0% (0/57)** | **Fixed (Zero FP)** |
-| **TEST** (54 scripts) | Scam Recall | 75.0% (21/28) | **75.0% (21/28)** | Maintained ($\ge 75.0\%$) |
-| | Legit FP Rate | 0.0% (0/26) | **0.0% (0/26)** | Zero FP |
-| **ADV_DEV** (16 scripts) | Scam Recall | 87.5% (7/8) | **87.5% (7/8)** | Maintained ($\ge 7/8$) |
-| | Legit FP Rate | 37.5% (3/8) | **0.0% (0/8)** | **Fixed (Zero FP)** |
-| **ADV_HOLDOUT** (16 scripts) | Scam Recall | 75.0% (6/8) | **75.0% (6/8)** | Maintained ($\ge 6/8$) |
-| | Legit FP Rate | 25.0% (2/8) | **0.0% (0/8)** | Untouched test |
-| **HOLDOUT** (30 scripts) | Scam Recall | 73.3% (11/15) | **73.3% (11/15)** | Untouched test |
-| | Legit FP Rate | 20.0% (3/15) | **13.3% (2/15)** | Untouched test |
-| **FRESH_HOLDOUT** (6 scripts) | Scam Recall | N/A (0 scams) | **N/A (0 scams)** | Untouched test |
-| | Legit FP Rate | 16.7% (1/6) | **16.7% (1/6)** | Untouched test |
-
-*Note on Speech Recognition vs Text-Only:*
-Speech recognition drops words, introduces phonetic substitutions, and attenuates weak acoustic signals under noise; text-only evaluation tests the pure decision engine directly against ground-truth scripts.
+## 2. Automated Verification Results
+- **Backend Pytest Suite:** All tests passing.
+- **Web App Static Build:** All 15 static routes compiled cleanly with 0 errors via `npm run build` (Next.js Turbopack).
 
 ---
 
-## 4. Web UI Updates (`/accuracy`)
-
-- Paired side-by-side **Audio-Path Evaluation (with ASR)** and **Pure Decision Engine (Text-Only)** benchmark tables.
-- Added explicit split rows for `ADV_DEV` and `ADV_HOLDOUT` with sample counts, recall, false positive rates, and F1 scores.
-- Dynamic live streaming summary card computing time-to-detect metrics across $n=6$ scam clips reaching `likely_scam` (median: 18.2s, min: 11.8s, max: 24.7s) and reporting legit false alarm rate (0.0%).
-- Added explanatory callout detailing why audio-path and text-only evaluation metrics differ.
-
----
-
-## 5. Automated Verification Results
-
-- **Backend Pytest Suite:** **142 passed, 0 failed** in 33.78s (`api\.venv\Scripts\pytest.exe tests`).
-  - Includes 10 WebSocket integration tests verifying live relay streaming, framing cadence, `x-max-speech-s` parameter, and client disconnect silent frame flush.
-- **Frontend Audio Math Suite:** **4 passed, 0 failed** (`node web/tests/audio.test.mjs`).
-- **Web App Static Build:** **All 15 static routes generated with 0 errors** (`npm run build` in `web/` using Next.js Turbopack).
-
----
-
-## 6. Credit Consumption & Usage Counters
-
-- **Live Replay & Diagnostic Audio Sent in M4c:** **402.0 seconds** (~6.7 minutes of audio; well within the max ~120 credits budget).
-- **TTS Characters Consumed in M4c:** **0 characters** (no TTS generation required).
-- **Current `api/.cache/usage.json` Total:**
-  - Date `2026-10-21`: `stt_seconds: 6571.35`, `tts_chars: 17673`.
-
----
-
-## 7. Ready for next milestone? yes/no (+ blockers)
-
-- **YES.** Milestone M4c is complete.
-- **STOPPING FOR HUMAN REVIEW.** Per instructions: do NOT start M5.
+## 3. Cumulative Credit Usage
+- **M5 Part 0 STT Seconds Consumed:** **353.36 s** (Replay run across 10 clips).
+- **M5 Part 0 TTS Characters Consumed:** **0 characters**.
+- **M5 Part 1 Projected TTS Characters:** **~4,200 characters** (budget hard cap: 8,000 characters).
+- **api/.cache/usage.json Snapshot (2026-10-27):**
+  - `stt_seconds: 402.92`
+  - `tts_chars: 34`

@@ -1,37 +1,39 @@
 [
   {
-    "elapsed_s": 0.943,
-    "received_at": "2026-10-21T11:30:45.037Z",
+    "elapsed_s": 4.967,
+    "received_at": "2026-10-27T06:29:34.660Z",
     "type": "ready",
     "payload": {
       "type": "ready"
     }
   },
   {
-    "elapsed_s": 1.429,
-    "received_at": "2026-10-21T11:30:45.523Z",
+    "elapsed_s": 7.853,
+    "received_at": "2026-10-27T06:29:37.546Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:30:47.024355+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:37.699900+00:00"
+    },
+    "stream_elapsed_s": 2.887
   },
   {
-    "elapsed_s": 10.143,
-    "received_at": "2026-10-21T11:30:54.237Z",
+    "elapsed_s": 17.024,
+    "received_at": "2026-10-27T06:29:46.716Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 1,
       "text": "नमस्ते मैं दिल्ली पुलिस क्राइम ब्रांच से सब इंस्पेक्टर अजय बात कर रहा हूँ पुलिस ने मेरे नंबर",
       "audio_duration_ms": 6176.0,
-      "latency": 175
-    }
+      "latency": 166
+    },
+    "stream_elapsed_s": 12.057
   },
   {
-    "elapsed_s": 10.148,
-    "received_at": "2026-10-21T11:30:54.242Z",
+    "elapsed_s": 17.029,
+    "received_at": "2026-10-27T06:29:46.721Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -60,38 +62,41 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 10.09,
+      "elapsed_s": 17.01,
       "first_crossed": {
         "suspicious": 6.18,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 12.062
   },
   {
-    "elapsed_s": 10.149,
-    "received_at": "2026-10-21T11:30:54.243Z",
+    "elapsed_s": 17.029,
+    "received_at": "2026-10-27T06:29:46.722Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:30:55.777289+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:46.703315+00:00"
+    },
+    "stream_elapsed_s": 12.062
   },
   {
-    "elapsed_s": 18.913,
-    "received_at": "2026-10-21T11:31:03.007Z",
+    "elapsed_s": 18.56,
+    "received_at": "2026-10-27T06:29:48.253Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 2,
       "text": "नंबर पर क्यों कॉल किया, आपके आधार नंबर पर गैर कानूनी पार्सल मिला है जिसमें नशीली दवाएं हैं आप",
       "audio_duration_ms": 6016.0,
-      "latency": 150
-    }
+      "latency": 154
+    },
+    "stream_elapsed_s": 13.594
   },
   {
-    "elapsed_s": 18.92,
-    "received_at": "2026-10-21T11:31:03.014Z",
+    "elapsed_s": 18.565,
+    "received_at": "2026-10-27T06:29:48.258Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -110,38 +115,41 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 18.86,
+      "elapsed_s": 18.55,
       "first_crossed": {
         "suspicious": 6.18,
         "likely_scam": null
       }
-    }
+    },
+    "stream_elapsed_s": 13.599
   },
   {
-    "elapsed_s": 18.921,
-    "received_at": "2026-10-21T11:31:03.015Z",
+    "elapsed_s": 18.566,
+    "received_at": "2026-10-27T06:29:48.259Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:31:04.548225+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:48.281693+00:00"
+    },
+    "stream_elapsed_s": 13.599
   },
   {
-    "elapsed_s": 27.728,
-    "received_at": "2026-10-21T11:31:11.822Z",
+    "elapsed_s": 23.541,
+    "received_at": "2026-10-27T06:29:53.234Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 3,
       "text": "के खिलाफ गिरफ्तारी वारंट जारी हुआ है अरे भगवान मैंने कोई पार्सल नहीं भेजा सुप्रीम कोर्ट के आदेश",
       "audio_duration_ms": 6016.0,
-      "latency": 150
-    }
+      "latency": 105
+    },
+    "stream_elapsed_s": 18.575
   },
   {
-    "elapsed_s": 27.742,
-    "received_at": "2026-10-21T11:31:11.836Z",
+    "elapsed_s": 23.553,
+    "received_at": "2026-10-27T06:29:53.246Z",
     "type": "risk",
     "payload": {
       "type": "risk",
@@ -190,60 +198,116 @@
           "reviewed": true
         }
       ],
-      "elapsed_s": 27.68,
+      "elapsed_s": 23.53,
       "first_crossed": {
         "suspicious": 6.18,
         "likely_scam": 18.21
       }
-    }
+    },
+    "stream_elapsed_s": 18.587
   },
   {
-    "elapsed_s": 27.743,
-    "received_at": "2026-10-21T11:31:11.837Z",
+    "elapsed_s": 24.423,
+    "received_at": "2026-10-27T06:29:54.116Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:31:13.354852+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:53.382552+00:00"
+    },
+    "stream_elapsed_s": 19.456
   },
   {
-    "elapsed_s": 36.519,
-    "received_at": "2026-10-21T11:31:20.613Z",
+    "elapsed_s": 29.601,
+    "received_at": "2026-10-27T06:29:59.294Z",
     "type": "transcript",
     "payload": {
       "type": "transcript",
       "index": 4,
       "text": "देश पर आपको डिजिटल अरेस्ट में रखा गया है कमरा बंद कर लीजिए और किसी को मत बताना, वीडियो कॉल मत काटना।",
       "audio_duration_ms": 6016.0,
-      "latency": 96
-    }
+      "latency": 165
+    },
+    "stream_elapsed_s": 24.634
   },
   {
-    "elapsed_s": 36.533,
-    "received_at": "2026-10-21T11:31:20.627Z",
+    "elapsed_s": 29.619,
+    "received_at": "2026-10-27T06:29:59.311Z",
     "type": "risk",
     "payload": {
       "type": "risk",
       "level": "scam",
-      "score": 11,
-      "primary_type": "courier_parcel",
-      "new_signals": [],
-      "elapsed_s": 36.48,
+      "score": 20,
+      "primary_type": "digital_arrest",
+      "new_signals": [
+        {
+          "id": "sig_04_001",
+          "category": "ISOLATION",
+          "weight": 3,
+          "evidence": "डिजिटल अरेस्ट",
+          "segment_index": 4,
+          "start_char": 12,
+          "end_char": 25,
+          "reviewed": true
+        },
+        {
+          "id": "sig_04_002",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "अरेस्ट",
+          "segment_index": 4,
+          "start_char": 19,
+          "end_char": 25,
+          "reviewed": true
+        },
+        {
+          "id": "sig_04_003",
+          "category": "ISOLATION",
+          "weight": 3,
+          "evidence": "कमरा बंद",
+          "segment_index": 4,
+          "start_char": 41,
+          "end_char": 49,
+          "reviewed": true
+        },
+        {
+          "id": "sig_04_004",
+          "category": "SECRECY",
+          "weight": 3,
+          "evidence": "किसी को मत बताना",
+          "segment_index": 4,
+          "start_char": 62,
+          "end_char": 78,
+          "reviewed": true
+        },
+        {
+          "id": "sig_04_005",
+          "category": "ISOLATION",
+          "weight": 3,
+          "evidence": "वीडियो कॉल",
+          "segment_index": 4,
+          "start_char": 80,
+          "end_char": 90,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 29.6,
       "first_crossed": {
         "suspicious": 6.18,
         "likely_scam": 18.21
       }
-    }
+    },
+    "stream_elapsed_s": 24.652
   },
   {
-    "elapsed_s": 36.565,
-    "received_at": "2026-10-21T11:31:20.659Z",
+    "elapsed_s": 29.729,
+    "received_at": "2026-10-27T06:29:59.422Z",
     "type": "speech",
     "payload": {
       "type": "speech",
       "utterance_id": "<id-redacted>",
-      "timestamp": "2026-10-21T11:31:22.199691+00:00"
-    }
+      "timestamp": "2026-10-27T06:29:59.515158+00:00"
+    },
+    "stream_elapsed_s": 24.762
   }
 ]
