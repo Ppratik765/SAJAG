@@ -57,6 +57,14 @@ async def test_usage_auth():
             assert resp_ok.status_code == 200
             assert "stt_seconds" in resp_ok.json()
 
+        # Unset ADMIN_TOKEN -> 403 always (closed by default)
+        with patch("app.routes.meta.get_admin_token", return_value=""):
+            resp_unset = await client.get("/api/usage")
+            assert resp_unset.status_code == 403
+            resp_unset2 = await client.get("/api/usage", headers={"X-Admin-Token": "anything"})
+            assert resp_unset2.status_code == 403
+
+
 
 @pytest.mark.asyncio
 @respx.mock

@@ -1,7 +1,22 @@
 import fs from "fs";
 import path from "path";
 import Link from "next/link";
-import { ShieldCheck, AlertTriangle, Clock, CheckCircle2, FileText, ArrowLeft, RefreshCw, Radio } from "lucide-react";
+import { AlertTriangle, Clock, CheckCircle2, FileText, ArrowLeft, Radio } from "lucide-react";
+
+interface SplitMetrics {
+  total_clips: number;
+  scam_clips?: number;
+  legit_clips?: number;
+  tp: number;
+  fp: number;
+  tn: number;
+  fn: number;
+  precision: number;
+  recall: number;
+  false_positive_rate: number;
+  f1: number;
+  mean_cer?: number | null;
+}
 
 interface EvalReport {
   timestamp: string;
@@ -24,9 +39,9 @@ interface EvalReport {
     type_accuracy: number;
     mean_cer: number | null;
   };
-  per_split?: Record<string, any>;
-  per_language: Record<string, any>;
-  per_variant: Record<string, any>;
+  per_split?: Record<string, SplitMetrics>;
+  per_language: Record<string, SplitMetrics>;
+  per_variant: Record<string, SplitMetrics>;
   items: Array<{
     script_id: string;
     language: string;
@@ -144,7 +159,7 @@ export default function AccuracyPage() {
     );
   }
 
-  const { overall, config, per_language, per_variant, items, limitations, per_split } = data;
+  const { overall, per_language, per_variant, items, per_split } = data;
 
   return (
     <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto" style={{ backgroundColor: "var(--bg)", color: "var(--ink)" }}>
@@ -274,7 +289,7 @@ export default function AccuracyPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y" style={{ borderColor: "var(--rule)" }}>
-                    {Object.entries(per_split).map(([splitName, m]: [string, any]) => {
+                    {Object.entries(per_split).map(([splitName, m]: [string, SplitMetrics]) => {
                       const label =
                         splitName === "holdout"
                           ? "HOLDOUT"
@@ -464,8 +479,6 @@ export default function AccuracyPage() {
           .map((c) => c.first_crossed.likely_scam as number)
           .sort((a, b) => a - b);
         const medianTtd = scamTimes.length > 0 ? scamTimes[Math.floor(scamTimes.length / 2)].toFixed(1) : "N/A";
-        const minTtd = scamTimes.length > 0 ? scamTimes[0].toFixed(1) : "—";
-        const maxTtd = scamTimes.length > 0 ? scamTimes[scamTimes.length - 1].toFixed(1) : "—";
 
         const wallScamTimes = reachedLikelyScam
           .map((c) => c.wall_first_likely_scam_s)
@@ -664,7 +677,7 @@ export default function AccuracyPage() {
                 </tr>
               </thead>
               <tbody className="divide-y" style={{ borderColor: "var(--rule)" }}>
-                {Object.entries(per_language).map(([lang, m]: [string, any]) => (
+                {Object.entries(per_language).map(([lang, m]: [string, SplitMetrics]) => (
                   <tr key={lang} className="py-2">
                     <td className="py-2.5 font-medium">{lang}</td>
                     <td className="py-2.5">{m.total_clips}</td>
@@ -697,7 +710,7 @@ export default function AccuracyPage() {
                 </tr>
               </thead>
               <tbody className="divide-y" style={{ borderColor: "var(--rule)" }}>
-                {Object.entries(per_variant).map(([variant, m]: [string, any]) => (
+                {Object.entries(per_variant).map(([variant, m]: [string, SplitMetrics]) => (
                   <tr key={variant}>
                     <td className="py-2.5 font-medium">{variant}</td>
                     <td className="py-2.5">{m.total_clips}</td>

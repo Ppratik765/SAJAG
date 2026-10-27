@@ -4,9 +4,9 @@
 > Audio clips were generated with Gnani Timbre TTS v2.5 (`hi-IN`: Chitra, `en-IN`: Kaveri) and are awaiting human pronunciation and clarity review.
 > As an AI agent cannot judge authentic pronunciation, clips are cataloged below as generated and awaiting human review.
 
-- **Total Clips:** 22
-- **Total Audio Size:** 1140.0 KB
-- **Characters Consumed:** 2594 (Projected: 2594)
+- **Total Clips:** 24
+- **Total Audio Size:** 1243.3 KB
+- **Characters Consumed:** 221 (Projected: 2815)
 
 | File Path | Lang | Voice | Kind / Type | Spoken Text | Duration | Size | Human Verdict (ok / mispronounced / fix text) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -21,6 +21,7 @@
 | `web/public/audio/warnings/hi-IN/explain_tech_support_remote.mp3` | hi-IN | Chitra | explain (tech_support_remote) | "किसी अनजान कॉलर के कहने पर मोबाइल या कंप्यूटर में रिमोट ऐप जैसे एनीडेस्क कभी डाउनलोड न करें। वे आपका खाता खाली कर सकते हैं।" | 7.42s | 59328 B | |
 | `web/public/audio/warnings/hi-IN/explain_family_emergency.mp3` | hi-IN | Chitra | explain (family_emergency) | "किसी रिश्तेदार के मुसीबत या अस्पताल में होने का दावा करने वाली कॉल पर तुरंत पैसे न भेजें। पहले सीधे उस परिजन को फोन करके जांचें।" | 7.1s | 56832 B | |
 | `web/public/audio/warnings/hi-IN/explain_investment_task.mp3` | hi-IN | Chitra | explain (investment_task) | "ऑनलाइन टास्क या घर बैठे भारी मुनाफे के वादे अक्सर फर्जी निवेश घोटाले होते हैं। अनजान ग्रुप्स में पैसे कभी न लगाएं।" | 6.77s | 54144 B | |
+| `web/public/audio/warnings/hi-IN/explain_unknown_suspicious.mp3` | hi-IN | Chitra | explain (unknown_suspicious) | "इस कॉल में ठगी के संदिग्ध संकेत मिले हैं। किसी अनजान व्यक्ति के साथ निजी जानकारी, कोड या पैसे साझा न करें।" | 6.77s | 54144 B | |
 | `web/public/audio/warnings/en-IN/alert_scam.mp3` | en-IN | Kaveri | alert_scam | "Warning. This call looks like a scam. Do not share any code or PIN, and do not send money. Hang up now." | 5.66s | 45312 B | |
 | `web/public/audio/warnings/en-IN/alert_suspicious.mp3` | en-IN | Kaveri | alert_suspicious | "Be careful. This call has some signs of a scam. Do not share any code or PIN, and do not send money." | 5.81s | 46464 B | |
 | `web/public/audio/warnings/en-IN/explain_digital_arrest.mp3` | en-IN | Kaveri | explain (digital_arrest) | "Real police and court officials never demand money or conduct arrests over video calls. Hang up and contact the cyber helpline one nine three zero." | 7.25s | 57984 B | |
@@ -32,6 +33,7 @@
 | `web/public/audio/warnings/en-IN/explain_tech_support_remote.mp3` | en-IN | Kaveri | explain (tech_support_remote) | "Never download remote access apps like AnyDesk at the request of an unknown caller. They can view your screen and steal your funds." | 6.14s | 49152 B | |
 | `web/public/audio/warnings/en-IN/explain_family_emergency.mp3` | en-IN | Kaveri | explain (family_emergency) | "Do not send money in panic if a caller claims a family member is in trouble. Call your relative directly to verify." | 5.66s | 45312 B | |
 | `web/public/audio/warnings/en-IN/explain_investment_task.mp3` | en-IN | Kaveri | explain (investment_task) | "Promises of high guaranteed returns for completing online tasks or trading are investment scams. Do not deposit funds into unknown accounts." | 7.58s | 60672 B | |
+| `web/public/audio/warnings/en-IN/explain_unknown_suspicious.mp3` | en-IN | Kaveri | explain (unknown_suspicious) | "This call has suspicious warning signs. Never share personal details, codes, PINs, or money with an unknown caller." | 6.46s | 51648 B | |
 
 ## Claims for the human to verify
 The following institutional statements are spoken in the warning explanations:

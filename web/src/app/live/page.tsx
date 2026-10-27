@@ -8,26 +8,24 @@ import {
   MicOff,
   Square,
   AlertTriangle,
-  ShieldAlert,
-  ShieldCheck,
   RefreshCw,
-  Share2,
   Clock,
   Volume2,
   Info,
 } from "lucide-react";
 
-import { useI18n, Locale } from "@/lib/i18n/context";
+import { useI18n } from "@/lib/i18n/context";
 import { CallSheet, CallSegment, CallSignal, CallMarginNoteItem } from "@/components/ui/CallSheet";
 import { LevelStrip } from "@/components/ui/LevelStrip";
-import { VerdictStamp, RiskLevel } from "@/components/ui/VerdictStamp";
+import { RiskLevel } from "@/components/ui/VerdictStamp";
 import { CallTimeline, TimelineSignal } from "@/components/ui/CallTimeline";
 import { ResultCard } from "@/components/ui/ResultCard";
 import { getActiveMicPreset } from "@/lib/audio/constraints";
 import { resampleTo16k } from "@/lib/audio/resample";
 import { floatToPcm16 } from "@/lib/audio/pcm";
 import { Framer } from "@/lib/audio/framer";
-import { siteUrl } from "@/lib/site";
+import { createWarningPlayer, WarningPlayer } from "@/lib/warnings/policy";
+import { useServerMeta } from "@/lib/warnings/useServerMeta";
 
 const SUPPORTED_LANGUAGES = [
   { code: "hi-IN", label: "हिन्दी (Hindi)", script: "Devanagari" },
@@ -41,20 +39,6 @@ const SUPPORTED_LANGUAGES = [
   { code: "ml-IN", label: "മലയാളം (Malayalam)", script: "Malayalam" },
   { code: "pa-IN", label: "ਪੰਜਾਬੀ (Punjabi)", script: "Gurmukhi" },
 ];
-
-const SCAM_TYPE_LABELS: Record<string, { en: string; hi: string }> = {
-  digital_arrest: { en: "Digital Arrest Scam", hi: "डिजिटल अरेस्ट ठगी" },
-  bank_kyc: { en: "Fake Bank KYC", hi: "फर्जी बैंक केवाईसी" },
-  upi_refund: { en: "UPI Refund / Wrong Payment", hi: "यूपीआई रिफंड / गलत पेमेंट" },
-  utility_disconnect: { en: "Electricity Bill Disconnection", hi: "बिजली बिल डिस्कनेक्शन" },
-  courier_parcel: { en: "Illegal Parcel / Customs", hi: "कस्टम्स / अवैध पार्सल" },
-  tech_support_remote: { en: "Fake Tech Support", hi: "फर्जी तकनीकी सहायता" },
-  family_emergency: { en: "Family Emergency Scam", hi: "पारिवारिक आपातकाल ठगी" },
-  lottery_prize: { en: "Lottery / Prize Scam", hi: "लॉटरी / इनाम ठगी" },
-  investment_task: { en: "Investment / Part-time Task", hi: "निवेश / पार्ट-टाइम टास्क" },
-  unknown_suspicious: { en: "Suspicious Call", hi: "संदिग्ध कॉल" },
-  none: { en: "No Scam Detected", hi: "कोई ठगी नहीं मिली" },
-};
 
 const CATEGORY_NOTE_LABELS: Record<string, { en: string; hi: string }> = {
   AUTHORITY_CLAIM: { en: "Claimed police/agency", hi: "पुलिस/एजेंसी का दावा" },
@@ -111,66 +95,38 @@ function LiveContent() {
   const speechTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const currentLevelRef = useRef<RiskLevel>("safe");
   const selectedLangRef = useRef<string>("hi-IN");
-  const lastAlertTimes = useRef<{ alert_scam: number; alert_suspicious: number }>({
-    alert_scam: 0,
-    alert_suspicious: 0,
-  });
   const userGestureStarted = useRef<boolean>(false);
   const [audioUnavailable, setAudioUnavailable] = useState<boolean>(false);
+  const { meta } = useServerMeta();
+  const playerRef = useRef<WarningPlayer | null>(null);
+
+  useEffect(() => {
+    playerRef.current = createWarningPlayer({
+      makeAudio: (src) => new Audio(src),
+      onUnavailable: () => setAudioUnavailable(true),
+    });
+    return () => {
+      playerRef.current?.stop();
+    };
+  }, []);
 
   useEffect(() => {
     selectedLangRef.current = selectedLang;
   }, [selectedLang]);
 
-  const resolveWarningLang = (code: string): string => {
-    const isIndic =
-      code.startsWith("hi") ||
-      code.startsWith("ta") ||
-      code.startsWith("te") ||
-      code.startsWith("kn") ||
-      code.startsWith("ml") ||
-      code.startsWith("mr") ||
-      code.startsWith("bn") ||
-      code.startsWith("gu") ||
-      code.startsWith("pa");
-    return isIndic ? "hi-IN" : "en-IN";
-  };
-
-  // Real warning audio playback (spec 7.3 & M5 Part 2)
+  // Real warning audio playback via policy (spec 7.3 & M7 Part A)
   const playWarning = useCallback(
     (kind: "alert_suspicious" | "alert_scam", langCode: string) => {
-      // Autoplay policy: only play after user's Start gesture
       if (!userGestureStarted.current) return;
-
-      // Respect Mute
-      if (isMuted) return;
-
-      // Cooldown: never the same alert more than once per 60s
-      const now = Date.now();
-      const lastPlayed = lastAlertTimes.current[kind] || 0;
-      if (now - lastPlayed < 60000) return;
-      lastAlertTimes.current[kind] = now;
-
-      // Resolve language with Indic -> hi-IN fallback
-      const resolvedLang = resolveWarningLang(langCode);
-      const src = `/audio/warnings/${resolvedLang}/${kind}.mp3`;
-
-      try {
-        const audio = new Audio(src);
-        audio.onerror = () => {
-          setAudioUnavailable(true);
-        };
-        const p = audio.play();
-        if (p !== undefined) {
-          p.catch(() => {
-            setAudioUnavailable(true);
-          });
-        }
-      } catch {
-        setAudioUnavailable(true);
-      }
+      if (!playerRef.current) return;
+      playerRef.current.trigger(kind, {
+        lang: langCode,
+        muted: isMuted,
+        gesture: userGestureStarted.current,
+        reviewed: meta.reviewed_warning_languages,
+      });
     },
-    [isMuted]
+    [isMuted, meta.reviewed_warning_languages]
   );
 
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -182,64 +138,68 @@ function LiveContent() {
     // Enable simulated user gesture for mock mode
     userGestureStarted.current = true;
 
-    if (mockParam === "listening") {
-      setSessionState("listening");
-      setLevel("safe");
-      setScore(0);
-      setIsSpeaking(true);
-      setSegments([
-        { index: 0, text: "हाँ जी, मैं आपकी बात सुन रहा हूँ, बताइए क्या काम है?", time: "0:04" },
-      ]);
-    } else if (mockParam === "suspicious") {
-      setSessionState("listening");
-      setLevel("suspicious");
-      setScore(4);
-      setPrimaryType("bank_kyc");
-      setFirstCrossed({ suspicious: 6.4 });
-      setSegments([
-        { index: 0, text: "नमस्ते श्रीमान, मैं एसबीआई कार्ड विभाग से बोल रहा हूँ।", time: "0:03" },
-        { index: 1, text: "आपके क्रेडिट कार्ड की केवाईसी ब्लॉक हो जाएगी, कृपया अलर्ट रहें।", time: "0:08" },
-      ]);
-      setSignals([
-        { id: "m1", category: "AUTHORITY_CLAIM", weight: 2, evidence: "एसबीआई कार्ड विभाग", segment_index: 0 },
-        { id: "m2", category: "ACCOUNT_THREAT", weight: 2, evidence: "केवाईसी ब्लॉक हो जाएगी", segment_index: 1 },
-      ]);
-      setMarginNotes([
-        { segmentIndex: 0, category: "AUTHORITY_CLAIM", text: "बैंक का दावा" },
-        { segmentIndex: 1, category: "ACCOUNT_THREAT", text: "खाता बंद करने की चेतावनी" },
-      ]);
-    } else if (mockParam === "scam") {
-      setSessionState("listening");
-      setLevel("likely_scam");
-      setScore(10);
-      setPrimaryType("digital_arrest");
-      setFirstCrossed({ suspicious: 5.2, likely_scam: 11.4 });
-      setSegments([
-        { index: 0, text: "नमस्ते जी, मैं दिल्ली पुलिस क्राइम ब्रांच से सब-इंस्पेक्टर राजेश बात कर रहा हूँ।", time: "0:04" },
-        { index: 1, text: "आपके आधार नंबर पर मनी लॉन्ड्रिंग और गैरकानूनी पार्सल का केस दर्ज है। अरेस्ट वारंट जारी हुआ है।", time: "0:12" },
-        { index: 2, text: "सुप्रीम कोर्ट के आदेशानुसार आप डिजिटल अरेस्ट पर हैं। तुरंत वीडियो कॉल पर रहिए, फोन मत काटना।", time: "0:21" },
-        { index: 3, text: "वेरिफिकेशन के लिए तुरंत सरकारी सेफ अकाउंट में पचास हज़ार रुपये ट्रांसफर कीजिए।", time: "0:32" },
-      ]);
-      setSignals([
-        { id: "m1", category: "AUTHORITY_CLAIM", weight: 2, evidence: "दिल्ली पुलिस क्राइम ब्रांच", segment_index: 0 },
-        { id: "m2", category: "THREAT_ARREST", weight: 3, evidence: "अरेस्ट वारंट जारी हुआ है", segment_index: 1 },
-        { id: "m3", category: "ISOLATION", weight: 3, evidence: "डिजिटल अरेस्ट पर हैं", segment_index: 2 },
-        { id: "m4", category: "ISOLATION", weight: 3, evidence: "फोन मत काटना", segment_index: 2 },
-        { id: "m5", category: "MONEY_TRANSFER", weight: 3, evidence: "पचास हज़ार रुपये ट्रांसफर कीजिए", segment_index: 3 },
-      ]);
-      setMarginNotes([
-        { segmentIndex: 0, category: "AUTHORITY_CLAIM", text: "नकली पुलिस अधिकारी" },
-        { segmentIndex: 1, category: "THREAT_ARREST", text: "गिरफ्तारी की धमकी" },
-        { segmentIndex: 2, category: "ISOLATION", text: "कॉल काटने से मना किया" },
-        { segmentIndex: 3, category: "MONEY_TRANSFER", text: "पैसे तुरंत भेजने की मांग" },
-      ]);
-    } else if (mockParam === "error") {
-      setSessionState("error");
-      setErrorMessage({
-        code: "upstream_quota",
-        text: "Upstream speech recognition credits limit reached. Please try text paste analysis.",
-      });
-    }
+    const timer = setTimeout(() => {
+      if (mockParam === "listening") {
+        setSessionState("listening");
+        setLevel("safe");
+        setScore(0);
+        setIsSpeaking(true);
+        setSegments([
+          { index: 0, text: "हाँ जी, मैं आपकी बात सुन रहा हूँ, बताइए क्या काम है?", time: "0:04" },
+        ]);
+      } else if (mockParam === "suspicious") {
+        setSessionState("listening");
+        setLevel("suspicious");
+        setScore(4);
+        setPrimaryType("bank_kyc");
+        setFirstCrossed({ suspicious: 6.4 });
+        setSegments([
+          { index: 0, text: "नमस्ते श्रीमान, मैं एसबीआई कार्ड विभाग से बोल रहा हूँ।", time: "0:03" },
+          { index: 1, text: "आपके क्रेडिट कार्ड की केवाईसी ब्लॉक हो जाएगी, कृपया अलर्ट रहें।", time: "0:08" },
+        ]);
+        setSignals([
+          { id: "m1", category: "AUTHORITY_CLAIM", weight: 2, evidence: "एसबीआई कार्ड विभाग", segment_index: 0 },
+          { id: "m2", category: "ACCOUNT_THREAT", weight: 2, evidence: "केवाईसी ब्लॉक हो जाएगी", segment_index: 1 },
+        ]);
+        setMarginNotes([
+          { segmentIndex: 0, category: "AUTHORITY_CLAIM", text: "बैंक का दावा" },
+          { segmentIndex: 1, category: "ACCOUNT_THREAT", text: "खाता बंद करने की चेतावनी" },
+        ]);
+      } else if (mockParam === "scam") {
+        setSessionState("listening");
+        setLevel("likely_scam");
+        setScore(10);
+        setPrimaryType("digital_arrest");
+        setFirstCrossed({ suspicious: 5.2, likely_scam: 11.4 });
+        setSegments([
+          { index: 0, text: "नमस्ते जी, मैं दिल्ली पुलिस क्राइम ब्रांच से सब-इंस्पेक्टर राजेश बात कर रहा हूँ।", time: "0:04" },
+          { index: 1, text: "आपके आधार नंबर पर मनी लॉन्ड्रिंग और गैरकानूनी पार्सल का केस दर्ज है। अरेस्ट वारंट जारी हुआ है।", time: "0:12" },
+          { index: 2, text: "सुप्रीम कोर्ट के आदेशानुसार आप डिजिटल अरेस्ट पर हैं। तुरंत वीडियो कॉल पर रहिए, फोन मत काटना।", time: "0:21" },
+          { index: 3, text: "वेरिफिकेशन के लिए तुरंत सरकारी सेफ अकाउंट में पचास हज़ार रुपये ट्रांसफर कीजिए।", time: "0:32" },
+        ]);
+        setSignals([
+          { id: "m1", category: "AUTHORITY_CLAIM", weight: 2, evidence: "दिल्ली पुलिस क्राइम ब्रांच", segment_index: 0 },
+          { id: "m2", category: "THREAT_ARREST", weight: 3, evidence: "अरेस्ट वारंट जारी हुआ है", segment_index: 1 },
+          { id: "m3", category: "ISOLATION", weight: 3, evidence: "डिजिटल अरेस्ट पर हैं", segment_index: 2 },
+          { id: "m4", category: "ISOLATION", weight: 3, evidence: "फोन मत काटना", segment_index: 2 },
+          { id: "m5", category: "MONEY_TRANSFER", weight: 3, evidence: "पचास हज़ार रुपये ट्रांसफर कीजिए", segment_index: 3 },
+        ]);
+        setMarginNotes([
+          { segmentIndex: 0, category: "AUTHORITY_CLAIM", text: "नकली पुलिस अधिकारी" },
+          { segmentIndex: 1, category: "THREAT_ARREST", text: "गिरफ्तारी की धमकी" },
+          { segmentIndex: 2, category: "ISOLATION", text: "कॉल काटने से मना किया" },
+          { segmentIndex: 3, category: "MONEY_TRANSFER", text: "पैसे तुरंत भेजने की मांग" },
+        ]);
+      } else if (mockParam === "error") {
+        setSessionState("error");
+        setErrorMessage({
+          code: "upstream_quota",
+          text: "Upstream speech recognition credits limit reached. Please try text paste analysis.",
+        });
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [mockParam]);
 
   // Cleanup helper
@@ -520,18 +480,6 @@ function LiveContent() {
     ),
   }));
 
-  // WhatsApp Warn My Family URL
-  const scamTypeName =
-    SCAM_TYPE_LABELS[primaryType]?.[activeLang] ||
-    (primaryType === "none" ? "Suspected Scam" : primaryType.replace(/_/g, " "));
-
-  const whatsappMessage = encodeURIComponent(
-    activeLang === "hi"
-      ? `सावधान: मुझे अभी एक संदिग्ध कॉल (${scamTypeName}) आई। कृपया सतर्क रहें: किसी को भी ओटीपी या यूपीआई पिन न बताएं और पैसे न भेजें। सजग पर जांचें: ${siteUrl()}`
-      : `WARNING: I just encountered a suspected call (${scamTypeName}). Please stay vigilant: never share OTP or UPI PIN, and do not transfer money. Check with Sajag: ${siteUrl()}`
-  );
-  const whatsappUrl = `https://wa.me/?text=${whatsappMessage}`;
-
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6">
       {/* Page Header */}
@@ -769,6 +717,21 @@ function LiveContent() {
               />
             </div>
           </div>
+
+          {/* Unreviewed Warning Notice (spec M7 Part A) */}
+          {meta.reviewed_warning_languages.length === 0 && (
+            <div
+              className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 text-amber-800 dark:text-amber-200 text-xs flex items-center gap-2"
+              data-testid="audio-unreviewed-banner"
+            >
+              <Info className="w-4 h-4 shrink-0 text-amber-600" />
+              <span>
+                {activeLang === "hi"
+                  ? "बोलकर चेतावनी अभी बंद है जब तक आवाज़ों की समीक्षा पूरी नहीं हो जाती (Spoken warnings are off until the voices have been reviewed)"
+                  : "Spoken warnings are off until the voices have been reviewed"}
+              </span>
+            </div>
+          )}
 
           {/* Audio Unavailable Notice (never silently fail, spec 7.3) */}
           {audioUnavailable && (

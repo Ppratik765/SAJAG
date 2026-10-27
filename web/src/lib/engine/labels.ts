@@ -100,8 +100,8 @@ export const SCAM_TYPE_NAMES: Record<string, { en: string; hi: string }> = {
     hi: "संदेहास्पद कॉल",
   },
   none: {
-    en: "Safe Call",
-    hi: "सामान्य बातचीत",
+    en: "No warning signs found yet",
+    hi: "अभी कोई संकेत नहीं मिला",
   },
 };
 
@@ -131,7 +131,7 @@ export const ADVICE_TEXTS: Record<string, { en: string; hi: string }> = {
     hi: "बैंक की आधिकारिक वेबसाइट या हेल्पलाइन से अलग से जाँच करें।",
   },
   stay_alert: {
-    en: "No red flags detected. Always remain vigilant on unknown calls.",
-    hi: "कोई चेतावनी संकेत नहीं मिले। अज्ञात नंबरों पर हमेशा सतर्क रहें।",
+    en: "No warning signs found yet. Still do not share codes, PINs or money with unknown callers.",
+    hi: "अभी कोई संकेत नहीं मिला। फिर भी अनजान कॉलर के साथ कोड, पिन या पैसे साझा न करें।",
   },
 };

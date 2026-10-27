@@ -1,149 +1,116 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-// Helper replicating the live warning resolution logic
-function resolveWarningLang(code) {
-  const isIndic =
-    code.startsWith("hi") ||
-    code.startsWith("ta") ||
-    code.startsWith("te") ||
-    code.startsWith("kn") ||
-    code.startsWith("ml") ||
-    code.startsWith("mr") ||
-    code.startsWith("bn") ||
-    code.startsWith("gu") ||
-    code.startsWith("pa");
-  return isIndic ? "hi-IN" : "en-IN";
-}
+// Imports the real module used by /live and /parent (no replica).
+const {
+  resolveWarningLang,
+  decide,
+  createPolicyState,
+  createWarningPlayer,
+  COOLDOWN_MS,
+} = await import("../src/lib/warnings/policy.ts");
 
-function resolveAudioSrc({ level, primaryType, languageCode }) {
-  const langFolder = resolveWarningLang(languageCode);
-  const knownTypes = [
-    "digital_arrest",
-    "bank_kyc",
-    "courier_parcel",
-    "lottery_prize",
-    "upi_refund",
-    "utility_disconnect",
-    "tech_support_remote",
-    "family_emergency",
-    "investment_task",
-  ];
+const BOTH = ["hi-IN", "en-IN"];
+const ctx = (over = {}) => ({ lang: "hi-IN", muted: false, gesture: true, reviewed: BOTH, ...over });
 
-  if (primaryType && knownTypes.includes(primaryType)) {
-    return `/audio/warnings/${langFolder}/explain_${primaryType}.mp3`;
-  }
-  if (level === "scam" || level === "likely_scam") {
-    return `/audio/warnings/${langFolder}/alert_scam.mp3`;
-  }
-  return `/audio/warnings/${langFolder}/alert_suspicious.mp3`;
-}
-
-// 60-second rule simulator
-class WarningAudioController {
-  constructor() {
-    this.lastAlertTimes = {
-      alert_scam: 0,
-      alert_suspicious: 0,
+function fakeAudioFactory(log, { failPlay = false } = {}) {
+  return (src) => {
+    const a = {
+      src,
+      paused: true,
+      onended: null,
+      play() {
+        if (failPlay) return Promise.reject(new Error("NotAllowedError"));
+        a.paused = false;
+        log.push({ ev: "play", src });
+        return Promise.resolve();
+      },
+      pause() {
+        a.paused = true;
+        log.push({ ev: "pause", src });
+      },
     };
-    this.userGestureStarted = false;
-    this.isMuted = false;
-    this.playedClips = [];
-  }
-
-  playWarning(kind, langCode, now = Date.now()) {
-    if (!this.userGestureStarted) return false;
-    if (this.isMuted) return false;
-
-    const last = this.lastAlertTimes[kind] || 0;
-    if (now - last < 60000) {
-      return false; // suppressed by 60s rule
-    }
-
-    this.lastAlertTimes[kind] = now;
-    const resolvedLang = resolveWarningLang(langCode);
-    const src = `/audio/warnings/${resolvedLang}/${kind}.mp3`;
-    this.playedClips.push({ kind, src, time: now });
-    return true;
-  }
+    return a;
+  };
 }
 
-test("Warning audio path resolution: Hindi, Indic fallbacks, and English", () => {
-  assert.strictEqual(
-    resolveAudioSrc({ level: "likely_scam", primaryType: "digital_arrest", languageCode: "hi-IN" }),
-    "/audio/warnings/hi-IN/explain_digital_arrest.mp3"
-  );
+test("language resolution honours the reviewed list", () => {
+  assert.equal(resolveWarningLang("hi-IN", BOTH), "hi-IN");
+  assert.equal(resolveWarningLang("ta-IN", BOTH), "hi-IN");
+  assert.equal(resolveWarningLang("en-IN", BOTH), "en-IN");
+  assert.equal(resolveWarningLang("ta-IN", ["en-IN"]), "en-IN");
+  assert.equal(resolveWarningLang("en-IN", ["hi-IN"]), "hi-IN");
+  assert.equal(resolveWarningLang("hi-IN", []), null);
+});
 
-  // Indic fallback to hi-IN
-  assert.strictEqual(
-    resolveAudioSrc({ level: "likely_scam", primaryType: "bank_kyc", languageCode: "ta-IN" }),
-    "/audio/warnings/hi-IN/explain_bank_kyc.mp3"
-  );
+test("no gesture, muted and unreviewed never play", () => {
+  const s = createPolicyState();
+  assert.deepEqual(decide(s, "alert_scam", ctx({ gesture: false }), 1e6), { play: false, reason: "no_gesture" });
+  assert.deepEqual(decide(s, "alert_scam", ctx({ muted: true }), 1e6), { play: false, reason: "muted" });
+  assert.deepEqual(decide(s, "alert_scam", ctx({ reviewed: [] }), 1e6), { play: false, reason: "not_reviewed" });
+});
 
-  // English resolved to en-IN
-  assert.strictEqual(
-    resolveAudioSrc({ level: "likely_scam", primaryType: "upi_refund", languageCode: "en-IN" }),
-    "/audio/warnings/en-IN/explain_upi_refund.mp3"
-  );
+test("60 s cooldown per kind; suspicious never blocks scam", async () => {
+  let t = 1_000_000;
+  const log = [];
+  const p = createWarningPlayer({ makeAudio: fakeAudioFactory(log), now: () => t });
 
-  // General alert fallback when primary type is none
-  assert.strictEqual(
-    resolveAudioSrc({ level: "likely_scam", primaryType: "none", languageCode: "hi-IN" }),
-    "/audio/warnings/hi-IN/alert_scam.mp3"
-  );
-  assert.strictEqual(
-    resolveAudioSrc({ level: "suspicious", primaryType: "none", languageCode: "en-IN" }),
-    "/audio/warnings/en-IN/alert_suspicious.mp3"
+  assert.equal(await p.trigger("alert_suspicious", ctx()), true);
+  t += 5_000;
+  assert.equal(await p.trigger("alert_scam", ctx()), true, "scam must not be blocked by suspicious cooldown");
+  t += 10_000;
+  assert.equal(await p.trigger("alert_scam", ctx()), false, "same kind inside 60 s is blocked");
+  t += COOLDOWN_MS;
+  assert.equal(await p.trigger("alert_scam", ctx()), true, "allowed again after 60 s");
+  assert.deepEqual(
+    log.filter((e) => e.ev === "play").map((e) => e.src),
+    [
+      "/audio/warnings/hi-IN/alert_suspicious.mp3",
+      "/audio/warnings/hi-IN/alert_scam.mp3",
+      "/audio/warnings/hi-IN/alert_scam.mp3",
+    ],
   );
 });
 
-test("60-second cooldown rule: prevents duplicate alerts within 60 seconds", () => {
-  const ctrl = new WarningAudioController();
-  ctrl.userGestureStarted = true;
-
-  const t0 = 1000000;
-  // First alert plays
-  const played1 = ctrl.playWarning("alert_scam", "hi-IN", t0);
-  assert.strictEqual(played1, true);
-  assert.strictEqual(ctrl.playedClips.length, 1);
-  assert.strictEqual(ctrl.playedClips[0].src, "/audio/warnings/hi-IN/alert_scam.mp3");
-
-  // Immediate repeat within 60s (at t0 + 10s) is blocked
-  const played2 = ctrl.playWarning("alert_scam", "hi-IN", t0 + 10000);
-  assert.strictEqual(played2, false);
-  assert.strictEqual(ctrl.playedClips.length, 1);
-
-  // Different kind (alert_suspicious) is NOT blocked by alert_scam timer
-  const playedSuspicious = ctrl.playWarning("alert_suspicious", "hi-IN", t0 + 15000);
-  assert.strictEqual(playedSuspicious, true);
-  assert.strictEqual(ctrl.playedClips.length, 2);
-
-  // At t0 + 59s, alert_scam is still blocked
-  const played3 = ctrl.playWarning("alert_scam", "hi-IN", t0 + 59999);
-  assert.strictEqual(played3, false);
-
-  // At t0 + 60.1s, alert_scam is permitted again
-  const played4 = ctrl.playWarning("alert_scam", "hi-IN", t0 + 60100);
-  assert.strictEqual(played4, true);
-  assert.strictEqual(ctrl.playedClips.length, 3);
+test("scam alert stops a still-playing suspicious clip", async () => {
+  const log = [];
+  const p = createWarningPlayer({ makeAudio: fakeAudioFactory(log), now: () => 2_000_000 });
+  await p.trigger("alert_suspicious", ctx());
+  await p.trigger("alert_scam", ctx());
+  assert.deepEqual(log.map((e) => `${e.ev}:${e.src.split("/").pop()}`), [
+    "play:alert_suspicious.mp3",
+    "pause:alert_suspicious.mp3",
+    "play:alert_scam.mp3",
+  ]);
+  assert.equal(p.state.playingKind, "alert_scam");
 });
 
-test("Mute and autoplay gesture gating", () => {
-  const ctrl = new WarningAudioController();
+test("suspicious does not interrupt a playing scam clip", async () => {
+  const log = [];
+  const p = createWarningPlayer({ makeAudio: fakeAudioFactory(log), now: () => 3_000_000 });
+  await p.trigger("alert_scam", ctx());
+  assert.equal(await p.trigger("alert_suspicious", ctx()), false);
+});
 
-  const t = 2000000;
-  // Without user gesture, no audio
-  assert.strictEqual(ctrl.playWarning("alert_scam", "hi-IN", t), false);
-  assert.strictEqual(ctrl.playedClips.length, 0);
+test("cooldown starts only if play() succeeded; failure is reported", async () => {
+  let t = 4_000_000;
+  const reasons = [];
+  const failing = createWarningPlayer({
+    makeAudio: fakeAudioFactory([], { failPlay: true }),
+    now: () => t,
+    onUnavailable: (r) => reasons.push(r),
+  });
+  assert.equal(await failing.trigger("alert_scam", ctx()), false);
+  assert.equal(failing.state.lastPlayed.alert_scam, 0, "no cooldown after failed play");
+  assert.deepEqual(reasons, ["play_failed"]);
+});
 
-  // With user gesture but muted, no audio
-  ctrl.userGestureStarted = true;
-  ctrl.isMuted = true;
-  assert.strictEqual(ctrl.playWarning("alert_scam", "hi-IN", t), false);
-  assert.strictEqual(ctrl.playedClips.length, 0);
-
-  // Unmuted -> plays
-  ctrl.isMuted = false;
-  assert.strictEqual(ctrl.playWarning("alert_scam", "hi-IN", t), true);
-  assert.strictEqual(ctrl.playedClips.length, 1);
+test("unreviewed language reports not_reviewed instead of failing silently", async () => {
+  const reasons = [];
+  const p = createWarningPlayer({
+    makeAudio: fakeAudioFactory([]),
+    onUnavailable: (r) => reasons.push(r),
+  });
+  assert.equal(await p.trigger("alert_scam", ctx({ reviewed: [] })), false);
+  assert.deepEqual(reasons, ["not_reviewed"]);
 });

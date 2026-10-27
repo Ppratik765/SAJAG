@@ -4,13 +4,11 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Volume2,
-  VolumeX,
   Square,
   Share2,
   ShieldAlert,
   ShieldCheck,
   AlertTriangle,
-  Info,
 } from "lucide-react";
 import { VerdictStamp, RiskLevel } from "./VerdictStamp";
 
@@ -44,7 +42,7 @@ const SCAM_TYPE_NAMES: Record<string, { en: string; hi: string }> = {
   lottery_prize: { en: "Lottery / Prize Scam", hi: "लॉटरी / इनाम ठगी" },
   investment_task: { en: "Investment / Part-time Task", hi: "निवेश / पार्ट-टाइम टास्क" },
   unknown_suspicious: { en: "Suspicious Call", hi: "संदिग्ध कॉल" },
-  none: { en: "No Scam Detected", hi: "कोई ठगी नहीं मिली" },
+  none: { en: "No warning signs found yet", hi: "अभी कोई संकेत नहीं मिला" },
 };
 
 const EXPLAIN_DESCRIPTIONS: Record<string, { en: string; hi: string }> = {
@@ -110,7 +108,6 @@ export function ResultCard({
   score,
   primaryType,
   signals = [],
-  adviceKeys,
   languageCode = "hi-IN",
   activeLang = "hi",
   showShare = true,
@@ -142,7 +139,7 @@ export function ResultCard({
     const langFolder = isIndic ? "hi-IN" : "en-IN";
     const typeKey = primaryType && primaryType !== "none" ? primaryType : null;
 
-    if (typeKey && typeKey in EXPLAIN_DESCRIPTIONS && typeKey !== "unknown_suspicious") {
+    if (typeKey && typeKey in EXPLAIN_DESCRIPTIONS) {
       return `/audio/warnings/${langFolder}/explain_${typeKey}.mp3`;
     }
     if (isAlarm) {
@@ -197,6 +194,7 @@ export function ResultCard({
     }
   };
 
+  const isSafe = level === "safe";
   const scamTypeName = SCAM_TYPE_NAMES[primaryType]?.[activeLang] || primaryType;
   const explainText =
     EXPLAIN_DESCRIPTIONS[primaryType]?.[activeLang] ||
@@ -204,9 +202,13 @@ export function ResultCard({
       ? activeLang === "hi"
         ? "इस कॉल में ठगी के गंभीर संकेत मिले हैं। तुरंत फोन काट दें।"
         : "Critical red flags of financial fraud detected. Disconnect immediately."
+      : isSuspicious
+      ? activeLang === "hi"
+        ? "इस कॉल में सतर्क रहने के संकेत हैं। कोई भी कोड न बताएं।"
+        : "Exercise caution. Do not share personal verification codes."
       : activeLang === "hi"
-      ? "इस कॉल में सतर्क रहने के संकेत हैं। कोई भी कोड न बताएं।"
-      : "Exercise caution. Do not share personal verification codes.");
+      ? "अभी कोई संकेत नहीं मिला। फिर भी अनजान कॉलर के साथ कोड, पिन या पैसे साझा न करें।"
+      : "No warning signs found yet. Still do not share codes, PINs or money with unknown callers.");
 
   const topEvidence = signals.slice(0, 5);
 
@@ -235,7 +237,7 @@ export function ResultCard({
                 ? activeLang === "hi" ? "गंभीर चेतावनी • SCAM ALERT" : "FRAUD RISK ALERT"
                 : isSuspicious
                 ? activeLang === "hi" ? "सतर्क रहें • CAUTION" : "SUSPICIOUS ACTIVITY"
-                : activeLang === "hi" ? "सुरक्षित • SAFE" : "SAFE / NO FRAUD"}
+                : activeLang === "hi" ? "अभी कोई संकेत नहीं • NO WARNING SIGNS" : "NO WARNING SIGNS FOUND YET"}
             </span>
           </div>
 
@@ -261,7 +263,9 @@ export function ResultCard({
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <span className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">
-            {activeLang === "hi" ? "यह ठगी क्यों लगती है:" : "Why this looks like a scam:"}
+            {isSafe
+              ? (activeLang === "hi" ? "सलाह और स्थिति:" : "Advisory & status:")
+              : (activeLang === "hi" ? "यह ठगी क्यों लगती है:" : "Why this looks like a scam:")}
           </span>
 
           {/* Listen Button (Spec 7.5) */}

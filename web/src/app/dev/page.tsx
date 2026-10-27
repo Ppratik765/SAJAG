@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   MIC_PRESETS,
@@ -10,13 +10,18 @@ import {
 } from "@/lib/audio/constraints";
 
 export default function DevIndexPage() {
-  const [selectedPreset, setSelectedPreset] = useState<MicPreset["id"]>("clean");
+  const [selectedPreset, setSelectedPreset] = useState<MicPreset["id"]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return getActiveMicPreset().id;
+      } catch {
+        return "clean";
+      }
+    }
+    return "clean";
+  });
   const [isMicTesting, setIsMicTesting] = useState(false);
   const [volumeLevel, setVolumeLevel] = useState(0);
-
-  useEffect(() => {
-    setSelectedPreset(getActiveMicPreset().id);
-  }, []);
 
   const handleSelectPreset = (id: MicPreset["id"]) => {
     setSelectedPreset(id);

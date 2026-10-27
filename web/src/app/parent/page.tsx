@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, Suspense } from "react";
+import React, { useState, useRef, useCallback, Suspense, useMemo, useEffect } from "react";
 import { siteUrl } from "@/lib/site";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -11,7 +11,6 @@ import {
   AlertTriangle,
   PhoneOff,
   Share2,
-  Volume2,
   RefreshCw,
   ArrowLeft,
 } from "lucide-react";
@@ -20,6 +19,8 @@ import { Framer } from "@/lib/audio/framer";
 import { floatToPcm16 } from "@/lib/audio/pcm";
 import { resampleTo16k } from "@/lib/audio/resample";
 import { getActiveMicPreset } from "@/lib/audio/constraints";
+import { createWarningPlayer, WarningPlayer } from "@/lib/warnings/policy";
+import { useServerMeta } from "@/lib/warnings/useServerMeta";
 
 type ParentSessionState = "idle" | "connecting" | "listening" | "ended" | "error";
 
@@ -34,17 +35,40 @@ const SCAM_TYPE_NAMES: Record<string, { hi: string; en: string }> = {
   lottery_prize: { hi: "लॉटरी / इनाम ठगी", en: "Lottery / Prize Scam" },
   investment_task: { hi: "फर्जी निवेश टास्क", en: "Investment / Part-time Task" },
   unknown_suspicious: { hi: "संदिग्ध कॉल", en: "Suspicious Call" },
-  none: { hi: "अभी कोई संकेत नहीं मिला", en: "No Scam Detected" },
+  none: { hi: "अभी कोई संकेत नहीं मिला", en: "No warning signs found yet" },
 };
 
 function ParentContent() {
   const searchParams = useSearchParams();
   const mockParam = searchParams.get("mock");
+  const { meta } = useServerMeta();
 
-  const [sessionState, setSessionState] = useState<ParentSessionState>("idle");
-  const [level, setLevel] = useState<RiskLevel>("safe");
-  const [primaryType, setPrimaryType] = useState<string>("none");
+  // Derive mock states without triggering set-state-in-effect lint error
+  const mockState = useMemo(() => {
+    if (!mockParam) return null;
+    if (mockParam === "idle") {
+      return { session: "idle" as ParentSessionState, level: "safe" as RiskLevel, primary: "none" };
+    }
+    if (mockParam === "safe" || mockParam === "listening") {
+      return { session: "listening" as ParentSessionState, level: "safe" as RiskLevel, primary: "none" };
+    }
+    if (mockParam === "suspicious") {
+      return { session: "listening" as ParentSessionState, level: "suspicious" as RiskLevel, primary: "bank_kyc" };
+    }
+    if (mockParam === "scam") {
+      return { session: "listening" as ParentSessionState, level: "likely_scam" as RiskLevel, primary: "digital_arrest" };
+    }
+    return null;
+  }, [mockParam]);
+
+  const [realSessionState, setRealSessionState] = useState<ParentSessionState>("idle");
+  const [realLevel, setRealLevel] = useState<RiskLevel>("safe");
+  const [realPrimaryType, setRealPrimaryType] = useState<string>("none");
   const [audioUnavailable, setAudioUnavailable] = useState(false);
+
+  const sessionState = mockState ? mockState.session : realSessionState;
+  const level = mockState ? mockState.level : realLevel;
+  const primaryType = mockState ? mockState.primary : realPrimaryType;
 
   // Audio refs & playback tracking
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -52,57 +76,33 @@ function ParentContent() {
   const workletNodeRef = useRef<AudioWorkletNode | null>(null);
   const websocketRef = useRef<WebSocket | null>(null);
   const currentLevelRef = useRef<RiskLevel>("safe");
-  const userGestureStarted = useRef<boolean>(false);
-  const lastAlertTimes = useRef<{ alert_scam: number; alert_suspicious: number }>({
-    alert_scam: 0,
-    alert_suspicious: 0,
-  });
+  const userGestureStarted = useRef<boolean>(Boolean(mockParam));
+  const playerRef = useRef<WarningPlayer | null>(null);
 
-  // Play warning audio (spec 7.3 & 7.4)
-  const playWarning = useCallback((kind: "alert_suspicious" | "alert_scam") => {
-    if (!userGestureStarted.current) return;
-
-    const now = Date.now();
-    const lastPlayed = lastAlertTimes.current[kind] || 0;
-    if (now - lastPlayed < 60000) return;
-    lastAlertTimes.current[kind] = now;
-
-    const src = `/audio/warnings/hi-IN/${kind}.mp3`;
-    try {
-      const audio = new Audio(src);
-      audio.onerror = () => setAudioUnavailable(true);
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => setAudioUnavailable(true));
-      }
-    } catch {
-      setAudioUnavailable(true);
-    }
+  useEffect(() => {
+    playerRef.current = createWarningPlayer({
+      makeAudio: (src) => new Audio(src),
+      onUnavailable: () => setAudioUnavailable(true),
+    });
+    return () => {
+      playerRef.current?.stop();
+    };
   }, []);
 
-  // Mock states for evaluation and screenshots
-  useEffect(() => {
-    if (!mockParam) return;
-
-    userGestureStarted.current = true;
-    if (mockParam === "idle") {
-      setSessionState("idle");
-      setLevel("safe");
-      setPrimaryType("none");
-    } else if (mockParam === "safe" || mockParam === "listening") {
-      setSessionState("listening");
-      setLevel("safe");
-      setPrimaryType("none");
-    } else if (mockParam === "suspicious") {
-      setSessionState("listening");
-      setLevel("suspicious");
-      setPrimaryType("bank_kyc");
-    } else if (mockParam === "scam") {
-      setSessionState("listening");
-      setLevel("likely_scam");
-      setPrimaryType("digital_arrest");
-    }
-  }, [mockParam]);
+  // Play warning audio via policy (spec 7.3 & 7.4)
+  const playWarning = useCallback(
+    (kind: "alert_suspicious" | "alert_scam") => {
+      if (!userGestureStarted.current) return;
+      if (!playerRef.current) return;
+      playerRef.current.trigger(kind, {
+        lang: "hi-IN",
+        muted: false,
+        gesture: userGestureStarted.current,
+        reviewed: meta.reviewed_warning_languages,
+      });
+    },
+    [meta.reviewed_warning_languages]
+  );
 
   const stopAudio = useCallback(() => {
     if (workletNodeRef.current) {
@@ -125,16 +125,16 @@ function ParentContent() {
 
   const handleStop = useCallback(() => {
     stopAudio();
-    setSessionState("ended");
+    setRealSessionState("ended");
   }, [stopAudio]);
 
   const handleStart = async () => {
     if (mockParam) return;
     stopAudio();
-    setSessionState("connecting");
-    setLevel("safe");
+    setRealSessionState("connecting");
+    setRealLevel("safe");
     currentLevelRef.current = "safe";
-    setPrimaryType("none");
+    setRealPrimaryType("none");
     userGestureStarted.current = true;
 
     try {
@@ -180,13 +180,13 @@ function ParentContent() {
         try {
           const data = JSON.parse(event.data);
           if (data.type === "ready") {
-            setSessionState("listening");
+            setRealSessionState("listening");
           } else if (data.type === "risk") {
             const prevLevel = currentLevelRef.current;
             currentLevelRef.current = data.level;
-            setLevel(data.level);
+            setRealLevel(data.level);
             if (data.primary_type && data.primary_type !== "none") {
-              setPrimaryType(data.primary_type);
+              setRealPrimaryType(data.primary_type);
             }
 
             if (data.level === "likely_scam" || data.level === "scam") {
@@ -203,23 +203,20 @@ function ParentContent() {
       };
 
       ws.onerror = () => {
-        setSessionState("error");
+        setRealSessionState("error");
         stopAudio();
       };
       ws.onclose = () => {
-        if (sessionState === "listening" || sessionState === "connecting") {
-          setSessionState("ended");
-        }
+        setRealSessionState((prev) => (prev === "listening" || prev === "connecting" ? "ended" : prev));
       };
     } catch {
-      setSessionState("error");
+      setRealSessionState("error");
       stopAudio();
     }
   };
 
   const isScam = level === "likely_scam" || level === "scam";
   const isSuspicious = level === "suspicious";
-  const isSafe = level === "safe";
 
   // Build WhatsApp URL with scam type name and app link, NO transcript (spec 7.4)
   const scamDisplayName = SCAM_TYPE_NAMES[primaryType]?.hi || (isScam ? "संभावित ठगी" : "संदिग्ध कॉल");
@@ -254,6 +251,24 @@ function ParentContent() {
           माता-पिता मोड • PARENT MODE
         </span>
       </header>
+
+      {/* Unreviewed warning language notice (spec M7 Part A) */}
+      {meta.reviewed_warning_languages.length === 0 && (
+        <div
+          data-testid="parent-unreviewed-banner"
+          className="bg-amber-100 text-amber-950 py-2 px-4 text-center text-xs sm:text-sm font-bold border-b border-amber-300"
+        >
+          बोलकर चेतावनी अभी बंद है (Spoken warnings are off until the voices have been reviewed)
+        </div>
+      )}
+      {audioUnavailable && (
+        <div
+          data-testid="parent-audio-unavailable-banner"
+          className="bg-amber-100 text-amber-950 py-2 px-4 text-center text-xs sm:text-sm font-bold border-b border-amber-300"
+        >
+          ऑडियो चेतावनी अनुपलब्ध है (Warning audio unavailable)
+        </div>
+      )}
 
       {/* Main Full-Screen Status Field */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 text-center max-w-xl mx-auto w-full space-y-6 sm:space-y-8">

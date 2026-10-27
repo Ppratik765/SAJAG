@@ -4,17 +4,14 @@ import React, { useState } from "react";
 import { useI18n } from "@/lib/i18n/context";
 import { CallSheet, CallSegment, CallSignal, CallMarginNoteItem } from "@/components/ui/CallSheet";
 import { LevelStrip } from "@/components/ui/LevelStrip";
-import { VerdictStamp, RiskLevel } from "@/components/ui/VerdictStamp";
+import { RiskLevel } from "@/components/ui/VerdictStamp";
 import { ResultCard } from "@/components/ui/ResultCard";
 import { analyzeText, FullAnalysisResponse } from "@/lib/api/analyze";
-import { CATEGORY_PLAIN_NOTES, SCAM_TYPE_NAMES, ADVICE_TEXTS } from "@/lib/engine/labels";
+import { CATEGORY_PLAIN_NOTES } from "@/lib/engine/labels";
 import {
   FileText,
   Sparkles,
   RotateCcw,
-  ShieldAlert,
-  ShieldCheck,
-  PhoneOff,
   Copy,
   Check,
   ArrowRight,
@@ -141,9 +138,6 @@ export default function PastePage() {
   }));
 
   const riskLevel: RiskLevel = result ? result.level : "safe";
-  const scamTypeName = result
-    ? SCAM_TYPE_NAMES[result.primary_type]?.[activeLang] || result.primary_type
-    : "";
 
   return (
     <div className="py-6 sm:py-10 max-w-7xl mx-auto px-4 sm:px-6">

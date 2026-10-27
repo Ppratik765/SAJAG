@@ -20,6 +20,7 @@ languages:
       tech_support_remote: "किसी अनजान कॉलर के कहने पर मोबाइल या कंप्यूटर में रिमोट ऐप जैसे एनीडेस्क कभी डाउनलोड न करें। वे आपका खाता खाली कर सकते हैं।"
       family_emergency: "किसी रिश्तेदार के मुसीबत या अस्पताल में होने का दावा करने वाली कॉल पर तुरंत पैसे न भेजें। पहले सीधे उस परिजन को फोन करके जांचें।"
       investment_task: "ऑनलाइन टास्क या घर बैठे भारी मुनाफे के वादे अक्सर फर्जी निवेश घोटाले होते हैं। अनजान ग्रुप्स में पैसे कभी न लगाएं।"
+      unknown_suspicious: "इस कॉल में ठगी के संदिग्ध संकेत मिले हैं। किसी अनजान व्यक्ति के साथ निजी जानकारी, कोड या पैसे साझा न करें।"
 
   en-IN:
     reviewed: false
@@ -35,3 +36,4 @@ languages:
       tech_support_remote: "Never download remote access apps like AnyDesk at the request of an unknown caller. They can view your screen and steal your funds."
       family_emergency: "Do not send money in panic if a caller claims a family member is in trouble. Call your relative directly to verify."
       investment_task: "Promises of high guaranteed returns for completing online tasks or trading are investment scams. Do not deposit funds into unknown accounts."
+      unknown_suspicious: "This call has suspicious warning signs. Never share personal details, codes, PINs, or money with an unknown caller."

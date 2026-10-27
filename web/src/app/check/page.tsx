@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   Upload,
   Mic,
@@ -12,7 +11,6 @@ import {
   Check,
   FileAudio,
   AlertCircle,
-  Clock,
   Sparkles,
 } from "lucide-react";
 import { uploadAudioForAnalysis, AnalysisResponse, TranscriptSegment } from "@/lib/api/analyze";
@@ -32,7 +30,7 @@ const SUPPORTED_LANGUAGES = [
 ];
 
 export default function CheckPage() {
-  const { t, locale } = useI18n();
+  const { locale } = useI18n();
 
   // State
   const [selectedLang, setSelectedLang] = useState(locale === "hi" ? "hi-IN" : "en-IN");
@@ -60,8 +58,19 @@ export default function CheckPage() {
 
   // Update default lang when locale changes
   useEffect(() => {
-    setSelectedLang(locale === "hi" ? "hi-IN" : "en-IN");
+    const timer = setTimeout(() => {
+      setSelectedLang(locale === "hi" ? "hi-IN" : "en-IN");
+    }, 0);
+    return () => clearTimeout(timer);
   }, [locale]);
+
+  // Stop recording
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  }, [isRecording]);
 
   // Recording timer
   useEffect(() => {
@@ -81,7 +90,7 @@ export default function CheckPage() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isRecording]);
+  }, [isRecording, stopRecording]);
 
   // Start recording
   const startRecording = async () => {
@@ -107,21 +116,12 @@ export default function CheckPage() {
 
       recorder.start(500);
       setIsRecording(true);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
+    } catch {
       setErrorMessage(
         locale === "hi"
           ? "माइक्रोफ़ोन एक्सेस नहीं मिला। कृपया अनुमति दें।"
           : "Microphone access denied or unavailable. Please grant permission."
       );
-    }
-  };
-
-  // Stop recording
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
     }
   };
 

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 // Import pure audio modules
 const { resampleTo16k } = await import("../src/lib/audio/resample.ts");
-const { floatToPcm16, pcm16ToBytes } = await import("../src/lib/audio/pcm.ts");
+const { floatToPcm16 } = await import("../src/lib/audio/pcm.ts");
 const { Framer, FRAME_BYTES, FRAME_SAMPLES } = await import("../src/lib/audio/framer.ts");
 
 test("Frame size invariant: every emitted frame is exactly 1,024 bytes (512 samples)", () => {

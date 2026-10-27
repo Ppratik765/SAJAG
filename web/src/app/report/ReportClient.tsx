@@ -6,7 +6,6 @@ import Link from "next/link";
 import {
   ShieldAlert,
   AlertTriangle,
-  PhoneOff,
   Share2,
   Copy,
   Check,

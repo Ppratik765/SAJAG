@@ -37,7 +37,7 @@ export function LevelStrip({ level, score = 0, className = "" }: LevelStripProps
       {/* Zone labels: aligned with ruler zones, names only */}
       <div className="grid grid-cols-4 text-[10px] sm:text-xs font-semibold text-[var(--ink-muted)] mb-1 px-1 select-none">
         <span className={`text-left ${level === "safe" ? "text-[var(--safe-text)] font-bold" : ""}`}>
-          Safe
+          No warning signs
         </span>
         <span className={`text-center ${level === "suspicious" ? "text-[var(--stamp)] font-bold" : ""}`}>
           Suspicious
