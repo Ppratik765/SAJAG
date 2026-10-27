@@ -12,9 +12,11 @@ from fastapi import APIRouter, Header, HTTPException
 from app.config.settings import (
     SUPPORTED_STT_LANGUAGES,
     get_admin_token,
+    get_build_commit,
+    get_daily_live_sessions_cap,
     is_maintenance_mode,
 )
-from app.gnani.usage import get_current_day_usage
+from app.gnani.usage import get_current_day_usage, get_today_live_sessions
 
 router = APIRouter(prefix="/api", tags=["meta"])
 
@@ -37,13 +39,14 @@ def get_reviewed_warning_languages() -> list[str]:
 @router.get("/meta")
 def get_meta() -> dict[str, Any]:
     """Supported STT languages and system readiness flags."""
+    live_avail = not is_maintenance_mode() and (get_today_live_sessions() < get_daily_live_sessions_cap())
     return {
         "supported_stt_languages": SUPPORTED_STT_LANGUAGES,
         "reviewed_warning_languages": get_reviewed_warning_languages(),
         "engine_attached": True,  # M2: detection engine active
         "maintenance": is_maintenance_mode(),
-        "build_commit": os.environ.get("BUILD_COMMIT", "dev"),
-        "live_sessions_available": True,
+        "build_commit": get_build_commit(),
+        "live_sessions_available": live_avail,
     }
 
 

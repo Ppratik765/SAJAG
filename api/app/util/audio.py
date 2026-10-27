@@ -59,13 +59,22 @@ def probe_duration(path: Path) -> float:
     # First attempt: standard wave module if path ends with .wav
     if path.suffix.lower() == ".wav":
         try:
-            with wave.open(str(path), "rb") as wf:
-                frames = wf.getnframes()
-                rate = wf.getframerate()
-                if rate > 0 and frames > 0:
-                    dur = frames / float(rate)
-                    if 0 < dur < 100000:
-                        return round(dur, 3)
+            sz = path.stat().st_size
+            if sz >= 44:
+                with wave.open(str(path), "rb") as wf:
+                    frames = wf.getnframes()
+                    rate = wf.getframerate()
+                    channels = wf.getnchannels()
+                    width = wf.getsampwidth()
+                    # Lying header check: expected audio bytes cannot exceed actual file size
+                    expected_bytes = frames * channels * width
+                    if expected_bytes > (sz - 44) + 1024:
+                        # Header claims more data than file contains -> fall through to ffprobe
+                        pass
+                    elif rate > 0 and frames > 0:
+                        dur = frames / float(rate)
+                        if 0 < dur < 100000:
+                            return round(dur, 3)
         except Exception:
             pass
 

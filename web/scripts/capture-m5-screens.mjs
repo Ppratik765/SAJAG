@@ -84,7 +84,6 @@ async function main() {
     // Mock Audio in browser to track play requests without requiring audio device
     await page.addInitScript(() => {
       window.__playedAudioSources = [];
-      const origAudio = window.Audio;
       window.Audio = class MockAudio {
         constructor(src) {
           this.src = src;

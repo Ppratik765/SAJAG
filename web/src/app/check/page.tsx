@@ -12,9 +12,12 @@ import {
   FileAudio,
   AlertCircle,
   Sparkles,
+  Info,
 } from "lucide-react";
+import Link from "next/link";
 import { uploadAudioForAnalysis, AnalysisResponse, TranscriptSegment } from "@/lib/api/analyze";
 import { useI18n } from "@/lib/i18n/context";
+import { useServerMeta } from "@/lib/warnings/useServerMeta";
 
 const SUPPORTED_LANGUAGES = [
   { code: "hi-IN", label: "हिन्दी (Hindi)" },
@@ -31,6 +34,7 @@ const SUPPORTED_LANGUAGES = [
 
 export default function CheckPage() {
   const { locale } = useI18n();
+  const { meta } = useServerMeta();
 
   // State
   const [selectedLang, setSelectedLang] = useState(locale === "hi" ? "hi-IN" : "en-IN");
@@ -210,6 +214,24 @@ export default function CheckPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Upload / Record Controls */}
         <div className="lg:col-span-5 space-y-6">
+          {/* Maintenance Mode Notice */}
+          {meta.maintenance && (
+            <div className="p-4 rounded-xl border border-[var(--warning)]/40 bg-[var(--warning)]/10 flex items-start gap-3">
+              <Info className="w-5 h-5 text-[var(--warning-text)] shrink-0 mt-0.5" />
+              <div className="text-xs sm:text-sm text-[var(--warning-text)] leading-relaxed">
+                <span className="font-bold block">
+                  Service Under Maintenance
+                </span>
+                Audio upload and speech recognition are temporarily offline for maintenance. Text analysis remains fully operational.
+                <div className="mt-2">
+                  <Link href="/paste" className="font-semibold underline hover:opacity-80">
+                    Analyze text transcript instead →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Card Surface */}
           <div className="bg-[var(--sheet)] border border-[var(--line)] rounded-xl p-5 shadow-sm space-y-5">
             {/* Language Selector */}

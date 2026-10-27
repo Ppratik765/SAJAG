@@ -536,6 +536,26 @@ function LiveContent() {
           : ""}
       </div>
 
+      {/* Maintenance Mode Notice */}
+      {meta.maintenance && (
+        <div className="p-4 rounded-md border border-[var(--warning)]/40 bg-[var(--warning)]/10 flex items-start gap-3">
+          <Info className="w-5 h-5 text-[var(--warning-text)] shrink-0 mt-0.5" />
+          <div className="text-xs sm:text-sm text-[var(--warning-text)] leading-relaxed">
+            <span className="font-bold block">
+              {activeLang === "hi" ? "सेवा रखरखाव मोड में है" : "Service Under Maintenance"}
+            </span>
+            {activeLang === "hi"
+              ? "लाइव ऑडियो सेवा अभी रखरखाव में है। टेक्स्ट विश्लेषण पूरी तरह चालू है।"
+              : "Live speech streaming is temporarily offline for maintenance. Text analysis remains fully operational."}
+            <div className="mt-2">
+              <Link href="/paste" className="font-semibold underline hover:opacity-80">
+                {activeLang === "hi" ? "टेक्स्ट पेस्ट करके जांचें →" : "Analyze text transcript instead →"}
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 1. IDLE STATE: Permission & Start Gesture */}
       {sessionState === "idle" && (
         <section className="paper-sheet p-6 sm:p-8 space-y-6 text-center">
@@ -560,7 +580,12 @@ function LiveContent() {
               type="button"
               id="live-start-btn"
               onClick={handleStart}
-              className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-md font-display font-bold text-base sm:text-lg bg-[var(--stamp)] text-white hover:opacity-95 shadow-md active:scale-98 transition-transform"
+              disabled={meta.maintenance}
+              className={`inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-md font-display font-bold text-base sm:text-lg text-white shadow-md transition-transform ${
+                meta.maintenance
+                  ? "bg-[var(--line)] cursor-not-allowed opacity-60"
+                  : "bg-[var(--stamp)] hover:opacity-95 active:scale-98"
+              }`}
             >
               <Mic className="w-5 h-5" />
               {activeLang === "hi" ? "सुनना शुरू करें" : "Start Live Listening"}

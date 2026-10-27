@@ -117,3 +117,33 @@ def record_tts_usage(chars: int) -> None:
     day_stats["tts_chars"] = int(day_stats.get("tts_chars", 0)) + chars
     _write_usage_data(data)
     logger.info("Recorded %d TTS chars usage. Total today: %d", chars, day_stats["tts_chars"])
+
+
+def get_today_live_sessions() -> int:
+    """Return count of live sessions started today."""
+    today = _get_today_str()
+    data = _read_usage_data()
+    day_stats = data.get(today, {})
+    return int(day_stats.get("live_sessions", 0))
+
+
+def check_live_session_budget() -> None:
+    """Check if daily live sessions cap has been reached."""
+    from app.config.settings import get_daily_live_sessions_cap
+    cap = get_daily_live_sessions_cap()
+    used = get_today_live_sessions()
+    if used >= cap:
+        raise BudgetExhausted(
+            f"Daily live sessions cap reached: {used}/{cap} sessions used today",
+            kind="live_sessions",
+        )
+
+
+def record_live_session() -> None:
+    """Record a live session initiation."""
+    today = _get_today_str()
+    data = _read_usage_data()
+    day_stats = data.setdefault(today, {"stt_seconds": 0.0, "tts_chars": 0, "live_sessions": 0})
+    day_stats["live_sessions"] = int(day_stats.get("live_sessions", 0)) + 1
+    _write_usage_data(data)
+    logger.info("Recorded live session. Total today: %d", day_stats["live_sessions"])

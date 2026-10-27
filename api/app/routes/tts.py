@@ -14,10 +14,11 @@ from typing import Any
 import yaml
 from fastapi import APIRouter, HTTPException, Request, Response
 
-from app.config.settings import REPO_ROOT
+from app.config.settings import REPO_ROOT, is_maintenance_mode
 from app.config.voices import get_default_warning_voice
 from app.gnani.tts_rest import _cache_key, CACHE_DIR, synthesize
 from app.gnani.usage import BudgetExhausted, check_tts_budget
+from app.util.rate_limit import check_rate_limit, get_client_ip, reset_rate_limits
 
 logger = logging.getLogger(__name__)
 
@@ -27,10 +28,8 @@ WARNINGS_PATH = REPO_ROOT / "api" / "app" / "config" / "warnings.yaml"
 ALLOWED_KINDS = {"alert_scam", "alert_suspicious", "explain"}
 ALLOWED_REQUEST_FIELDS = {"kind", "scam_type", "language_code"}
 
-# In-memory per-IP sliding window rate limiter: 5 requests / 60s
-_ip_rate_limits: dict[str, list[float]] = {}
-RATE_LIMIT_MAX_REQUESTS = 5
-RATE_LIMIT_WINDOW_SECONDS = 60.0
+# Re-export for test compatibility
+_reset_rate_limits = reset_rate_limits
 
 
 def _load_warnings() -> dict[str, Any]:
@@ -41,23 +40,9 @@ def _load_warnings() -> dict[str, Any]:
         return yaml.safe_load(f) or {}
 
 
-def _reset_rate_limits() -> None:
-    """Helper for testing to reset rate limit counters."""
-    _ip_rate_limits.clear()
-
-
 def _check_rate_limit(client_ip: str) -> None:
     """Enforce 5 requests per minute per IP."""
-    now = time.time()
-    cutoff = now - RATE_LIMIT_WINDOW_SECONDS
-    history = [t for t in _ip_rate_limits.get(client_ip, []) if t > cutoff]
-    if len(history) >= RATE_LIMIT_MAX_REQUESTS:
-        raise HTTPException(
-            status_code=429,
-            detail={"code": "rate_limit_exceeded", "message": "TTS warning limit of 5 requests per minute exceeded."},
-        )
-    history.append(now)
-    _ip_rate_limits[client_ip] = history
+    check_rate_limit(client_ip, "tts", 5, 60.0)
 
 
 def _read_from_cache(cache_path: Path) -> bytes | None:
@@ -74,7 +59,13 @@ async def warning_tts_route(request: Request) -> Response:
     Rejects any free text or unknown types/kinds/languages with 400.
     Enforces 5 requests/min per IP and daily TTS budget cap.
     """
-    client_ip = request.client.host if request.client else "127.0.0.1"
+    if is_maintenance_mode():
+        raise HTTPException(
+            status_code=503,
+            detail={"code": "maintenance", "message": "Service is currently in maintenance mode."},
+        )
+
+    client_ip = get_client_ip(request)
     _check_rate_limit(client_ip)
 
     try:

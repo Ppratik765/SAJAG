@@ -87,6 +87,26 @@ def is_maintenance_mode() -> bool:
     return os.environ.get("MAINTENANCE_MODE", "false").lower() in ("true", "1", "yes")
 
 
+def allow_no_origin() -> bool:
+    val = os.environ.get("ALLOW_NO_ORIGIN")
+    if val is not None:
+        return val.strip().lower() in ("true", "1", "yes")
+    env = os.environ.get("ENV", "development").strip().lower()
+    return env not in ("production", "prod")
+
+
+def trust_proxy() -> bool:
+    return os.environ.get("TRUST_PROXY", "false").lower() in ("true", "1", "yes")
+
+
+def get_build_commit() -> str:
+    return os.environ.get("BUILD_COMMIT", "dev").strip()
+
+
+def get_daily_live_sessions_cap() -> int:
+    return int(os.environ.get("DAILY_LIVE_SESSIONS_CAP", "50"))
+
+
 SUPPORTED_STT_LANGUAGES = [
     "bn-IN",
     "en-IN",

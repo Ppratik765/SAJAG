@@ -74,6 +74,7 @@ export function decide(state: PolicyState, kind: AlertKind, ctx: TriggerContext,
 export interface AudioLike {
   play(): Promise<void> | void;
   pause(): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onended: ((this: any, ...args: any[]) => any) | null;
 }
 

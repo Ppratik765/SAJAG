@@ -18,6 +18,7 @@ from starlette.websockets import WebSocketState
 
 from app.config.settings import (
     SUPPORTED_STT_LANGUAGES,
+    allow_no_origin,
     allowed_origins,
     get_daily_stt_seconds_cap,
     get_gnani_api_key,
@@ -27,6 +28,7 @@ from app.config.settings import (
     get_max_live_sessions,
     get_max_live_sessions_per_ip,
     is_maintenance_mode,
+    trust_proxy,
 )
 from app.engine.analyzer import analyze_segments
 from app.gnani.stt_stream import (
@@ -44,7 +46,13 @@ from app.gnani.stt_stream import (
     ErrorEvent,
     EndEvent,
 )
-from app.gnani.usage import get_current_day_usage, record_stt_usage
+from app.gnani.usage import (
+    BudgetExhausted,
+    check_live_session_budget,
+    get_current_day_usage,
+    record_live_session,
+    record_stt_usage,
+)
 from app.models.analysis import RiskLevel, Segment, Signal
 
 logger = logging.getLogger(__name__)
@@ -66,9 +74,10 @@ LEVEL_RANKS: Dict[RiskLevel, int] = {
 
 def _get_client_ip(websocket: WebSocket) -> str:
     headers = dict(websocket.headers)
-    forwarded = headers.get("x-forwarded-for")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
+    if trust_proxy():
+        forwarded = headers.get("x-forwarded-for")
+        if forwarded:
+            return forwarded.split(",")[0].strip()
     if websocket.client and websocket.client.host:
         return websocket.client.host
     return "127.0.0.1"
@@ -77,7 +86,7 @@ def _get_client_ip(websocket: WebSocket) -> str:
 def _is_origin_allowed(websocket: WebSocket) -> bool:
     origin = websocket.headers.get("origin")
     if not origin:
-        return True
+        return allow_no_origin()
     allowed = allowed_origins()
     if "*" in allowed:
         return True
@@ -152,6 +161,18 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
         await websocket.close(code=1008)
         return
 
+    try:
+        check_live_session_budget()
+    except BudgetExhausted as err:
+        await websocket.accept()
+        await websocket.send_json({
+            "type": "end",
+            "reason": "budget_exhausted",
+            "message": str(err),
+        })
+        await websocket.close(code=1008)
+        return
+
     # 5. Session limits (global & per-IP)
     client_ip = _get_client_ip(websocket)
     max_global = get_max_live_sessions()
@@ -183,6 +204,7 @@ async def live_ws(websocket: WebSocket, lang: str = "hi-IN") -> None:
 
     # Accept client WebSocket
     await websocket.accept()
+    record_live_session()
 
     # Session tracking state
     session_start_time = time.time()
