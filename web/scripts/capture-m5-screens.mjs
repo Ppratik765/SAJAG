@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = 3000;
-const BASE_URL = `http://localhost:${PORT}`;
+const BASE_URL = `http://127.0.0.1:${PORT}`;
 const M5_SCREENS_DIR = path.resolve(__dirname, "../../docs/screens/m5");
 
 if (!fs.existsSync(M5_SCREENS_DIR)) {
@@ -189,6 +189,25 @@ async function main() {
       await pCtx.close();
     }
     console.log("\nPart 3 Parent mode Playwright verification completed successfully!");
+
+    // 3. Part 4 OG Image captures (spec 7.1D & 7.2)
+    console.log("\n3. Capturing Open Graph images from /api/og...");
+    const ogUrls = [
+      { name: "og-en.png", path: "/api/og?type=digital_arrest&level=scam&lang=en" },
+      { name: "og-hi.png", path: "/api/og?type=digital_arrest&level=scam&lang=hi" },
+    ];
+
+    for (const og of ogUrls) {
+      const resp = await fetch(`${BASE_URL}${og.path}`);
+      if (!resp.ok) {
+        throw new Error(`Failed to fetch ${og.path}: HTTP ${resp.status}`);
+      }
+      const buffer = Buffer.from(await resp.arrayBuffer());
+      const outPath = path.join(M5_SCREENS_DIR, og.name);
+      fs.writeFileSync(outPath, buffer);
+      console.log(`Captured: ${og.name} (${buffer.length} bytes from ${og.path})`);
+    }
+    console.log("\nPart 4 OG Image generation completed successfully!");
   } finally {
     await browser.close();
     if (serverProcess) {
