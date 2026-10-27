@@ -73,3 +73,34 @@ Fill in this template with your real-world test observations:
 - [ ] No false positive escalation on legitimate bank/police advisories (`holdout_legit_ba_en_001` stays `safe`).
 - [ ] The **"Warn my family"** WhatsApp share button opens WhatsApp with pre-filled warning text containing the scam type and app URL, with **zero** transcript content.
 - [ ] Audio warning sound path verified (no unhandled JS exceptions when clip is missing).
+
+---
+
+## 6. Private Real-Audio Evaluation Tool (`scripts/eval_real_audio.py`)
+
+If you wish to test Sajag against publicly available scam awareness recordings or YouTube scam expose videos, use the automated private evaluation tool:
+
+```bash
+python scripts/eval_real_audio.py data/private_audio/ --lang hi-IN
+```
+
+### 1. Preparation Rules
+- **Folder**: Save audio files into `data/private_audio/` (which is strictly git-ignored). Supported extensions: `.wav`, `.mp3`, `.m4a`, `.aac`, `.flac`.
+- **Trimming**: Trim recordings with an audio editor or ffmpeg so they contain only the telephone call portion.
+- **Language**: Set `--lang` to match the spoken language (e.g., `--lang hi-IN` or `--lang en-IN`).
+- **Budget Guard**: The script prints total audio duration in seconds before starting. It will refuse to run if duration exceeds 600 seconds (10 minutes) unless you pass `--yes`.
+
+### 2. Reading the Summary
+The script streams audio through the real live WebSocket pipeline at real-time 32 ms pace and writes aggregate-only statistics to `eval/results/real_audio_summary.json`:
+- `total_recordings`
+- `reached_likely_scam_count` & percentage
+- `median_time_to_likely_scam_s`
+- High-level categories flagged (e.g., `["AUTHORITY_CLAIM", "THREAT_ARREST"]`)
+
+### 3. Public Disclosure Rules (What You May and May Not Say)
+- **ALLOWED**: You may state publicly:
+  > *"Tested privately against N public scam recordings; aggregated results show X% reached likely scam with a median detection time of Y.Y seconds. Recordings and transcripts are strictly not redistributed."*
+- **FORBIDDEN**: You must **never** publish or commit:
+  - Raw audio recordings, phone numbers, or channel names.
+  - Verbatim transcripts, quotes, or caller dialog.
+  - Victim identifiers or personal data.

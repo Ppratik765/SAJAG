@@ -105,6 +105,37 @@ interface LiveTtdItem {
   variant: string;
 }
 
+interface RealAudioSummary {
+  metadata: {
+    date: string;
+    total_recordings: number;
+    total_duration_seconds: number;
+    language_code: string;
+    reached_likely_scam_count: number;
+    reached_likely_scam_pct: number;
+    median_time_to_likely_scam_s: number | null;
+    privacy_notice: string;
+  };
+}
+
+function getRealAudioSummary(): RealAudioSummary | null {
+  try {
+    const candidates = [
+      path.join(process.cwd(), "..", "eval", "results", "real_audio_summary.json"),
+      path.join(process.cwd(), "eval", "results", "real_audio_summary.json"),
+    ];
+    for (const p of candidates) {
+      if (fs.existsSync(/*turbopackIgnore: true*/ p)) {
+        const raw = fs.readFileSync(/*turbopackIgnore: true*/ p, "utf-8");
+        return JSON.parse(raw);
+      }
+    }
+  } catch (err) {
+    console.error("Failed to read real_audio_summary.json:", err);
+  }
+  return null;
+}
+
 function getLiveTtdResults(): LiveTtdItem[] | null {
   try {
     const candidates = [
@@ -146,6 +177,7 @@ function getLatestResults(): EvalReport | null {
 export default function AccuracyPage() {
   const data = getLatestResults();
   const liveTtd = getLiveTtdResults();
+  const realAudio = getRealAudioSummary();
 
   if (!data) {
     return (
@@ -346,12 +378,34 @@ export default function AccuracyPage() {
                       <td className="py-2.5" style={{ color: "var(--stamp)" }}>25.0% (2/8)*</td>
                       <td className="py-2.5">0.750</td>
                     </tr>
+                    {realAudio && (
+                      <tr className="py-2 border-t border-dashed" style={{ borderColor: "var(--rule)" }}>
+                        <td className="py-2.5 font-medium">
+                          <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-stone-100 text-stone-800 dark:bg-stone-800 dark:text-stone-200">
+                            Real recordings (private)
+                          </span>
+                        </td>
+                        <td className="py-2.5">{realAudio.metadata.total_recordings}</td>
+                        <td className="py-2.5 font-semibold">
+                          {realAudio.metadata.reached_likely_scam_pct}% ({realAudio.metadata.reached_likely_scam_count}/{realAudio.metadata.total_recordings})
+                        </td>
+                        <td className="py-2.5 text-xs text-[var(--muted)]">
+                          Median TTD: {realAudio.metadata.median_time_to_likely_scam_s ? `${realAudio.metadata.median_time_to_likely_scam_s}s` : "N/A"}
+                        </td>
+                        <td className="py-2.5 text-xs text-[var(--muted)]">Private eval**</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
               <p className="text-[11px] mt-2 text-muted-foreground" style={{ color: "var(--muted)" }}>
                 * Clean M4a numbers preserved. Post-M4c tuning on failure signals contaminated this split.
               </p>
+              {realAudio && (
+                <p className="text-[11px] mt-1 text-muted-foreground" style={{ color: "var(--muted)" }}>
+                  ** Real recordings: private local evaluation from data/private_audio/ using scripts/eval_real_audio.py. Transcripts and audio are never retained or redistributed; not presented as part of the training corpus.
+                </p>
+              )}
             </div>
           </div>
         )}
