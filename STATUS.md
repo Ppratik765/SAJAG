@@ -22,7 +22,7 @@
 - **Part C: Demo Replay Page & Recorded Live Fixture**
   - Created `scripts/make_demo_fixture.py` which streamed dev clip `da_hi_002` (26.86s, Digital Arrest) through the live pipeline once at 1.0x real-time pace.
   - Generated `web/public/demo/fixture.json` and `web/public/demo/call.mp3` capturing real audio timestamps and wall-clock arrival offsets.
-  - Built interactive `/demo` page replaying through `<CallSheet>`, `<LevelStrip>`, `<VerdictStamp>`, and `<CallTimeline>` with exact required banner: "Synthetic demo call, pre-recorded. Transcripts were captured earlier from Prisma on this audio. Use Live mode to run on your own audio." Shows real calculated alert times: flagged after 11.2s (audio time) / 12.4s (wall-clock time).
+  - Built interactive `/demo` page replaying through `<CallSheet>`, `<LevelStrip>`, `<VerdictStamp>`, and `<CallTimeline>` with exact required banner: "Synthetic demo call, pre-recorded. Transcripts were captured earlier from Prisma on this audio. Use Live mode to run on your own audio." Shows alert times computed from the recorded events by `compute_flagged_at` (no typed-in fallbacks): suspicious after 5.7 s of audio (8.2 s wall-clock), likely scam after 11.8 s of audio (16.1 s wall-clock), scam after 20.9 s (23.2 s). The earlier STATUS figure of 11.2 s / 12.4 s was wrong. The per-event `audio_time_s` field is the server session clock, not audio heard; `audio_heard_s` is the corrected field.
 
 - **Part D: Deploy Kit & Launch Credit Protection**
   - Created `api/Dockerfile` (Python 3.13-slim, ffmpeg, non-root user `appuser`, `--proxy-headers`, `/healthz` healthcheck) and `api/.dockerignore`.
@@ -48,17 +48,18 @@
 
 ---
 
-## Safety Copy Audit Table (Part A Item 4)
+## Safety Copy Audit Table (Part A item 4, regenerated from `git show bd9126a` in M7g; the earlier table listed files that do not exist)
 
-| Location / File | Old Wording | New Spec-Compliant Wording | Rationale |
-| :--- | :--- | :--- | :--- |
-| `web/src/components/VerdictStamp.tsx` | "सुरक्षित" / "Safe" | "अभी कोई संकेत नहीं मिला" / "No warning signs found yet" | Eliminates false guarantee of security. |
-| `web/src/app/parent/page.tsx` | "कॉल सुरक्षित लगती है" | "अभी कोई संकेत नहीं मिला" + "फिर भी अनजान कॉलर को कोड, पिन या पैसे न दें" | Advises vigilance even when no patterns match. |
-| `web/src/app/parent/page.tsx` | "Safe call" | "No warning signs found yet" | Replaces unverified safety claim. |
-| `web/src/lib/i18n/dictionaries.ts` | `"level_safe": "Safe"` | `"level_safe": "No warning signs found yet"` | Global translation dictionary update. |
-| `web/src/lib/i18n/dictionaries.ts` | `"level_safe": "सुरक्षित"` | `"level_safe": "अभी कोई संकेत नहीं मिला"` | Global Hindi translation dictionary update. |
-| `web/src/app/page.tsx` | "All clear" | "No warning signs found yet" | Landing page hero callout update. |
-| `web/src/app/report/ReportClient.tsx` | "Safe call" | "No warning signs found yet" | Report preview card update. |
+| File | Old wording | New wording |
+| :--- | :--- | :--- |
+| `web/src/components/ui/ResultCard.tsx` | "No Scam Detected" / "कोई ठगी नहीं मिली" | "No warning signs found yet" / "अभी कोई संकेत नहीं मिला", plus "Still do not share codes, PINs or money with unknown callers." |
+| `web/src/lib/engine/labels.ts` | "Safe Call" | "No warning signs found yet" (en and hi) with the same caution sentence |
+| `web/src/components/ui/LevelStrip.tsx` | "Safe" | "No warning signs" |
+| `web/src/app/parent/page.tsx` | `none` label "No Scam Detected" | "No warning signs found yet" |
+| `web/src/components/ui/VerdictStamp.tsx` (M5 review commit) | "सुरक्षित" | "साफ़" / "अभी कोई संकेत नह�ीं" is "अभी कोई संकेत नहीं" |
+| `web/src/app/live/page.tsx` | local `none` label "No Scam Detected" | removed (uses shared labels) |
+
+Remaining occurrences of "सुरक्षित" in the code are inside scam-script text ("सुरक्षित खाते" = "safe account") and are correct. Search for leftovers: `grep -rn "No Scam Detected\|कोई ठगी नहीं मिली\|Safe Call" web/src` returns nothing.
 
 ---
 
@@ -113,6 +114,19 @@
   ```
 
 ---
+
+## Lighthouse (mobile preset, run in M7g against a local dev server, Lighthouse 12.6.1)
+
+| Page | Accessibility | Best practices |
+| :--- | :---: | :---: |
+| `/` | 96 | 100 |
+| `/live` | 95 | 96 |
+| `/parent` | 95 | 96 |
+| `/demo` | 96 | 100 |
+| `/about` | 96 | 100 |
+| `/report?type=bank_kyc&level=scam` | 96 | 96 |
+
+Performance was measured on the unminified dev server (29 to 63), which is not representative, so no performance claim is made. Re-run against the production deployment and record those numbers before launch.
 
 ## Tests
 
@@ -177,7 +191,7 @@
 
 - **STT seconds:** 26.86s (from recording the single synthetic demo call `da_hi_002` through live pipeline in M7C)
 - **TTS characters:** 221 characters (from baking `explain_unknown_suspicious.mp3` for `hi-IN` and `en-IN` in M7A)
-- **Estimated credit expenditure:** ~0.08 credits total (well below the 100-credit milestone cap)
+- **Credits:** not converted. Only the counters above are measured; the dashboard reading is needed from the human.
 - **Credit change reported by human:** *Dashboard reading needed from the human*
 
 ---

@@ -11,11 +11,11 @@
     "primary_type": "digital_arrest",
     "why_chosen": "Synthetic dev-split call 'da_hi_002' captures a prevalent Indian digital arrest scam pattern (impersonating CBI/courts with arrest threats). It reliably escalates from suspicious to likely_scam and scam within 27 seconds.",
     "flagged_at": {
-      "suspicious_audio_s": 5.73,
+      "suspicious_audio_s": 5.728,
       "suspicious_wall_s": 8.212,
-      "likely_scam_audio_s": 11.78,
+      "likely_scam_audio_s": 11.776,
       "likely_scam_wall_s": 16.097,
-      "scam_audio_s": 21.292,
+      "scam_audio_s": 20.896,
       "scam_wall_s": 23.243
     }
   },
@@ -263,28 +263,32 @@
       "score": 6,
       "primary_type": "unknown_suspicious",
       "wall_arrival_s": 8.212,
-      "audio_time_s": 6.261
+      "audio_time_s": 6.261,
+      "audio_heard_s": 5.728
     },
     {
       "level": "likely_scam",
       "score": 7,
       "primary_type": "unknown_suspicious",
       "wall_arrival_s": 16.097,
-      "audio_time_s": 14.147
+      "audio_time_s": 14.147,
+      "audio_heard_s": 11.776
     },
     {
       "level": "likely_scam",
       "score": 9,
       "primary_type": "unknown_suspicious",
       "wall_arrival_s": 17.05,
-      "audio_time_s": 15.1
+      "audio_time_s": 15.1,
+      "audio_heard_s": 14.816
     },
     {
       "level": "scam",
       "score": 16,
       "primary_type": "digital_arrest",
       "wall_arrival_s": 23.243,
-      "audio_time_s": 21.292
+      "audio_time_s": 21.292,
+      "audio_heard_s": 20.896
     }
   ],
   "speech_events": [

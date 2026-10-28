@@ -4,7 +4,7 @@
 Picks synthetic scam clip 'da_hi_002' from the dev split:
 - Type: Digital Arrest (CBI, court warrant, illegal transfer, video call demand).
 - Duration: 26.86 seconds.
-- Result in live_ttd.json: suspicious at 5.73s, likely_scam at 11.78s, final level: scam.
+- Flag times are computed from the recorded events (see compute_flagged_at), never typed in.
 - Real live streaming captured via /ws/live pipeline at 32 ms cadence.
 
 Outputs:
@@ -28,6 +28,32 @@ MP3_PATH = OUT_DIR / "call.mp3"
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("make_demo_fixture")
+
+
+def audio_heard_at(wall_s: float, segments: list[dict]) -> float:
+    """Seconds of call audio the engine had heard when a risk update arrived.
+
+    A risk update is produced right after the transcript segment that triggered it, so take the segment whose
+    wall-clock arrival is the latest one not after the update (within a small tolerance) and use its end_audio_s.
+    The per-event `audio_time_s` field is the server's session-elapsed clock, NOT audio heard, so it is not used.
+    """
+    candidates = [seg for seg in segments if seg["wall_arrival_s"] <= wall_s + 0.25]
+    if not candidates:
+        raise ValueError(f"No transcript segment arrived at or before wall={wall_s}s")
+    return round(max(candidates, key=lambda seg: seg["wall_arrival_s"])["end_audio_s"], 3)
+
+
+def compute_flagged_at(segments: list[dict], risk_events: list[dict]) -> dict:
+    """First time each level was reached, computed only from recorded events. No fallback numbers."""
+    out: dict[str, float] = {}
+    order = {"suspicious": 1, "likely_scam": 2, "scam": 3}
+    for name, rank in order.items():
+        hit = next((e for e in risk_events if order.get(e["level"], 0) >= rank), None)
+        if hit is None:
+            continue
+        out[f"{name}_audio_s"] = audio_heard_at(hit["wall_arrival_s"], segments)
+        out[f"{name}_wall_s"] = round(hit["wall_arrival_s"], 3)
+    return out
 
 
 def make_demo_fixture() -> None:
@@ -170,14 +196,7 @@ def make_demo_fixture() -> None:
                 "scam pattern (impersonating CBI/courts with arrest threats). It reliably escalates "
                 "from suspicious to likely_scam and scam within 27 seconds."
             ),
-            "flagged_at": {
-                "suspicious_audio_s": first_crossed["suspicious"] or 5.73,
-                "suspicious_wall_s": first_crossed_wall["suspicious"] or 8.06,
-                "likely_scam_audio_s": first_crossed["likely_scam"] or 11.78,
-                "likely_scam_wall_s": first_crossed_wall["likely_scam"] or 16.09,
-                "scam_audio_s": first_crossed["scam"] or 23.08,
-                "scam_wall_s": first_crossed_wall["scam"] or 23.24,
-            },
+            "flagged_at": compute_flagged_at(segments, risk_events),
         },
         "segments": segments,
         "signals": signals,
@@ -185,6 +204,9 @@ def make_demo_fixture() -> None:
         "risk_events": risk_events,
         "speech_events": speech_events,
     }
+
+    for ev in risk_events:
+        ev["audio_heard_s"] = audio_heard_at(ev["wall_arrival_s"], segments)
 
     FIXTURE_PATH.write_text(json.dumps(fixture_data, indent=2, ensure_ascii=False), encoding="utf-8")
     logger.info("Saved demo fixture to %s", FIXTURE_PATH)
@@ -199,5 +221,20 @@ def make_demo_fixture() -> None:
     print("------------------------------------\n")
 
 
+def recompute_existing() -> None:
+    """Re-derive flagged_at and audio_heard_s for the committed fixture without any STT or API calls."""
+    data = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    for ev in data["risk_events"]:
+        ev["audio_heard_s"] = audio_heard_at(ev["wall_arrival_s"], data["segments"])
+    data["meta"]["flagged_at"] = compute_flagged_at(data["segments"], data["risk_events"])
+    FIXTURE_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(json.dumps(data["meta"]["flagged_at"], indent=2))
+
+
 if __name__ == "__main__":
-    make_demo_fixture()
+    import sys
+
+    if "--recompute" in sys.argv:
+        recompute_existing()
+    else:
+        make_demo_fixture()

@@ -239,8 +239,8 @@ export default function DemoPage() {
         <ShieldAlert className="w-4 h-4 shrink-0" />
         <span>
           {activeLang === "hi"
-            ? `कॉल शुरू होने के ${fixture.meta.flagged_at.likely_scam_audio_s}s ऑडियो पर संभावित फ्रॉड चिह्नित (वास्तविक समय: ${fixture.meta.flagged_at.likely_scam_wall_s}s)`
-            : `Flagged as likely scam after ${fixture.meta.flagged_at.likely_scam_audio_s}s of audio (${fixture.meta.flagged_at.likely_scam_wall_s}s wall-clock time)`}
+            ? `कॉल शुरू होने के ${fixture.meta.flagged_at.likely_scam_audio_s.toFixed(1)}s ऑडियो पर संभावित फ्रॉड चिह्नित (वास्तविक समय: ${fixture.meta.flagged_at.likely_scam_wall_s.toFixed(1)}s)`
+            : `Flagged as likely scam after ${fixture.meta.flagged_at.likely_scam_audio_s.toFixed(1)}s of audio (${fixture.meta.flagged_at.likely_scam_wall_s.toFixed(1)}s wall-clock time)`}
         </span>
       </div>
     ) : currentLevel === "suspicious" ? (
@@ -248,8 +248,8 @@ export default function DemoPage() {
         <AlertTriangle className="w-4 h-4 shrink-0" />
         <span>
           {activeLang === "hi"
-            ? `कॉल शुरू होने के ${fixture.meta.flagged_at.suspicious_audio_s}s ऑडियो पर संदिग्ध चिह्नित (वास्तविक समय: ${fixture.meta.flagged_at.suspicious_wall_s}s)`
-            : `Flagged as suspicious after ${fixture.meta.flagged_at.suspicious_audio_s}s of audio (${fixture.meta.flagged_at.suspicious_wall_s}s wall-clock time)`}
+            ? `कॉल शुरू होने के ${fixture.meta.flagged_at.suspicious_audio_s.toFixed(1)}s ऑडियो पर संदिग्ध चिह्नित (वास्तविक समय: ${fixture.meta.flagged_at.suspicious_wall_s.toFixed(1)}s)`
+            : `Flagged as suspicious after ${fixture.meta.flagged_at.suspicious_audio_s.toFixed(1)}s of audio (${fixture.meta.flagged_at.suspicious_wall_s.toFixed(1)}s wall-clock time)`}
         </span>
       </div>
     ) : null
