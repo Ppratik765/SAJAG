@@ -114,7 +114,7 @@ function LiveContent() {
     selectedLangRef.current = selectedLang;
   }, [selectedLang]);
 
-  // Real warning audio playback via policy (spec 7.3 & M7 Part A)
+  // Real warning audio playback via policy (spec 7.3)
   const playWarning = useCallback(
     (kind: "alert_suspicious" | "alert_scam", langCode: string) => {
       if (!userGestureStarted.current) return;
@@ -743,7 +743,7 @@ function LiveContent() {
             </div>
           </div>
 
-          {/* Unreviewed Warning Notice (spec M7 Part A) */}
+          {/* Unreviewed Warning Notice */}
           {meta.reviewed_warning_languages.length === 0 && (
             <div
               className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 text-amber-800 dark:text-amber-200 text-xs flex items-center gap-2"

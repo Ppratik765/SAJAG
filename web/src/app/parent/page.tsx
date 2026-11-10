@@ -252,7 +252,7 @@ function ParentContent() {
         </span>
       </header>
 
-      {/* Unreviewed warning language notice (spec M7 Part A) */}
+      {/* Unreviewed warning language notice */}
       {meta.reviewed_warning_languages.length === 0 && (
         <div
           data-testid="parent-unreviewed-banner"

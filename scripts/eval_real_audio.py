@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Private real-audio evaluation tool (M7 Part E).
+"""Private real-audio evaluation tool.
 
 Evaluates user-provided real scam-call or scam-awareness audio recordings
 located in data/private_audio/ without storing transcripts, evidence quotes,

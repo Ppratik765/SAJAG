@@ -2,7 +2,7 @@
 
 > "Sajag" (सजग = alert, vigilant) is a **working name**. Repo/package names may be changed by the human later; do not rename on your own.
 
-This file is the single source of truth for the build. It is written for a coding agent (Antigravity). Read **all** of it before writing any code. Then execute **only the milestone the human tells you to run** (start with M0).
+This file is the single source of truth for the build. It is written for a coding agent (Antigravity). Read **all** of it before writing any code.
 
 ---
 
@@ -17,13 +17,13 @@ These rules exist because the cost of a hallucinated API call or a fake "it work
 5. **Secrets:** the Gnani key lives only in `.env` (git-ignored) as `GNANI_API_KEY`. Never print it, log it, commit it, or send it to the browser. Commit `.env.example` only.
 6. **Dependencies:** pin versions. Prefer the standard library. List every dependency you add, with a one-line reason, in `STATUS.md`. Do **not** use the `gnani-vachana` SDK or the `transformers` pipeline; call the documented HTTP/WebSocket endpoints directly (section 3). Do **not** use Python's `audioop` (removed in Python 3.13). Use Python 3.11 or 3.12.
 7. **Budget guard:** Gnani credits are limited (5,000 programme credits; the unit-to-seconds/characters conversion is **unknown** to us). Never run a batch that would send more than **600 seconds of audio to STT** or **20,000 characters to TTS** in one run without first writing the projected totals to `STATUS.md` and waiting for the human to approve. Every script that calls Gnani must print how many STT-seconds and TTS-characters it used.
-8. **Scope discipline:** do only the requested milestone. No extra features, no refactors outside the milestone, no "while I was there" changes. If you think the spec is wrong, say so in `STATUS.md` instead of silently deviating.
-9. **Git:** work on `main`. One commit per logical step, message style `m1: add chunked STT upload`. At the end of each milestone: all tests pass, `git push`, then write/update `STATUS.md` (template in section 12) and stop.
+8. **Scope discipline:** do only the requested scope. No extra features, no refactors outside the task, no "while I was there" changes. If you think the spec is wrong, say so in `STATUS.md` instead of silently deviating.
+9. **Git:** work on `main`. One commit per logical step. At the end of each phase: all tests pass, `git push`, then write/update `STATUS.md` and stop.
 10. **When blocked** (missing key, quota error, ambiguous docs): stop, write what you tried and the exact error (key redacted) into `STATUS.md`, and wait.
 
 ### 0.1 Starting state: an empty folder and an empty remote repo (you set everything up)
 
-The human has **an empty local folder and an empty GitHub repository. Nothing is initialised.** The human has placed `SAJAG_SPEC.md` in the folder root (if it is missing, stop and say so). You create the entire project from scratch, inside the current working directory only; never create files outside it. As the very first part of M0:
+The human has **an empty local folder and an empty GitHub repository. Nothing is initialised.** The human has placed `SAJAG_SPEC.md` in the folder root (if it is missing, stop and say so). You create the entire project from scratch, inside the current working directory only; never create files outside it:
 
 1. **Check the machine, report, do not guess.** Print OS, and versions of `git`, `python` (need 3.11 or 3.12), `node` and `npm` (check Next.js's current minimum Node version from its own docs/`npm view next engines` rather than assuming), `ffmpeg`, `ffprobe`. If something is missing or too old: **do not silently install system packages and do not use `sudo`.** Write the exact install command for the detected OS into `STATUS.md` and stop. (Tools installable in user space — pip packages, npm packages, a Python venv — you may install.)
 2. **Git.** Run `git init -b main`. Check `git config user.name` and `user.email`; if unset, ask the human — **never invent an identity**. Check `git remote -v`. If no `origin` exists and the human's kickoff prompt gave a URL, run `git remote add origin <URL>`; if no URL was given, ask. Verify access with `git ls-remote origin` (an empty repo returns nothing and exit code 0). If authentication fails, report the error; do not try to work around it with tokens.
@@ -31,7 +31,7 @@ The human has **an empty local folder and an empty GitHub repository. Nothing is
 4. Do not add a licence file on your own; ask the human which licence they want (put the question in `STATUS.md`).
 5. **Python:** create `api/.venv` (git-ignored), install pinned dependencies from the pinned file. **Web:** scaffold with `create-next-app`; run it with `--help` first and use only flags that exist in the installed version; pick the Next.js version with `npm view next version` and pin it. Commit lockfiles.
 6. **Cross-platform commands:** provide `npm`/`python -m` entry points that work on the detected OS. Add a `Makefile` only if the OS is macOS/Linux. README "Run locally" must list the exact commands you actually ran.
-7. Create `README.md` as a short stub now (no badges, no emojis); the full README is written in M7.
+7. Create `README.md` with full documentation.
 
 ---
 
@@ -63,7 +63,7 @@ Why it uses Gnani models genuinely:
 
 ## 2. Verified Gnani API reference (source of truth)
 
-Verified from `docs.gnani.ai` on **2026-10-19**. Re-verify during M0 and record differences in `docs/GNANI_API_NOTES.md`.
+Verified from `docs.gnani.ai` on **2026-10-19**. Re-verify and record differences in `docs/GNANI_API_NOTES.md`.
 
 ### 2.1 Base URL and auth
 - Base URL: `https://api.vachana.ai`
@@ -169,13 +169,13 @@ Browser (Next.js PWA-style web app)
 ### 3.1 Stack (decided — do not re-litigate)
 - **Backend:** Python 3.11/3.12, FastAPI, uvicorn, `httpx`, `websockets`, `pydantic` v2, `pyyaml`, `pytest`, `pytest-asyncio`, `respx` (test-only HTTP mocking). System dependency: `ffmpeg` (decode/chunk/convert).
 - **Frontend:** Next.js (App Router) + TypeScript + Tailwind CSS, npm. Share-card images via `next/og` (`ImageResponse`). Simple JSON i18n (no heavy i18n library). Fonts via `next/font/google` (self-hosted at build). Allowed UI libraries, pinned: `framer-motion` (the only animation library) and `lucide-react` (icons). **No component kits** (no MUI, Chakra, Mantine, shadcn-default look). Dev-only: `playwright` for screenshots. Verify every package exists on npm (`npm view <pkg> version`) before adding it.
-- **Deploy (decided in M7, keep options open now):** frontend on Vercel; backend in a Docker container (ffmpeg included) on any host that supports long-lived WebSockets. Vercel serverless functions **cannot** hold the WebSocket proxy, so the WebSocket must live in the backend service.
+- **Deploy:** frontend on Vercel; backend in a Docker container (ffmpeg included) on any host that supports long-lived WebSockets. Vercel serverless functions **cannot** hold the WebSocket proxy, so the WebSocket must live in the backend service.
 
 ### 3.2 Repo layout
 ```
 sajag/
   SAJAG_SPEC.md            # this file (copy in unchanged)
-  STATUS.md                # rewritten at end of every milestone
+  STATUS.md                # build status report
   README.md
   .env.example
   docs/GNANI_API_NOTES.md  # verified + observed API shapes
@@ -187,14 +187,14 @@ sajag/
   web/
     src/app/...            # pages (section 8)
     src/lib/{audio/, api/, i18n/}
-    public/audio/warnings/ # pre-baked Timbre clips (M5)
+    public/audio/warnings/ # pre-baked Timbre clips
   data/
     playbook/playbook.yaml # scam types + signals (section 6)
     corpus/scripts/*.yaml  # synthetic call scripts (section 9)
     corpus/audio/          # generated audio (git-ignored except the demo clip)
-    demo/                  # demo replay fixtures (M7)
+    demo/                  # demo replay fixtures
   eval/                    # harness + degrade tools + results/
-  scripts/smoke.py         # M0 smoke test
+  scripts/smoke.py         # smoke test
 ```
 
 ### 3.3 Environment variables (`.env.example`; real values only in `.env`)
@@ -358,7 +358,7 @@ types:
     all_of: [INVESTMENT]
     any_of: [MONEY_TRANSFER, PRIZE_REFUND]
 ```
-Seed phrases per category (agent must expand in English, Hindi-Devanagari, Hinglish-Roman; **expand using real Prisma outputs in M3**, not guesses):
+Seed phrases per category (agent must expand in English, Hindi-Devanagari, Hinglish-Roman; **expand using real Prisma outputs**, not guesses):
 - AUTHORITY_CLAIM: cbi/सीबीआई, police/पुलिस, crime branch/क्राइम ब्रांच, narcotics, customs/कस्टम, trai/ट्राई, rbi/आरबीआई, cyber cell/साइबर सेल, court/कोर्ट, officer/ऑफिसर
 - THREAT_ARREST: arrest/अरेस्ट/गिरफ्तार, warrant/वारंट, money laundering/मनी लॉन्ड्रिंग, case/केस दर्ज
 - ISOLATION: stay on the call, don't disconnect, video call, digital arrest/डिजिटल अरेस्ट, फोन मत काटना
@@ -474,7 +474,7 @@ Desktop wireframe (the headline and sheet are the hero; there is no hero image o
 ```
 Below the fold, in this order: (1) **How it works**, three real steps (Listen, Mark, Warn) each with a small custom SVG; (2) **Built for how India speaks**: language names set at a large size in their own scripts, Hinglish called out, one honest sentence on noisy phone lines (no numbers unless from `/accuracy`); (3) **Scams Sajag knows**, a typographic index (type name large, one plain-language sentence beside it) rather than a card grid; (4) **For your parents**, a full-width band previewing Parent mode; (5) **Honest limits**, short and visible, linking to `/about`; (6) footer with credits ("Speech recognition and voice by Gnani Prisma and Timbre"), privacy note, and the GitHub link. No badge rows, no emojis.
 
-Hero sheet content: in M0.5 it shows a **short invented example dialogue labelled "Example, written by us"** with hand-placed marks (static). In M7 it is replaced by the real demo replay (7.6) with the same visual. It must never be presented as a live result.
+Hero sheet content: shows a **short invented example dialogue labelled "Example, written by us"** with hand-placed marks. It must never be presented as a live result.
 
 Plain-language scam index copy (agent may refine; keep it factual, no statistics):
 - Digital arrest: someone says they are police or CBI, claims you are under "arrest", and tells you to stay on the call.
@@ -495,7 +495,7 @@ Plain-language scam index copy (agent may refine; keep it factual, no statistics
 ### 7.1E Copy and tone
 Plain verbs, sentence case, active voice, one job per sentence. Buttons say exactly what happens ("Start listening", "Check a recording", "Tell my family"); the same action keeps the same name across the flow. Errors say what happened and what to do, without apologising. Empty states are invitations ("No call yet. Press Start listening, or try a recording."). No fear-mongering, no "AI-powered" filler, no promises of protection. Hindi copy written by the agent is `reviewed: false` until the human approves it (section 13).
 
-### 7.1F UI acceptance checklist (used at M0.5 and again at M7)
+### 7.1F UI acceptance checklist
 - Looks intentional at 360×800 and 1440×900, in light and dark. No horizontal scroll at 320 px.
 - Contrast table in `docs/DESIGN.md` complete; all body text ≥ 4.5:1.
 - Keyboard-only walkthrough of every page works; visible focus everywhere; `aria-live` announces level changes; the stamp text is readable by a screen reader.
@@ -518,7 +518,7 @@ Plain verbs, sentence case, active voice, one job per sentence. Buttons say exac
 
 ### 7.3 Live mode
 - Language selector (STT language), **Start** button (user gesture; also primes audio playback), mic permission explanation.
-- Mic capture: `getUserMedia({audio: {channelCount: 1, echoCancellation: false, noiseSuppression: false, autoGainControl: true}})` as the default for *second-device listening* (tune in M4 by testing; document the result).
+- Mic capture: `getUserMedia({audio: {channelCount: 1, echoCancellation: false, noiseSuppression: false, autoGainControl: true}})` as the default for *second-device listening* (tune by testing; document the result).
 - An **AudioWorklet** resamples to **16,000 Hz mono**, converts to Int16 little-endian, and emits **exactly 1,024-byte frames (512 samples)** as they fill (≈ every 32 ms in real time). Pure functions for resample/frame are in `src/lib/audio/` and unit-tested (frame size invariant, no sample loss across buffers).
 - WebSocket to `NEXT_PUBLIC_API_WS_URL/ws/live?lang=...`; handle `ready/transcript/risk/error/end`; auto-stop at the server time limit; show remaining time.
 - UI: the `<CallSheet>` with `<LevelStrip>`, `<VerdictStamp>` and `<CallTimeline>` (section 7.1B; no generic meter or orb), the rolling transcript as the sheet with **marked evidence phrases** and margin notes, "what to do now" list (hang up; don't share OTP/PIN; don't send money; don't install apps; call the national cyber-crime helpline; tell a family member), and a **Warn my family** button.
@@ -533,7 +533,7 @@ One screen, minimal: a huge **Start listening** button, a **full-screen colour f
 Level badge; scam-type label (human words); up to 5 evidence quotes with the category label; "Why this looks like a scam" (1–2 plain sentences, from templates); advice list; **Listen** button (calls `/api/tts/warning` with `kind=explain`); "Not a guarantee" disclaimer; share button.
 
 ### 7.6 Demo replay (`/demo`)
-- Plays a **clearly labelled synthetic call** (audio generated with Timbre in M7; banner text: "Synthetic demo call — pre-recorded. Transcripts were captured earlier from Prisma on this audio. Use Live mode to run on your own audio.").
+- Plays a **clearly labelled synthetic call** (audio generated with Timbre; banner text: "Synthetic demo call — pre-recorded. Transcripts were captured earlier from Prisma on this audio. Use Live mode to run on your own audio.").
 - Replays cached per-segment transcripts (fixture JSON with audio timestamps) through the **same engine** so the sheet is marked and the stamp lands in sync with the audio. The fixture is produced by `scripts/make_demo_fixture.py`: take one dev-split synthetic scam clip, stream it through the **real live pipeline once at real-time pace**, and record the wall-clock offset at which each transcript segment arrived. These are the genuine times a live user would have seen, so any "flagged after N seconds" shown on the page is real. This costs zero credits and gives visitors an instant try-it experience.
 - It must never be presented as a live run. The 60-second submission video must show **Live mode**, not this page.
 
@@ -573,7 +573,7 @@ Note for the README: **TTS→STT round-trips are optimistic** (clean synthetic v
 - Streaming simulation for time-to-detect: feed segment transcripts in order with their cumulative audio time; record first time `suspicious` and `likely_scam` were reached.
 - Metrics (overall and per language, per variant, per type): for the binary decision "level ≥ likely_scam": precision, recall, F1, **false-positive rate on legit scripts**; type accuracy among detected scams; median and p90 time-to-detect (seconds); character error rate of STT vs the known script text (secondary; normalise punctuation/case/digit-words consistently and document how).
 - Output: `eval/results/<timestamp>.json` and a `latest.json` consumed by `/accuracy`. Always include: counts, config, git commit, date, and a "limitations" list.
-- **Discipline:** tune playbook/thresholds using **dev only**. Run `--split test` **at most once per milestone-defined freeze** and record it in `STATUS.md`. If you tune after seeing test results, say so.
+- **Discipline:** tune playbook/thresholds using **dev only**. Run `--split test` **at most once per freeze** and record it in `STATUS.md`. If you tune after seeing test results, say so.
 
 ### 8.5 STT configuration experiments (dev split, small)
 Decide with data, not opinion (and record in `docs/DECISIONS.md`):
@@ -595,90 +595,17 @@ Keep each experiment within the budget guard.
 
 ---
 
-## 10. Milestones
-
-Run **one milestone at a time**, only when the human says so. Each ends with: tests green, pushed, `STATUS.md` written. Dates are targets.
-
-### M0 — Scaffold + proof the Gnani APIs work (target 10-20)
-0. **Do section 0.1 first** (machine check, `git init`, remote, first commit with the spec, venv, Next.js scaffold), pushing to `origin/main`.
-1. Create the repo layout (section 3.2), `.env.example`, `.gitignore` (ignore `.env`, `api/.cache/`, `data/corpus/audio/`, `node_modules/`, `eval/results/*.json` except `latest.json`), pinned `pyproject.toml`/requirements, minimal FastAPI app with `/healthz`, a minimal Next.js app that shows the API health.
-2. Copy section 2 into `docs/GNANI_API_NOTES.md` under "Documented", and fetch the live pages (`llms.txt`, STT REST, STT WebSocket, TTS REST, voices) to confirm; list any differences.
-3. `scripts/smoke.py` (needs the human's `.env`): (a) TTS REST: synthesize one short Hindi sentence (`timbre-v2.5`, `Chitra`, `hi-IN`, WAV 16 kHz) and save it; (b) STT REST: transcribe that WAV with `hi-IN`; (c) STT WebSocket: read the WAV with the `wave` module, stream raw PCM in exact 1,024-byte frames at 32 ms cadence, then send ≥ 1 s of zero-frames so VAD closes the segment, and print received events. Print STT-seconds and TTS-chars used.
-4. Record in `docs/GNANI_API_NOTES.md` under "Observed": real response JSON shapes (redact ids), latencies, any differences from the docs.
-- **Acceptance:** the repo is initialised and pushed to `origin/main` with the spec as the first commit; `python scripts/smoke.py` succeeds on all three steps with the human's key; `pytest` runs (even if only a health test); `npm run build` passes; `STATUS.md` contains the real outputs. If any step fails, stop and report — do not continue to M1.
-
-### M0.5 — Design system and app shell (target 10-21)
-Build the visual identity (7.1A to 7.1F) **before any feature page**, so every later page is built on it.
-1. `docs/DESIGN.md`: tokens, type scale, the computed contrast table, component inventory, motion rules, the "do not build" list.
-2. `tokens.css`, Tailwind wiring, `next/font` setup (verify families/subsets exist), light/dark theme with toggle, EN/HI language toggle and dictionaries, app shell (top bar with `<Seal>`, wordmark, toggles; footer).
-3. Components from 7.1B with a dev-only `/dev/ui` gallery showing every state (empty, loading, error, each level, reduced motion). Gallery data is labelled "fixture" and the route is not reachable in production.
-4. The landing page (7.1C) with the labelled static example sheet. Placeholder routes for `/live`, `/check`, `/paste`, `/parent`, `/demo`, `/accuracy`, `/about`, `/report` that render the shell and a clear "coming in a later milestone" message (an honest empty state, not fake content).
-5. Playwright screenshot script `npm run shots` writing to `docs/screens/` at 360×800 and 1440×900, light and dark, plus reduced-motion emulation.
-- **Acceptance:** the full 7.1F checklist passes; `npm run build` and typecheck pass; screenshots and a self-critique are in `STATUS.md`. **Stop here and wait for the human's visual review; do not start M1.**
-
-### M1 — Transcription pipeline (target 10-21)
-Gnani client modules (4.1), audio utilities (4.2), `POST /api/analyze/audio` returning transcript + segments (engine not yet attached: `level: "safe"`, `signals: []` is **not allowed** as a stub in production code — return only transcript fields and have the route marked `engine_attached=false` in `/api/meta` until M2), `/check` page with upload + record + transcript view.
-- **Acceptance:** a 2-minute test file is chunked, transcribed in order, no chunk > 28 s; error paths tested with `respx` (400/403/429/500/503, timeouts); temp files cleaned; usage counters work and caps trigger `budget_exhausted`.
-
-### M2 — Detection engine (target 10-22)
-Section 5 in full + playbook v1 + `POST /api/analyze/text` + `/paste` page + result card.
-- **Acceptance:** all engine tests pass (≥ 60 cases); evidence-substring invariant test passes; the negation/delivery/genuine-bank cases do not exceed `suspicious`; `/api/analyze/audio` now runs the engine.
-
-### M3 — Corpus + evaluation harness (target 10-24)
-Section 8. Write scripts (dev-first), calibrate budget with a **5-clip calibration run** and ask the human to read the dashboard credit change before scaling, generate audio, run dev eval, run the 8.5 experiments, expand playbook patterns from real Prisma outputs, freeze, run the **test** split once.
-- **Acceptance:** `eval/results/latest.json` exists with all metrics; `/accuracy` renders it; `docs/DECISIONS.md` records the 8.5 outcomes with numbers; the human has been told the credit usage.
-
-### M4 — Live mode (target 10-26)
-`/ws/live`, `stt_stream.py`, AudioWorklet + framing, `/live` page, risk updates, evidence highlighting, level-escalation rule, limits.
-- **Acceptance:** with a laptop playing a synthetic scam call through its speaker and a phone running `/live`, the level reaches `likely_scam`; a fake-upstream integration test verifies relay, frame validation, session limits and error handling; unit tests for the worklet math pass; document the mic-constraint findings.
-
-### M5 — Voice: Timbre warnings + Parent mode (target 10-28)
-`tts_rest.py` cache, `warnings.yaml`, `/api/tts/warning`, `scripts/bake_warnings.py` (generates `web/public/audio/warnings/{lang}/*.mp3` for reviewed languages — budget guard applies), `/parent`, **Listen** button, WhatsApp share, `/report` + OG image.
-- **Acceptance:** all pre-baked clips exist and play; `/api/tts/warning` rejects anything outside the template set; Parent mode works at 360 px wide; the human has listened to every clip (the agent cannot judge pronunciation — list the clips for review in `STATUS.md`).
-
-### M6 — (Removed)
-Evon and any LLM tier were removed by decision of the human. Skip M6 entirely and go from M5 to M7. This milestone number is kept so the others do not change.
-
-### M7 — Hardening, deploy, launch kit (target 11-01)
-Rate limits, caps, maintenance mode, Dockerfile, deploy config, `README.md` (what it is, honest limits, architecture diagram, how to run, eval table, credits to Gnani), `/about`, `/demo` fixtures and page (7.6), accessibility pass, Lighthouse run (record numbers), security checklist from section 9.
-- **Acceptance:** the 7.1F UI checklist passes again with real data on every page (screenshots refreshed); public URL works on a real Android phone; all pages load on 360 px; the demo replay is labelled; `/api/usage` is protected; no secrets in git history (`git log -p` search for the key prefix is clean); README numbers match `latest.json`.
-
-Launch kit (script, captions, posts) is prepared by the human with Claude in chat after M7, not by you.
-
----
-
-## 11. Style notes
+## 10. Style notes
 - Backend: typed, small functions, async where I/O bound, no global mutable state except the explicit usage counters and rate limiter. Docstrings on public functions. Ruff + black defaults.
 - Frontend: strict TypeScript, no `any`, components small, text via i18n dictionaries, no hard-coded user-facing strings outside dictionaries.
 - Errors shown to users are plain and actionable ("The service is busy, please try again in a minute"), never stack traces.
 
 ---
 
-## 12. `STATUS.md` template (rewrite fully at the end of each milestone)
-
-```
-# STATUS — after M<n> — <date/time IST>
-## Done
-- bullet list of what exists now (files/endpoints/pages)
-## Evidence (real outputs, trimmed, key redacted)
-- command → result
-## Tests
-- pytest: X passed / Y failed; npm build: pass/fail; other
-## Gnani usage this milestone
-- STT seconds: …   TTS characters: …   (credit change reported by human: …)
-## Deviations from the spec (and why)
-## Doc differences found (live docs vs spec)
-## Dependencies added (name==version — reason)
-## Open questions for the human
-## Ready for next milestone? yes/no (+ blockers)
-```
-
----
-
-## 13. Things only the human can do (agent: list any that are blocking in STATUS.md)
+## 11. Things only the human can do
 0. Place `SAJAG_SPEC.md` in the empty project folder, create the (empty) GitHub repo, give the agent its URL, make sure `git` can authenticate to it, and install system tools the agent reports missing (for example `ffmpeg`).
 1. Create `.env` with `GNANI_API_KEY` from `https://app.gnani.ai/voice`.
-2. After the M3 calibration run: read the credit change on the Gnani dashboard and report it.
+2. After the calibration run: read the credit change on the Gnani dashboard and report it.
 3. Review a sample of the generated scripts, and every non-Hindi/non-English warning text, with a native speaker before flipping `reviewed: true`.
 4. Listen to every pre-baked Timbre clip (pronunciation of numbers and the helpline).
 5. Record ≥ 30 **staged human-voice** scam/legit calls with consenting friends/family (fake names, fake numbers, no real personal data) in different rooms/devices/noise, for the honest "real voice" evaluation row.

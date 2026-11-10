@@ -50,6 +50,6 @@ def test_compute_metrics_confusion_matrix():
     # False positive rate: 1 / (1 + 1) = 0.5
     assert abs(m["false_positive_rate"] - 0.5) < 0.001
     # Type accuracy among TP: both correct (2/2 = 1.0)
-    # Time to detect metrics deferred to M4 streaming path per user instruction 4
+    # Time to detect metrics evaluated on the streaming path
     assert "median_time_to_detect_s" not in m
 

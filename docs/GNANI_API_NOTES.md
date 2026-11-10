@@ -101,7 +101,7 @@ Not used, not referenced in code, not mentioned in the UI.
 
 ---
 
-## Live-docs re-check (2026-10-20, M0 step 2)
+## Live-docs re-check (2026-10-20)
 
 Pages fetched as markdown:
 - `https://docs.gnani.ai/llms.txt`

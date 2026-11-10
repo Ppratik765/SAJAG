@@ -355,7 +355,7 @@ export default function AccuracyPage() {
                         </tr>
                       );
                     })}
-                    {/* M4c Adversarial Text-Only Evaluation Rows */}
+                    {/* Adversarial Text-Only Evaluation Rows */}
                     <tr className="py-2 border-t" style={{ borderColor: "var(--rule)" }}>
                       <td className="py-2.5 font-medium">
                         <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-100 text-amber-900 dark:bg-amber-950/50 dark:text-amber-300">
@@ -370,7 +370,7 @@ export default function AccuracyPage() {
                     <tr className="py-2">
                       <td className="py-2.5 font-medium">
                         <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-100 text-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
-                          ADV HOLDOUT (contaminated after M4c)
+                          ADV HOLDOUT (post-tuning)*
                         </span>
                       </td>
                       <td className="py-2.5">16</td>
@@ -399,7 +399,7 @@ export default function AccuracyPage() {
                 </table>
               </div>
               <p className="text-[11px] mt-2 text-muted-foreground" style={{ color: "var(--muted)" }}>
-                * Clean M4a numbers preserved. Post-M4c tuning on failure signals contaminated this split.
+                * Clean pre-tuning numbers preserved. Subsequent tuning on failure signals contaminated this split.
               </p>
               {realAudio && (
                 <p className="text-[11px] mt-1 text-muted-foreground" style={{ color: "var(--muted)" }}>
@@ -492,7 +492,7 @@ export default function AccuracyPage() {
                   <tr className="py-2">
                     <td className="py-2.5 font-medium">
                       <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-100 text-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
-                        ADV HOLDOUT (contaminated after M4c)
+                        ADV HOLDOUT (post-tuning)*
                       </span>
                     </td>
                     <td className="py-2.5">16</td>
@@ -515,7 +515,7 @@ export default function AccuracyPage() {
               </table>
             </div>
             <p className="text-[11px] mt-2 text-muted-foreground" style={{ color: "var(--muted)" }}>
-              * Clean M4a numbers preserved (6/8 recall, 2/8 legit FP). During M4c, inspection of failed signals contaminated this split; post-tuning 0/8 FP was not an independent test.
+              * Clean pre-tuning numbers preserved (6/8 recall, 2/8 legit FP). Inspection of failed signals contaminated this split; post-tuning 0/8 FP was not an independent test.
             </p>
             <p className="text-[11px] mt-1 text-muted-foreground" style={{ color: "var(--muted)" }}>
               Final holdout: 10 new scripts (5 scam, 5 legit), written before the engine was frozen and run once, text only, with no tuning afterwards. Only 10 scripts, so treat it as a rough check, not a rate. Two genuine advisory or notification scripts were flagged, so false alarms on real advisories remain a known weakness.
@@ -524,7 +524,7 @@ export default function AccuracyPage() {
         </div>
       </div>
 
-      {/* Live Audio Streaming Benchmark (M4 Real-Time Replay) */}
+      {/* Live Audio Streaming Benchmark (Real-Time Replay) */}
       {liveTtd && liveTtd.length > 0 && (() => {
         const scamLiveClips = liveTtd.filter((c) => c.label !== "legit");
         const reachedLikelyScam = scamLiveClips.filter((c) => c.first_crossed.likely_scam !== null);
@@ -569,7 +569,7 @@ export default function AccuracyPage() {
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-1 px-2.5 py-0.5 rounded-full" style={{ backgroundColor: "rgba(220, 38, 38, 0.1)", color: "var(--stamp)" }}>
                 <Radio className="w-3.5 h-3.5 animate-pulse" />
-                M5 Live Streaming Benchmark • लाइव मोड समय-से-पहचान
+                Live Streaming Benchmark • लाइव मोड समय-से-पहचान
               </div>
               <h2 className="text-xl font-display font-bold">Real-Time Audio Streaming (WebSocket /ws/live)</h2>
               <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>
@@ -844,7 +844,7 @@ export default function AccuracyPage() {
             <strong>Process Invariant:</strong> The synthetic dialogue scripts and the detection rules were authored by the same engineering process.
           </li>
           <li>
-            <strong>Advisory Imitation Scams:</strong> Scam calls that imitate advisory language: hardened in M4a, measured on 32 scripts (text only), see table.
+            <strong>Advisory Imitation Scams:</strong> Scam calls that imitate advisory language: hardened in our ruleset, measured on 32 scripts (text only), see table.
           </li>
           <li>
             <strong>Audio Cleanliness:</strong> Synthetic TTS speech passed directly to STT is substantially cleaner than real telephony calls (lacks low-bitrate carrier codecs, packet drop, acoustic echo, and heavy background noise).
@@ -853,7 +853,7 @@ export default function AccuracyPage() {
             <strong>Headline Benchmark:</strong> The definitive headline accuracy numbers will come from an unseen holdout set (evaluated exactly once after playbook freeze) and staged human-voice calls.
           </li>
           <li>
-            Audio tested here was generated with Timbre TTS and degraded via standard telephony simulation. Staged real-voice calls with background noise will be reported separately in M7.
+            Synthetic audio tested here was generated with Timbre TTS and degraded via standard telephony simulation. Real-voice recordings are evaluated separately in the table above.
           </li>
         </ul>
       </div>

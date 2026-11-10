@@ -1,6 +1,6 @@
 """Generate consolidated benchmark report with separate dev, test, and holdout splits.
 
-Implements M3 reporting requirements:
+Implements evaluation reporting requirements:
 - Dev split: 113 scripts (56 scam, 57 legit)
 - Test split: 54 scripts (28 scam, 26 legit)
 - Holdout split: 30 scripts (15 scam, 15 legit) evaluated on clean and tel (60 clips)
@@ -119,7 +119,7 @@ async def main() -> None:
         "limitations": [
             "Process Invariant: The synthetic dialogue scripts and the detection rules were authored by the same engineering process.",
             "Audio Cleanliness: Synthetic TTS speech passed to STT is cleaner than real telephony calls (lacks low-bitrate carrier codecs, physical packet loss, acoustic echo, and heavy background noise).",
-            "Headline Benchmark: Headline accuracy is reported on the unseen holdout set (evaluated exactly once after playbook freeze) and will be benchmarked on staged human-voice calls in M7.",
+            "Headline Benchmark: Headline accuracy is reported on the unseen holdout set (evaluated exactly once after playbook freeze) and benchmarked on real-voice calls.",
             "Telephony degradation uses simulated bandpass and noise, not physical telecom carrier paths.",
         ],
     }

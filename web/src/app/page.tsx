@@ -1,20 +1,97 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Volume2, FileText, Smartphone } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { LivingHero } from "@/components/hero/LivingHero";
 import { ScrollHowItWorks } from "@/components/landing/ScrollHowItWorks";
 import { InteractiveScamIndex } from "@/components/landing/InteractiveScamIndex";
+import { LiveTestPlayer } from "@/components/livetest/LiveTestPlayer";
+
+const REAL_CLIPS = [
+  {
+    id: "da_real_01",
+    duration_s: 66,
+    title: "Digital arrest call — Fake Police Station & Video Statement",
+    title_hi: "डिजिटल अरेस्ट कॉल — नकली पुलिस स्टेशन और वीडियो बयान",
+    fixture_url: "/live-tests/da_real_01/fixture.json",
+  },
+  {
+    id: "da_real_02",
+    duration_s: 61,
+    title: "Digital arrest fraud — Drugs in Parcel & Money Transfer",
+    title_hi: "डिजिटल अरेस्ट धोखाधड़ी — पार्सल में ड्रग्स और पैसे ट्रांसफर",
+    fixture_url: "/live-tests/da_real_02/fixture.json",
+  },
+] as const;
 
 export default function HomePage() {
   const { t, tArray, locale } = useI18n();
+  const [selectedClipId, setSelectedClipId] = useState<string>(REAL_CLIPS[0].id);
+  const activeClip = REAL_CLIPS.find((c) => c.id === selectedClipId) ?? REAL_CLIPS[0];
 
   return (
     <main className="space-y-16 sm:space-y-24 py-6 sm:py-10">
       {/* 1. P0-1 The Living Hero */}
       <LivingHero />
+
+      {/* 1b. See this run on real examples (2 real pre-computed calls) */}
+      <section id="real-examples" className="max-w-5xl mx-auto px-4 sm:px-6 space-y-6 scroll-mt-20">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="space-y-2">
+            <span className="inline-block px-2.5 py-0.5 rounded-full bg-[var(--alarm)]/10 text-[var(--alarm-text)] font-mono font-bold text-xs uppercase">
+              {locale === "hi" ? "असली रिकॉर्डिंग" : "Real scam call recordings"}
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-[var(--ink)]">
+              {locale === "hi" ? "असली उदाहरणों पर चलते देखें" : "See this run on real examples"}
+            </h2>
+            <p className="text-sm sm:text-base text-[var(--ink-muted)] max-w-2xl">
+              {locale === "hi"
+                ? "नीचे दी गई 2 असली कॉल्स में से चुनें और स्पीकर बटन दबाएँ। ऑडियो के साथ-साथ लाइव ट्रांसक्रिप्ट दिखेगी, खतरनाक शब्द लाल रंग में हाइलाइट होंगे और कॉल को ठगी के रूप में चिह्नित किया जाएगा।"
+                : "Choose between 2 real calls below and press play. The audio streams with live transcription, scam trigger words are highlighted in red, and Sajag flags the call as a scam."}
+            </p>
+          </div>
+          <Link
+            href={`/test?clip=${activeClip.id}`}
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[var(--stamp)] hover:underline shrink-0"
+          >
+            <span>{locale === "hi" ? "पूरे टेस्ट पेज पर खोलें" : "Open full test view"}</span>
+            <ArrowRight size={15} />
+          </Link>
+        </div>
+
+        <div role="tablist" aria-label="Choose between 2 real calls" className="grid sm:grid-cols-2 gap-3">
+          {REAL_CLIPS.map((clip, idx) => {
+            const isSelected = clip.id === activeClip.id;
+            return (
+              <button
+                key={clip.id}
+                type="button"
+                role="tab"
+                aria-selected={isSelected}
+                onClick={() => setSelectedClipId(clip.id)}
+                className={`p-4 rounded-xl border text-left transition-colors ${
+                  isSelected
+                    ? "border-2 border-[var(--stamp)] bg-[var(--stamp)]/5 font-bold shadow-xs"
+                    : "border-[var(--line)] bg-[var(--sheet)] hover:border-[var(--stamp)]"
+                }`}
+              >
+                <span className="block text-[11px] font-mono uppercase text-[var(--stamp)] mb-1">
+                  {locale === "hi"
+                    ? `कॉल ${idx + 1} • असली रिकॉर्डिंग (${clip.duration_s}s)`
+                    : `Call ${idx + 1} • Real recording (${clip.duration_s}s)`}
+                </span>
+                <span className="text-sm sm:text-base text-[var(--ink)] block">
+                  {locale === "hi" ? clip.title_hi : clip.title}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <LiveTestPlayer key={activeClip.id} fixtureUrl={activeClip.fixture_url} allowLive={false} />
+      </section>
 
       {/* 2. P0-3 Scroll-Driven How It Works */}
       <ScrollHowItWorks />

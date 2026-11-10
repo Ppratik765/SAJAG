@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate and verify empirical benchmark numbers in README.md (M7 Part F).
+"""Generate and verify empirical benchmark numbers in README.md.
 
 Reads:
 - eval/results/latest.json (Corpus acoustic eval)

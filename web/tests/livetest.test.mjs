@@ -48,6 +48,23 @@ test("frame pacing: frame n is due at n*32 ms", () => {
 test("clock format and clip id allowlist", () => {
   assert.equal(formatClock(65.9), "1:05");
   assert.equal(safeClipId("da_hi_002"), "da_hi_002");
+  assert.equal(safeClipId("da_real_01"), "da_real_01");
+  assert.equal(safeClipId("da_real_02"), "da_real_02");
   assert.equal(safeClipId("../etc/passwd"), null);
   assert.equal(safeClipId("A"), null);
+});
+
+test("real example clips in manifest have valid fixtures, exact evidence substrings, and flag as scam", () => {
+  const manifest = JSON.parse(fs.readFileSync(new URL("../public/live-tests/manifest.json", import.meta.url), "utf8"));
+  assert.equal(manifest.clips.length, 2);
+  for (const clip of manifest.clips) {
+    assert.equal(clip.kind, "real");
+    const realFx = JSON.parse(fs.readFileSync(new URL(`../public${clip.fixture_url}`, import.meta.url), "utf8"));
+    const finalView = deriveView(realFx, realFx.meta.audio_duration_s + 5);
+    assert.equal(finalView.level, "scam");
+    for (const s of realFx.signals) {
+      const seg = realFx.segments.find((x) => x.index === s.segment_index);
+      assert.ok(seg && seg.text.includes(s.evidence), `${clip.id}:${s.id}`);
+    }
+  }
 });

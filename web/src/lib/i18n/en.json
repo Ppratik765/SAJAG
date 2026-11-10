@@ -9,7 +9,7 @@
     "paste": "Paste message",
     "spot": "Spot red flags",
     "parent": "Parent mode",
-    "demo": "Live test",
+    "demo": "Real examples",
     "accuracy": "Accuracy",
     "about": "About"
   },
@@ -17,7 +17,7 @@
     "title_primary": "Is this call a scam?",
     "title_secondary": "Live paper call shield for Indian families",
     "description": "Live paper call sheet that marks scam red flags and speaks aloud when to hang up.",
-    "cta_watch_demo": "Watch Sajag catch a scam",
+    "cta_watch_demo": "See this run on real examples",
     "cta_parent_mode": "Set up for my parents",
     "cta_spot_game": "Play: Spot the red flags",
     "cta_check_recording": "Check a recording",
@@ -123,7 +123,6 @@
     "disclaimer": "Sajag is an advisory shield, not a legal guarantee."
   },
   "placeholder": {
-    "milestone_notice": "Coming in a later milestone",
     "back_home": "Back to Home"
   }
 }

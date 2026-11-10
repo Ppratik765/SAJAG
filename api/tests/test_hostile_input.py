@@ -1,4 +1,4 @@
-"""Hostile input, origin security, rate limiting, and maintenance mode tests (M7 Part B).
+"""Hostile input, origin security, rate limiting, and maintenance mode tests.
 
 Verifies that no input crashes, hangs, or returns stack traces, that origin and
 rate limits are strictly enforced, and that maintenance mode selectively disables

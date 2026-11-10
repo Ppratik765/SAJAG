@@ -1,0 +1,325 @@
+{
+  "meta": {
+    "id": "da_real_01",
+    "kind": "real",
+    "title": "Digital arrest call — Fake Police & Telecom (The Lallantop)",
+    "title_hi": "डिजिटल अरेस्ट कॉल — नकली पुलिस और टेलीकॉम (दी लल्लनटॉप)",
+    "language_code": "hi-IN",
+    "audio_url": "/live-tests/da_real_01/call.mp3",
+    "audio_duration_s": 65.97,
+    "credit": "Source: The Lallantop. Used with permission for educational purposes.",
+    "captured_with": "Gnani Prisma STT via this site's /ws/live, streamed at real-time pace",
+    "final_level": "scam",
+    "final_score": 13,
+    "primary_type": "digital_arrest",
+    "first_appeared_s": {
+      "suspicious": 8.563,
+      "likely_scam": 16.064,
+      "scam": 32.741
+    }
+  },
+  "segments": [
+    {
+      "index": 1,
+      "text": "ओके",
+      "audio_start_s": 0.0,
+      "audio_end_s": 1.504,
+      "appear_s": 1.581,
+      "stt_latency_ms": 52
+    },
+    {
+      "index": 2,
+      "text": "क्या सहायता चाहिए पुलिस डिपार्टमेंट से आपको सर अभी पुलिस में ही बात हो रही थी उन्होंने बोला कि वो मेरा",
+      "audio_start_s": 1.504,
+      "audio_end_s": 8.02,
+      "appear_s": 8.556,
+      "stt_latency_ms": 112
+    },
+    {
+      "index": 3,
+      "text": "एफआईआर कैंसिल कर देंगे इसका आपका वीडियो स्टेटमेंट कार्ड होगा जी उसके बाद आपको",
+      "audio_start_s": 8.02,
+      "audio_end_s": 14.196,
+      "appear_s": 16.057,
+      "stt_latency_ms": 142
+    },
+    {
+      "index": 4,
+      "text": "जी मैं सिस्टम में चेक करता हूँ और ये अभी आपको कनेक्ट कर रहा हूँ",
+      "audio_start_s": 14.196,
+      "audio_end_s": 20.212,
+      "appear_s": 20.769,
+      "stt_latency_ms": 134
+    },
+    {
+      "index": 5,
+      "text": "वो आपका वॅन साइड वीडियो स्टेटमेंट रिकार्ड करेंगे",
+      "audio_start_s": 20.212,
+      "audio_end_s": 26.228,
+      "appear_s": 26.751,
+      "stt_latency_ms": 136
+    },
+    {
+      "index": 6,
+      "text": "ऑफिसर का कैमरा ऑफ होगा आपका कैमरा ऑन रहेगा जो एविडेन्स के तौर पर कोर्ट में सबमिट की जाएगी उसके बाद",
+      "audio_start_s": 26.228,
+      "audio_end_s": 32.244,
+      "appear_s": 32.727,
+      "stt_latency_ms": 85
+    },
+    {
+      "index": 7,
+      "text": "जी सर",
+      "audio_start_s": 32.244,
+      "audio_end_s": 35.668,
+      "appear_s": 36.106,
+      "stt_latency_ms": 56
+    },
+    {
+      "index": 8,
+      "text": "आप लाइन पे बने रहिये मैं आपको नाइट कर रहा हूँ",
+      "audio_start_s": 35.668,
+      "audio_end_s": 38.068,
+      "appear_s": 38.546,
+      "stt_latency_ms": 59
+    },
+    {
+      "index": 9,
+      "text": "प्रदीप सावंत कम इनटू माय ऑफिस केक",
+      "audio_start_s": 38.068,
+      "audio_end_s": 41.46,
+      "appear_s": 41.928,
+      "stt_latency_ms": 80
+    },
+    {
+      "index": 10,
+      "text": "कम इन कमिंग",
+      "audio_start_s": 41.46,
+      "audio_end_s": 44.136,
+      "appear_s": 45.83,
+      "stt_latency_ms": 73
+    },
+    {
+      "index": 11,
+      "text": "हेलो",
+      "audio_start_s": 44.136,
+      "audio_end_s": 45.864,
+      "appear_s": 47.48,
+      "stt_latency_ms": 54
+    },
+    {
+      "index": 12,
+      "text": "कम इन",
+      "audio_start_s": 45.864,
+      "audio_end_s": 48.668,
+      "appear_s": 50.981,
+      "stt_latency_ms": 57
+    },
+    {
+      "index": 13,
+      "text": "जी इनका वॅन सेकंड स्टेटमेंट रिकॉर्ड करो एस पर दी प्रोटोकॉल ओके सर",
+      "audio_start_s": 48.668,
+      "audio_end_s": 55.184,
+      "appear_s": 58.394,
+      "stt_latency_ms": 85
+    },
+    {
+      "index": 14,
+      "text": "मुझे उनकी तुरंत को चाहिए",
+      "audio_start_s": 55.184,
+      "audio_end_s": 57.584,
+      "appear_s": 60.842,
+      "stt_latency_ms": 126
+    },
+    {
+      "index": 15,
+      "text": "जय जय हिन्द सर पैसे वैसे नहीं चाहिए आपको",
+      "audio_start_s": 57.584,
+      "audio_end_s": 62.404,
+      "appear_s": 66.295,
+      "stt_latency_ms": 89
+    }
+  ],
+  "signals": [
+    {
+      "id": "sig_02_001",
+      "category": "AUTHORITY_CLAIM",
+      "weight": 2,
+      "evidence": "पुलिस",
+      "segment_index": 2,
+      "appear_s": 8.563
+    },
+    {
+      "id": "sig_02_002",
+      "category": "URGENCY",
+      "weight": 1,
+      "evidence": "अभी",
+      "segment_index": 2,
+      "appear_s": 8.563
+    },
+    {
+      "id": "sig_03_001",
+      "category": "THREAT_ARREST",
+      "weight": 3,
+      "evidence": "एफआईआर",
+      "segment_index": 3,
+      "appear_s": 16.064
+    },
+    {
+      "id": "sig_04_001",
+      "category": "URGENCY",
+      "weight": 1,
+      "evidence": "अभी",
+      "segment_index": 4,
+      "appear_s": 20.825
+    },
+    {
+      "id": "sig_06_001",
+      "category": "ISOLATION",
+      "weight": 3,
+      "evidence": "कैमरा ऑन",
+      "segment_index": 6,
+      "appear_s": 32.741
+    },
+    {
+      "id": "sig_06_002",
+      "category": "AUTHORITY_CLAIM",
+      "weight": 2,
+      "evidence": "कोर्ट",
+      "segment_index": 6,
+      "appear_s": 32.741
+    },
+    {
+      "id": "sig_14_001",
+      "category": "URGENCY",
+      "weight": 1,
+      "evidence": "तुरंत",
+      "segment_index": 14,
+      "appear_s": 60.86
+    }
+  ],
+  "risk_events": [
+    {
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "appear_s": 1.944,
+      "audio_heard_s": 1.504
+    },
+    {
+      "level": "suspicious",
+      "score": 4,
+      "primary_type": "unknown_suspicious",
+      "appear_s": 8.563,
+      "audio_heard_s": 8.02
+    },
+    {
+      "level": "likely_scam",
+      "score": 7,
+      "primary_type": "unknown_suspicious",
+      "appear_s": 16.064,
+      "audio_heard_s": 14.196
+    },
+    {
+      "level": "likely_scam",
+      "score": 8,
+      "primary_type": "unknown_suspicious",
+      "appear_s": 20.825,
+      "audio_heard_s": 20.212
+    },
+    {
+      "level": "likely_scam",
+      "score": 8,
+      "primary_type": "unknown_suspicious",
+      "appear_s": 26.759,
+      "audio_heard_s": 26.228
+    },
+    {
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "appear_s": 32.741,
+      "audio_heard_s": 32.244
+    },
+    {
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "appear_s": 36.115,
+      "audio_heard_s": 35.668
+    },
+    {
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "appear_s": 38.556,
+      "audio_heard_s": 38.068
+    },
+    {
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "appear_s": 41.943,
+      "audio_heard_s": 41.46
+    },
+    {
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "appear_s": 45.842,
+      "audio_heard_s": 44.136
+    },
+    {
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "appear_s": 47.494,
+      "audio_heard_s": 45.864
+    },
+    {
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "appear_s": 50.994,
+      "audio_heard_s": 48.668
+    },
+    {
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "appear_s": 58.405,
+      "audio_heard_s": 55.184
+    },
+    {
+      "level": "scam",
+      "score": 13,
+      "primary_type": "digital_arrest",
+      "appear_s": 60.86,
+      "audio_heard_s": 57.584
+    },
+    {
+      "level": "scam",
+      "score": 13,
+      "primary_type": "digital_arrest",
+      "appear_s": 66.304,
+      "audio_heard_s": 62.404
+    }
+  ],
+  "speech_events": [
+    0.469,
+    2.51,
+    8.681,
+    15.913,
+    20.653,
+    26.606,
+    32.658,
+    36.207,
+    38.627,
+    43.656,
+    46.053,
+    48.767,
+    52.407,
+    58.304,
+    61.515
+  ]
+}

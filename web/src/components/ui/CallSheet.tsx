@@ -101,9 +101,12 @@ export function CallSheet({
       }
     }
 
-    occurrences.sort((a, b) => a.start - b.start);
+    occurrences.sort((a, b) => a.start - b.start || (b.end - b.start) - (a.end - a.start));
 
     for (const occ of occurrences) {
+      if (occ.start < lastIndex) {
+        continue;
+      }
       if (occ.start > lastIndex) {
         parts.push(text.slice(lastIndex, occ.start));
       }

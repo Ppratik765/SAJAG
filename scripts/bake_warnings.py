@@ -1,4 +1,4 @@
-"""Bake pre-rendered warning and explanation audio clips (M5 Part 1).
+"""Bake pre-rendered warning and explanation audio clips.
 
 Generates static MP3s under web/public/audio/warnings/{lang}/ for hi-IN and en-IN.
 Uses content-addressed caching in api/app/gnani/tts_rest.py to avoid burning credits.
@@ -121,10 +121,10 @@ async def main() -> None:
             total_projected_chars += len(exp_text)
 
     print(f"============================================================")
-    print(f"M5 TTS Audio Baker — Pre-Bake Projection")
+    print(f"TTS Audio Baker — Pre-Bake Projection")
     print(f"Total files to bake: {len(items_to_bake)}")
     print(f"Total projected characters: {total_projected_chars}")
-    print(f"M5 Hard Cap: {TTS_HARD_CAP_CHARS} characters")
+    print(f"Hard Cap: {TTS_HARD_CAP_CHARS} characters")
     print(f"============================================================")
 
     if total_projected_chars > TTS_HARD_CAP_CHARS:
@@ -196,7 +196,7 @@ async def main() -> None:
     # 3. Generate docs/WARNING_REVIEW.md
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     review_lines = [
-        "# Warning Audio Review Table (M5 Part 1)",
+        "# Warning Audio Review Table",
         "",
         "> [!NOTE]",
         "> Audio clips were generated with Gnani Timbre TTS v2.5 (`hi-IN`: Chitra, `en-IN`: Kaveri) and are awaiting human pronunciation and clarity review.",

@@ -727,7 +727,7 @@ def test_unreviewed_pattern_cap():
 
 
 def test_advisory_sentences_suppressed():
-    """M3.1b: Advisory sentences ('never share your OTP with anyone') must not trigger SECRECY or OTP_PIN_REQUEST demands."""
+    """Advisory sentences ('never share your OTP with anyone') must not trigger SECRECY or OTP_PIN_REQUEST demands."""
     test_advisories = [
         ("Bank advisory: Never share your OTP with anyone.", "en-IN"),
         ("Never share your OTP with anyone.", "en-IN"),
@@ -750,7 +750,7 @@ def test_advisory_sentences_suppressed():
 
 
 def test_generic_authority_advisory_rule():
-    """M3.1b: Authority inside a sentence with an advisory frame must not score AUTHORITY_CLAIM, THREAT_ARREST, or MONEY_TRANSFER."""
+    """Authority inside a sentence with an advisory frame must not score AUTHORITY_CLAIM, THREAT_ARREST, or MONEY_TRANSFER."""
     test_cases = [
         "Public awareness bulletin: Police and CBI never place people under digital arrest or demand money transfer.",
         "Cyber cell advisory: Beware of fake police officers threatening arrest over Skype video calls.",
@@ -768,7 +768,7 @@ def test_generic_authority_advisory_rule():
 
 
 def test_m4a_advisory_imitation_resolution():
-    """M4a: Advisory imitation sentences must not be suppressed by advisory keywords,
+    """Advisory imitation sentences must not be suppressed by advisory keywords,
     while explicit negated directives remain protected/safe."""
     # Problem 1: Imitating RBI advisory but demanding OTP
     t1 = "This is RBI security advisory. Your account will be frozen. Be alert and tell me the OTP right now."

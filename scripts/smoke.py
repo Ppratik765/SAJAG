@@ -1,4 +1,4 @@
-"""M0 smoke test for the Gnani APIs (spec section 10, M0 step 3).
+"""Smoke test for the Gnani APIs.
 
 Steps:
   (a) TTS REST: synthesize one short Hindi sentence (timbre-v2.5, Chitra, hi-IN, WAV 16 kHz) and save it.

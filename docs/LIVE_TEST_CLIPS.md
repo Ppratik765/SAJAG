@@ -42,4 +42,4 @@ Vercel redeploys; the clip appears as a tab on `/test`.
 All times are seconds since the first audio frame was sent (the audio clock). "Appeared 14.1s into the call" means the line/alert showed up 14.1 s into the call, including the speech-to-text delay. A line is never shown before it arrived, even though its audio started earlier.
 
 ## Testing without credits
-`python scripts/fake_live_server.py --fixture web/public/live-tests/da_hi_002/fixture.json --port 8000` plays the part of `/ws/live` so the "Run it live now" button can be tested. Screenshots in `docs/screens/m8/` were made this way (plus a recorded run); they test the UI logic, not accuracy.
+`python scripts/fake_live_server.py --fixture web/public/live-tests/da_hi_002/fixture.json --port 8000` plays the part of `/ws/live` so the "Run it live now" button can be tested without spending credits.

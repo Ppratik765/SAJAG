@@ -139,7 +139,7 @@ All fonts loaded via `next/font/google` (`display: swap`):
 
 ---
 
-## 8. M0.6 Alive Additions & Audio Decision
+## 8. Alive Additions & Audio Decision
 
 - **Living Hero**: Display scale headline (40–104px) cycling 11 Indian languages with pen-wipe transition. Scripted CallSheet playback (~9s) with typing lines, highlighter swipes, vermilion circles, Kalam margin note writing reveal, LevelStrip needle slide, vermilion border flash, animated speech waveform, and VerdictStamp slam with ink splatter.
 - **Scroll-Driven How It Works**: Sticky paper sheet pinned on one side while 3 steps scroll on the other, driving sheet marks and stamps in both directions.

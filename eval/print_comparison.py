@@ -18,7 +18,7 @@ target_ids = [
 ]
 
 print("=" * 80)
-print("         SIGNALS BEFORE (HEAD / Pre-M3.1b) vs AFTER (Current / Post-M3.1b)")
+print("         SIGNALS BEFORE (HEAD) vs AFTER (Current)")
 print("=" * 80)
 
 for sid in target_ids:
@@ -28,7 +28,7 @@ for sid in target_ids:
     for h, c in zip(head_items, curr_items):
         var = h['variant']
         print(f"\n--- Target: {sid} [{var}] ---")
-        print(f"BEFORE M3.1b: Score={h.get('score', 0)}, is_detected_scam={h.get('is_detected_scam', False)}")
+        print(f"BEFORE: Score={h.get('score', 0)}, is_detected_scam={h.get('is_detected_scam', False)}")
         sigs_before = h.get('signals', [])
         if sigs_before:
             for s in sigs_before:
@@ -36,7 +36,7 @@ for sid in target_ids:
         else:
             print("  - (no signals)")
             
-        print(f"AFTER M3.1b:  Score={c.get('score', 0)}, is_detected_scam={c.get('is_detected_scam', False)}")
+        print(f"AFTER:  Score={c.get('score', 0)}, is_detected_scam={c.get('is_detected_scam', False)}")
         sigs_after = c.get('signals', [])
         if sigs_after:
             for s in sigs_after:

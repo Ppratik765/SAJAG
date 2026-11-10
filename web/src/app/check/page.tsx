@@ -520,7 +520,7 @@ export default function CheckPage() {
                     </div>
                   ))}
 
-                  {/* M1 Note */}
+                  {/* Pipeline Note */}
                   <div className="mt-8 pt-4 border-t border-[var(--line)] flex items-start gap-2.5 bg-[var(--bg)]/50 p-4 rounded-lg">
                     <Sparkles size={18} className="text-[var(--stamp)] shrink-0 mt-0.5" />
                     <div>
@@ -528,8 +528,7 @@ export default function CheckPage() {
                         Pipeline status: Speech-to-Text verified
                       </p>
                       <p className="text-xs text-[var(--ink-muted)] mt-0.5 leading-normal">
-                        All audio chunks transcribed cleanly with Gnani Prisma.
-                        Rule-based scam red flag detection engine attaches in Milestone M2.
+                        All audio chunks transcribed cleanly with Gnani Prisma and analyzed by our rule-based scam red flag detection engine.
                       </p>
                     </div>
                   </div>
@@ -569,7 +568,7 @@ export default function CheckPage() {
 
             {/* Bottom note */}
             <div className="pt-6 border-t border-[var(--line)] flex justify-between items-center text-[11px] text-[var(--ink-muted)]">
-              <span>Sajag Transcription Pipeline • M1</span>
+              <span>Sajag Transcription Pipeline</span>
               <span>Chunk limit ≤ 28s</span>
             </div>
           </div>

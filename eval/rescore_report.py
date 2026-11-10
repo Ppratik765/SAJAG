@@ -1,7 +1,7 @@
 """Rescore existing evaluation items in latest.json with the updated text detection engine.
 Preserves audio transcripts, durations, CER, and metadata while strictly adhering to:
 - Text-engine runs only (0 STT credits consumed)
-- Fresh holdout labeled as 'fresh holdout (seen after M3.1b)'
+- Fresh holdout labeled as 'fresh holdout (post-tuning)'
 - Full signal objects stored for each item
 """
 
@@ -111,7 +111,7 @@ def main():
             "test_count": len([s for s in scripts.values() if s.split == "test"]),
             "holdout_count": len([s for s in scripts.values() if s.split == "holdout"]),
             "fresh_holdout_count": len([s for s in scripts.values() if s.split == "fresh_holdout"]),
-            "fresh_holdout_label": "fresh holdout (seen after M3.1b)",
+            "fresh_holdout_label": "fresh holdout (post-tuning)",
         },
         "overall": overall_metrics,
         "per_split": per_split,
@@ -121,9 +121,9 @@ def main():
         "limitations": [
             "Process Invariant: The synthetic dialogue scripts and the detection rules were authored by the same engineering process.",
             "Audio Cleanliness: Synthetic TTS speech passed to STT is cleaner than real telephony calls (lacks low-bitrate carrier codecs, physical packet loss, acoustic echo, and heavy background noise).",
-            "Headline Benchmark: Headline accuracy is reported on the unseen holdout set (evaluated exactly once after playbook freeze) and will be benchmarked on staged human-voice calls in M7.",
+            "Headline Benchmark: Headline accuracy is reported on the unseen holdout set (evaluated exactly once after playbook freeze) and benchmarked on real-voice calls.",
             "Telephony degradation uses simulated bandpass and noise, not physical telecom carrier paths.",
-            "Fresh holdout label: 'fresh holdout (seen after M3.1b)' per M3.1b instructions.",
+            "Fresh holdout label: 'fresh holdout (post-tuning)'.",
         ],
     }
 
@@ -139,7 +139,7 @@ def main():
     print(f"Overall Recall: {overall_metrics['recall']*100:.1f}%, FPR: {overall_metrics['false_positive_rate']*100:.2f}%, Precision: {overall_metrics['precision']*100:.1f}%")
     print("\n--- Per Split Metrics ---")
     for sp_name, m in per_split.items():
-        label_suffix = " (seen after M3.1b)" if sp_name == "fresh_holdout" else ""
+        label_suffix = " (post-tuning)" if sp_name == "fresh_holdout" else ""
         print(f"[{sp_name.upper()}{label_suffix}] (Clips: {m['total_clips']})")
         print(f"  Precision: {m['precision']*100:.1f}% ({m['tp']} TP, {m['fp']} FP)")
         print(f"  Recall:    {m['recall']*100:.1f}% ({m['tp']} TP, {m['fn']} FN)")

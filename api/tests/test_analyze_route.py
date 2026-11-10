@@ -40,7 +40,7 @@ async def test_meta():
         assert resp.status_code == 200
         data = resp.json()
         assert "hi-IN" in data["supported_stt_languages"]
-        assert data["engine_attached"] is True  # M2: active
+        assert data["engine_attached"] is True  # active
 
 
 @pytest.mark.asyncio

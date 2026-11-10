@@ -1,4 +1,4 @@
-"""Tests for POST /api/tts/warning endpoint (M5 Part 1)."""
+"""Tests for POST /api/tts/warning endpoint."""
 
 from __future__ import annotations
 

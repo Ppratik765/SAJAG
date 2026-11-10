@@ -416,7 +416,7 @@ types:
     all_of: [INVESTMENT]
     any_of: [MONEY_TRANSFER, PRIZE_REFUND]
 
-# Generic Advisory & Awareness Data (M3.1b)
+# Generic Advisory & Awareness Data
 # Single deduplicated list of advisory phrases
 advisory_phrases:
   - "never share"

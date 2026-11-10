@@ -1,4 +1,4 @@
-"""TTS warning audio route (M5).
+"""TTS warning audio route.
 
 Provides POST /api/tts/warning to serve synthesized voice warning alerts and
 explanations using reviewed templates only. Never accepts arbitrary free text.

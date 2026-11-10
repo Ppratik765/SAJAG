@@ -88,11 +88,11 @@ const T = {
 
 interface Props {
   fixtureUrl: string;
-  /** Show the "Run it live now" option. */
+  /** Show the "Run it live now" option. Defaults to false for static Vercel hosting. */
   allowLive?: boolean;
 }
 
-export function LiveTestPlayer({ fixtureUrl, allowLive = true }: Props) {
+export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
   const { locale } = useI18n();
   const lang: "en" | "hi" = locale === "hi" ? "hi" : "en";
   const t = T[lang];

@@ -1,0 +1,715 @@
+[
+  {
+    "elapsed_s": 0.899,
+    "received_at": "2026-11-10T09:10:05.143Z",
+    "type": "ready",
+    "payload": {
+      "type": "ready"
+    }
+  },
+  {
+    "elapsed_s": 1.368,
+    "received_at": "2026-11-10T09:10:05.612Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:06.325045+00:00"
+    },
+    "stream_elapsed_s": 0.469
+  },
+  {
+    "elapsed_s": 2.48,
+    "received_at": "2026-11-10T09:10:06.724Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 1,
+      "text": "ओके",
+      "audio_duration_ms": 1504.0,
+      "latency": 52
+    },
+    "stream_elapsed_s": 1.581
+  },
+  {
+    "elapsed_s": 2.843,
+    "received_at": "2026-11-10T09:10:07.087Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "safe",
+      "score": 0,
+      "primary_type": "none",
+      "new_signals": [],
+      "elapsed_s": 2.6,
+      "first_crossed": {
+        "suspicious": null,
+        "likely_scam": null
+      }
+    },
+    "stream_elapsed_s": 1.944
+  },
+  {
+    "elapsed_s": 3.409,
+    "received_at": "2026-11-10T09:10:07.653Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:08.367997+00:00"
+    },
+    "stream_elapsed_s": 2.51
+  },
+  {
+    "elapsed_s": 9.455,
+    "received_at": "2026-11-10T09:10:13.699Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 2,
+      "text": "क्या सहायता चाहिए पुलिस डिपार्टमेंट से आपको सर अभी पुलिस में ही बात हो रही थी उन्होंने बोला कि वो मेरा",
+      "audio_duration_ms": 6516.0,
+      "latency": 112
+    },
+    "stream_elapsed_s": 8.556
+  },
+  {
+    "elapsed_s": 9.462,
+    "received_at": "2026-11-10T09:10:13.706Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "suspicious",
+      "score": 4,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_02_001",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "पुलिस",
+          "segment_index": 2,
+          "start_char": 18,
+          "end_char": 23,
+          "reviewed": true
+        },
+        {
+          "id": "sig_02_002",
+          "category": "URGENCY",
+          "weight": 1,
+          "evidence": "अभी",
+          "segment_index": 2,
+          "start_char": 47,
+          "end_char": 50,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 9.22,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": null
+      }
+    },
+    "stream_elapsed_s": 8.563
+  },
+  {
+    "elapsed_s": 9.58,
+    "received_at": "2026-11-10T09:10:13.824Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:14.540498+00:00"
+    },
+    "stream_elapsed_s": 8.681
+  },
+  {
+    "elapsed_s": 16.813,
+    "received_at": "2026-11-10T09:10:21.057Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:21.775461+00:00"
+    },
+    "stream_elapsed_s": 15.913
+  },
+  {
+    "elapsed_s": 16.956,
+    "received_at": "2026-11-10T09:10:21.200Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 3,
+      "text": "एफआईआर कैंसिल कर देंगे इसका आपका वीडियो स्टेटमेंट कार्ड होगा जी उसके बाद आपको",
+      "audio_duration_ms": 6176.0,
+      "latency": 142
+    },
+    "stream_elapsed_s": 16.057
+  },
+  {
+    "elapsed_s": 16.963,
+    "received_at": "2026-11-10T09:10:21.207Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "likely_scam",
+      "score": 7,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_03_001",
+          "category": "THREAT_ARREST",
+          "weight": 3,
+          "evidence": "एफआईआर",
+          "segment_index": 3,
+          "start_char": 0,
+          "end_char": 6,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 16.73,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 16.064
+  },
+  {
+    "elapsed_s": 21.552,
+    "received_at": "2026-11-10T09:10:25.796Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:26.495781+00:00"
+    },
+    "stream_elapsed_s": 20.653
+  },
+  {
+    "elapsed_s": 21.669,
+    "received_at": "2026-11-10T09:10:25.913Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 4,
+      "text": "जी मैं सिस्टम में चेक करता हूँ और ये अभी आपको कनेक्ट कर रहा हूँ",
+      "audio_duration_ms": 6016.0,
+      "latency": 134
+    },
+    "stream_elapsed_s": 20.769
+  },
+  {
+    "elapsed_s": 21.724,
+    "received_at": "2026-11-10T09:10:25.968Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "likely_scam",
+      "score": 8,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [
+        {
+          "id": "sig_04_001",
+          "category": "URGENCY",
+          "weight": 1,
+          "evidence": "अभी",
+          "segment_index": 4,
+          "start_char": 37,
+          "end_char": 40,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 21.49,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 20.825
+  },
+  {
+    "elapsed_s": 27.504,
+    "received_at": "2026-11-10T09:10:31.748Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:32.457935+00:00"
+    },
+    "stream_elapsed_s": 26.606
+  },
+  {
+    "elapsed_s": 27.65,
+    "received_at": "2026-11-10T09:10:31.894Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 5,
+      "text": "वो आपका वॅन साइड वीडियो स्टेटमेंट रिकार्ड करेंगे",
+      "audio_duration_ms": 6016.0,
+      "latency": 136
+    },
+    "stream_elapsed_s": 26.751
+  },
+  {
+    "elapsed_s": 27.658,
+    "received_at": "2026-11-10T09:10:31.902Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "likely_scam",
+      "score": 8,
+      "primary_type": "unknown_suspicious",
+      "new_signals": [],
+      "elapsed_s": 27.42,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 26.759
+  },
+  {
+    "elapsed_s": 33.557,
+    "received_at": "2026-11-10T09:10:37.801Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:38.479458+00:00"
+    },
+    "stream_elapsed_s": 32.658
+  },
+  {
+    "elapsed_s": 33.626,
+    "received_at": "2026-11-10T09:10:37.870Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 6,
+      "text": "ऑफिसर का कैमरा ऑफ होगा आपका कैमरा ऑन रहेगा जो एविडेन्स के तौर पर कोर्ट में सबमिट की जाएगी उसके बाद",
+      "audio_duration_ms": 6016.0,
+      "latency": 85
+    },
+    "stream_elapsed_s": 32.727
+  },
+  {
+    "elapsed_s": 33.639,
+    "received_at": "2026-11-10T09:10:37.883Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "new_signals": [
+        {
+          "id": "sig_06_001",
+          "category": "ISOLATION",
+          "weight": 3,
+          "evidence": "कैमरा ऑन",
+          "segment_index": 6,
+          "start_char": 28,
+          "end_char": 36,
+          "reviewed": true
+        },
+        {
+          "id": "sig_06_002",
+          "category": "AUTHORITY_CLAIM",
+          "weight": 2,
+          "evidence": "कोर्ट",
+          "segment_index": 6,
+          "start_char": 65,
+          "end_char": 70,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 33.4,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 32.741
+  },
+  {
+    "elapsed_s": 37.005,
+    "received_at": "2026-11-10T09:10:41.249Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 7,
+      "text": "जी सर",
+      "audio_duration_ms": 3424.0,
+      "latency": 56
+    },
+    "stream_elapsed_s": 36.106
+  },
+  {
+    "elapsed_s": 37.014,
+    "received_at": "2026-11-10T09:10:41.258Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "new_signals": [],
+      "elapsed_s": 36.78,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 36.115
+  },
+  {
+    "elapsed_s": 37.106,
+    "received_at": "2026-11-10T09:10:41.350Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:42.066453+00:00"
+    },
+    "stream_elapsed_s": 36.207
+  },
+  {
+    "elapsed_s": 39.445,
+    "received_at": "2026-11-10T09:10:43.689Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 8,
+      "text": "आप लाइन पे बने रहिये मैं आपको नाइट कर रहा हूँ",
+      "audio_duration_ms": 2400.0,
+      "latency": 59
+    },
+    "stream_elapsed_s": 38.546
+  },
+  {
+    "elapsed_s": 39.455,
+    "received_at": "2026-11-10T09:10:43.699Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "new_signals": [],
+      "elapsed_s": 39.22,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 38.556
+  },
+  {
+    "elapsed_s": 39.526,
+    "received_at": "2026-11-10T09:10:43.770Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:44.488220+00:00"
+    },
+    "stream_elapsed_s": 38.627
+  },
+  {
+    "elapsed_s": 42.827,
+    "received_at": "2026-11-10T09:10:47.071Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 9,
+      "text": "प्रदीप सावंत कम इनटू माय ऑफिस केक",
+      "audio_duration_ms": 3392.0,
+      "latency": 80
+    },
+    "stream_elapsed_s": 41.928
+  },
+  {
+    "elapsed_s": 42.842,
+    "received_at": "2026-11-10T09:10:47.087Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "new_signals": [],
+      "elapsed_s": 42.6,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 41.943
+  },
+  {
+    "elapsed_s": 44.555,
+    "received_at": "2026-11-10T09:10:48.799Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:49.518007+00:00"
+    },
+    "stream_elapsed_s": 43.656
+  },
+  {
+    "elapsed_s": 46.73,
+    "received_at": "2026-11-10T09:10:50.974Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 10,
+      "text": "कम इन कमिंग",
+      "audio_duration_ms": 2676.0,
+      "latency": 73
+    },
+    "stream_elapsed_s": 45.83
+  },
+  {
+    "elapsed_s": 46.741,
+    "received_at": "2026-11-10T09:10:50.985Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "new_signals": [],
+      "elapsed_s": 46.5,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 45.842
+  },
+  {
+    "elapsed_s": 46.952,
+    "received_at": "2026-11-10T09:10:51.196Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:51.915273+00:00"
+    },
+    "stream_elapsed_s": 46.053
+  },
+  {
+    "elapsed_s": 48.379,
+    "received_at": "2026-11-10T09:10:52.623Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 11,
+      "text": "हेलो",
+      "audio_duration_ms": 1728.0,
+      "latency": 54
+    },
+    "stream_elapsed_s": 47.48
+  },
+  {
+    "elapsed_s": 48.393,
+    "received_at": "2026-11-10T09:10:52.637Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "new_signals": [],
+      "elapsed_s": 48.15,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 47.494
+  },
+  {
+    "elapsed_s": 49.666,
+    "received_at": "2026-11-10T09:10:53.910Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:54.626988+00:00"
+    },
+    "stream_elapsed_s": 48.767
+  },
+  {
+    "elapsed_s": 51.88,
+    "received_at": "2026-11-10T09:10:56.124Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 12,
+      "text": "कम इन",
+      "audio_duration_ms": 2804.0,
+      "latency": 57
+    },
+    "stream_elapsed_s": 50.981
+  },
+  {
+    "elapsed_s": 51.893,
+    "received_at": "2026-11-10T09:10:56.137Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "new_signals": [],
+      "elapsed_s": 51.65,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 50.994
+  },
+  {
+    "elapsed_s": 53.306,
+    "received_at": "2026-11-10T09:10:57.550Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:10:58.249510+00:00"
+    },
+    "stream_elapsed_s": 52.407
+  },
+  {
+    "elapsed_s": 59.203,
+    "received_at": "2026-11-10T09:11:03.447Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:11:04.162328+00:00"
+    },
+    "stream_elapsed_s": 58.304
+  },
+  {
+    "elapsed_s": 59.293,
+    "received_at": "2026-11-10T09:11:03.537Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 13,
+      "text": "जी इनका वॅन सेकंड स्टेटमेंट रिकॉर्ड करो एस पर दी प्रोटोकॉल ओके सर",
+      "audio_duration_ms": 6516.0,
+      "latency": 85
+    },
+    "stream_elapsed_s": 58.394
+  },
+  {
+    "elapsed_s": 59.304,
+    "received_at": "2026-11-10T09:11:03.548Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 12,
+      "primary_type": "digital_arrest",
+      "new_signals": [],
+      "elapsed_s": 59.07,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 58.405
+  },
+  {
+    "elapsed_s": 61.741,
+    "received_at": "2026-11-10T09:11:05.985Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 14,
+      "text": "मुझे उनकी तुरंत को चाहिए",
+      "audio_duration_ms": 2400.0,
+      "latency": 126
+    },
+    "stream_elapsed_s": 60.842
+  },
+  {
+    "elapsed_s": 61.759,
+    "received_at": "2026-11-10T09:11:06.003Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 13,
+      "primary_type": "digital_arrest",
+      "new_signals": [
+        {
+          "id": "sig_14_001",
+          "category": "URGENCY",
+          "weight": 1,
+          "evidence": "तुरंत",
+          "segment_index": 14,
+          "start_char": 10,
+          "end_char": 15,
+          "reviewed": true
+        }
+      ],
+      "elapsed_s": 61.52,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 60.86
+  },
+  {
+    "elapsed_s": 62.414,
+    "received_at": "2026-11-10T09:11:06.659Z",
+    "type": "speech",
+    "payload": {
+      "type": "speech",
+      "utterance_id": "<id-redacted>",
+      "timestamp": "2026-11-10T09:11:07.377665+00:00"
+    },
+    "stream_elapsed_s": 61.515
+  },
+  {
+    "elapsed_s": 67.194,
+    "received_at": "2026-11-10T09:11:11.438Z",
+    "type": "transcript",
+    "payload": {
+      "type": "transcript",
+      "index": 15,
+      "text": "जय जय हिन्द सर पैसे वैसे नहीं चाहिए आपको",
+      "audio_duration_ms": 4820.0,
+      "latency": 89
+    },
+    "stream_elapsed_s": 66.295
+  },
+  {
+    "elapsed_s": 67.203,
+    "received_at": "2026-11-10T09:11:11.447Z",
+    "type": "risk",
+    "payload": {
+      "type": "risk",
+      "level": "scam",
+      "score": 13,
+      "primary_type": "digital_arrest",
+      "new_signals": [],
+      "elapsed_s": 66.97,
+      "first_crossed": {
+        "suspicious": 8.02,
+        "likely_scam": 14.2
+      }
+    },
+    "stream_elapsed_s": 66.304
+  }
+]

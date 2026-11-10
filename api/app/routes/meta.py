@@ -43,7 +43,7 @@ def get_meta() -> dict[str, Any]:
     return {
         "supported_stt_languages": SUPPORTED_STT_LANGUAGES,
         "reviewed_warning_languages": get_reviewed_warning_languages(),
-        "engine_attached": True,  # M2: detection engine active
+        "engine_attached": True,  # detection engine active
         "maintenance": is_maintenance_mode(),
         "build_commit": get_build_commit(),
         "live_sessions_available": live_avail,

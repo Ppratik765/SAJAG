@@ -1,4 +1,4 @@
-"""Sajag backend entry point. M0: health endpoint only."""
+"""Sajag backend entry point."""
 
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Live mode real-time replay runner (Milestone M4b).
+"""Live mode real-time replay runner.
 
 Streams corpus audio through /ws/live at 32 ms cadence (512 samples = 1,024 bytes).
 Measures time-to-detect (TTD) in audio time, wall-clock latency, and final level.
@@ -357,7 +357,7 @@ async def main():
     parser.add_argument("--resample-method", default="interp", choices=["interp", "scipy"], help="Resampling method")
     args = parser.parse_args()
 
-    # Pre-declared clips for M4b
+    # Pre-declared clips for streaming evaluation
     TARGET_CLIPS = [
         # 3 dev scam
         {"id": "da_hi_002", "split": "dev", "label": "digital_arrest", "lang": "hi-IN", "variant": "clean"},

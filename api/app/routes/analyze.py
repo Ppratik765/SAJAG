@@ -1,4 +1,4 @@
-"""Audio and Text Analysis routes (M1 & M2).
+"""Audio and Text Analysis routes.
 
 - /api/analyze/audio: Splits audio into <= 28s chunks, transcribes via Gnani Prisma REST,
   reassembles transcript segments, runs deterministic detection engine, and returns AnalysisResult.
@@ -161,7 +161,7 @@ async def analyze_audio(
             for c in chunk_results
         ]
 
-        # 8. Run deterministic detection engine (M2 attached)
+        # 8. Run deterministic detection engine
         analysis = analyze_segments(
             segments=segments,
             language_code=language_code,

@@ -55,41 +55,48 @@ export default function LiveTestPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl sm:text-3xl font-display font-black text-[var(--ink)] tracking-tight">
-          {lang === "hi" ? "लाइव टेस्ट: सुनिए और देखिए सजग कैसे पकड़ता है" : "Live test: hear a call, watch Sajag catch it"}
+          {lang === "hi" ? "असली उदाहरणों पर चलते देखें: सुनिए और देखिए सजग कैसे पकड़ता है" : "See this run on real examples: hear a call, watch Sajag catch it"}
         </h1>
         <p className="text-sm text-[var(--ink-muted)] leading-relaxed">
           {lang === "hi"
-            ? "स्पीकर बटन दबाइए। कॉल चलेगी, उसी समय ट्रांसक्रिप्ट बनेगी, चेतावनी संकेत चिह्नित होंगे और खतरा बढ़ने पर \"फोन काटें\" दिखेगा।"
-            : "Press the speaker button. The call plays, the transcript builds as it is heard, warning signs get marked, and when the risk is high it tells you to hang up."}
+            ? "नीचे दी गई 2 असली कॉल्स में से किसी एक को चुनें और स्पीकर बटन दबाइए। कॉल चलेगी, साथ-साथ लाइव ट्रांसक्रिप्ट बनेगी, ठगी के शब्द लाल रंग में चिह्नित होंगे और खतरा बढ़ने पर इसे ठगी घोषित कर \"फोन काटें\" दिखेगा।"
+            : "Choose between the 2 real calls below and press the speaker button. The audio streams as the live transcript builds, scam words are highlighted in red, and the call is flagged as a scam."}
         </p>
       </div>
 
       {failed && <p role="alert" className="text-sm text-[var(--alarm-text)]">Could not load the list of test clips.</p>}
 
       {clips && clips.length > 1 && (
-        <div role="tablist" aria-label="Test clips" className="flex flex-wrap gap-2">
-          {clips.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              role="tab"
-              aria-selected={c.id === selected}
-              data-testid={`clip-tab-${c.id}`}
-              onClick={() => pickClip(c.id)}
-              className={`px-3 py-2 rounded-md border text-xs sm:text-sm text-left transition-colors ${
-                c.id === selected ? "border-[var(--stamp)] bg-[var(--stamp)]/5 font-bold" : "border-[var(--line)] bg-[var(--sheet)] hover:border-[var(--stamp)]"
-              }`}
-            >
-              <span className="block text-[10px] font-mono uppercase text-[var(--ink-muted)]">
-                {c.kind === "real" ? (lang === "hi" ? "असली रिकॉर्डिंग" : "Real recording") : lang === "hi" ? "सिंथेटिक" : "Synthetic"}
-              </span>
-              {lang === "hi" ? c.title_hi : c.title}
-            </button>
-          ))}
+        <div className="space-y-2">
+          <p className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-muted)]">
+            {lang === "hi" ? "2 असली कॉल्स में से चुनें:" : "Choose between 2 real calls:"}
+          </p>
+          <div role="tablist" aria-label="Test clips" className="grid sm:grid-cols-2 gap-3">
+            {clips.map((c, idx) => (
+              <button
+                key={c.id}
+                type="button"
+                role="tab"
+                aria-selected={c.id === selected}
+                data-testid={`clip-tab-${c.id}`}
+                onClick={() => pickClip(c.id)}
+                className={`p-3.5 rounded-lg border text-xs sm:text-sm text-left transition-colors ${
+                  c.id === selected
+                    ? "border-2 border-[var(--stamp)] bg-[var(--stamp)]/5 font-bold shadow-2xs"
+                    : "border-[var(--line)] bg-[var(--sheet)] hover:border-[var(--stamp)]"
+                }`}
+              >
+                <span className="block text-[10px] font-mono uppercase text-[var(--stamp)] mb-0.5">
+                  {lang === "hi" ? `उदाहरण ${idx + 1} • असली रिकॉर्डिंग (${Math.round(c.duration_s)}s)` : `Call ${idx + 1} • Real recording (${Math.round(c.duration_s)}s)`}
+                </span>
+                <span className="text-[var(--ink)]">{lang === "hi" ? c.title_hi : c.title}</span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {current && <LiveTestPlayer key={current.id} fixtureUrl={current.fixture_url} />}
+      {current && <LiveTestPlayer key={current.id} fixtureUrl={current.fixture_url} allowLive={false} />}
 
       <div className="p-5 rounded-xl border border-[var(--line)] bg-[var(--sheet)] flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-sm text-[var(--ink-muted)]">

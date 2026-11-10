@@ -40,7 +40,7 @@ export default function DemoPage() {
         </p>
       </div>
 
-      <LiveTestPlayer fixtureUrl="/live-tests/da_hi_002/fixture.json" allowLive={false} />
+      <LiveTestPlayer fixtureUrl="/live-tests/da_real_01/fixture.json" allowLive={false} />
 
       <div className="p-5 rounded-xl border border-[var(--line)] bg-[var(--sheet)] flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-sm text-[var(--ink-muted)]">

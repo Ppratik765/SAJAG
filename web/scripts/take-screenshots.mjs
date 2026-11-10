@@ -56,7 +56,7 @@ async function isServerRunning(url) {
 }
 
 async function main() {
-  console.log("=== Sajag M0.6 Screenshot & Motion Automation ===");
+  console.log("=== Sajag Screenshot & Motion Automation ===");
   console.log(`Screens Directory: ${SCREENS_DIR}`);
   console.log(`Motion Directory: ${MOTION_DIR}`);
 
@@ -613,7 +613,7 @@ async function main() {
       console.warn("Ffmpeg contact sheet generation warning:", e.message);
     }
 
-    console.log("\nAll M0.6b motion frames, videos & contact sheets successfully captured!");
+    console.log("\nAll motion frames, videos & contact sheets successfully captured!");
   } finally {
     await browser.close();
     if (serverProcess) {

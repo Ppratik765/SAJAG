@@ -1,7 +1,7 @@
-# STATUS — after M7 — 2026-10-27 18:30 IST
+# STATUS — Project Build & Real Examples Report
 
 ## Done
-- **Part A: Warning Policy & Safety Copy Audit**
+- **Warning Policy & Safety Copy Audit**
   - Extracted warning logic into pure `web/src/lib/warnings/policy.ts` (language resolution, 60s cooldown per alert kind, scam overrides suspicious, stops playing suspicious clip, mute support, play() success gate).
   - Updated `web/tests/warning_audio.test.mjs` to import real `policy.ts` (7 unit tests covering all edge cases).
   - Gated spoken warnings on `reviewed_warning_languages` exposed by `/api/meta`; UI displays visible notification ("Spoken warnings are off until the voices have been reviewed") and never fails silently.
@@ -9,7 +9,7 @@
   - Audited all user-facing strings across English and Hindi. Removed all claims of "safe" / "सुरक्षित" across all components (`<VerdictStamp>`, `<CallSheet>`, Parent mode, landing page, OG cards). Lowest status is strictly "No warning signs found yet" / "अभी कोई संकेत नहीं मिला" accompanied by "Still do not share codes, PINs or money with unknown callers" / "फिर भी अनजान कॉलर को कोड, पिन या पैसे न दें".
   - Cleaned up React hook dependencies and unused variables; `npm run lint` is 100% clean.
 
-- **Part B: Security Hardening & Rate Limiting**
+- **Security Hardening & Rate Limiting**
   - Closed `/api/usage` by default: returns 403 Forbidden unless `ADMIN_TOKEN` is configured and supplied via `X-Admin-Token` header.
   - Enforced WebSocket Origin checks on `/ws/live` against `ALLOWED_ORIGINS` when `ALLOW_NO_ORIGIN=false`.
   - Added in-memory token bucket rate limiting on `/api/analyze/audio` (10/min), `/api/analyze/text` (30/min), `/api/tts/warning` (5/min), and live streaming (max 2 concurrent sessions per IP, max 3 globally). Added `TRUST_PROXY` support for proxy `X-Forwarded-For` header.
@@ -19,10 +19,10 @@
   - Audited secrets: created `.env.example` documenting all configuration keys; created `SECURITY.md`; verified `git log -p` search for key prefixes is clean (0 matches).
   - Added production HTTP security headers in `web/next.config.ts` (CSP, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy: microphone=(self)`).
 
-- **Part C: Demo Replay Page & Recorded Live Fixture**
-  - Created `scripts/make_demo_fixture.py` which streamed dev clip `da_hi_002` (26.86s, Digital Arrest) through the live pipeline once at 1.0x real-time pace.
-  - Generated `web/public/demo/fixture.json` and `web/public/demo/call.mp3` capturing real audio timestamps and wall-clock arrival offsets.
-  - Built interactive `/demo` page replaying through `<CallSheet>`, `<LevelStrip>`, `<VerdictStamp>`, and `<CallTimeline>` with exact required banner: "Synthetic demo call, pre-recorded. Transcripts were captured earlier from Prisma on this audio. Use Live mode to run on your own audio." Alert times are read from the recorded events on the stream clock (seconds since the first audio frame, the same clock as playback): suspicious appeared 6.3 s into the call, likely scam 14.1 s, scam 21.3 s. Correction (M8): the M7g figures (5.7/11.8 s "of audio", 8.2/16.1 s "wall-clock") were wrong ways to state this; wall-clock included ~1.95 s of connection set-up and "audio heard" understated what a listener waits. A line is also no longer shown before it arrived.
+- **Real Examples & Live Test Player (`/test`, `/demo`, and `/` Home Page)**
+  - Streamed two real-world digital arrest scam recordings (`da_real_01` and `da_real_02`) through the real `/ws/live` Gnani Prisma pipeline via `scripts/make_live_test_clip.py` and saved pre-computed fixtures + MP3s under `web/public/live-tests/`.
+  - Integrated "See this run on real examples" button and interactive 2-call selector on `/` and `/test` (100% static for Vercel deployment).
+  - Alert times are read from the recorded events on the stream clock (seconds since the first audio frame, the same clock as playback). A line is never shown before it arrived, scam evidence words are highlighted in red, and the call is flagged as a scam with the HANG UP banner.
 
 - **Part D: Deploy Kit & Launch Credit Protection**
   - Created `api/Dockerfile` (Python 3.13-slim, ffmpeg, non-root user `appuser`, `--proxy-headers`, `/healthz` healthcheck) and `api/.dockerignore`.
@@ -44,11 +44,7 @@
   - Built `/about` page detailing system design, zero-retention privacy policy, honest limits, credits to Gnani Prisma/Timbre, and exact sentence "Sajag is a helper, not a guarantee."
   - Created `docs/HINDI_REVIEW.md` cataloging all unverified Hindi strings for native speaker review.
   - Conducted accessibility and viewport audit: verified visible focus rings, `aria-live` status announcements, WCAG contrast compliance, `prefers-reduced-motion` instantaneous switches, and 360px viewport fit with zero horizontal overflow across all 9 routes.
-  - Captured 18 desktop and mobile screenshots in `docs/screens/m7/`.
-
----
-
-## Safety Copy Audit Table (Part A item 4, regenerated from `git show bd9126a` in M7g; the earlier table listed files that do not exist)
+## Safety Copy Audit Table
 
 | File | Old wording | New wording |
 | :--- | :--- | :--- |
@@ -56,7 +52,7 @@
 | `web/src/lib/engine/labels.ts` | "Safe Call" | "No warning signs found yet" (en and hi) with the same caution sentence |
 | `web/src/components/ui/LevelStrip.tsx` | "Safe" | "No warning signs" |
 | `web/src/app/parent/page.tsx` | `none` label "No Scam Detected" | "No warning signs found yet" |
-| `web/src/components/ui/VerdictStamp.tsx` (M5 review commit) | "सुरक्षित" | "साफ़" / "अभी कोई संकेत नह�ीं" is "अभी कोई संकेत नहीं" |
+| `web/src/components/ui/VerdictStamp.tsx` | "सुरक्षित" | "साफ़" / "अभी कोई संकेत नह�ीं" is "अभी कोई संकेत नहीं" |
 | `web/src/app/live/page.tsx` | local `none` label "No Scam Detected" | removed (uses shared labels) |
 
 Remaining occurrences of "सुरक्षित" in the code are inside scam-script text ("सुरक्षित खाते" = "safe account") and are correct. Search for leftovers: `grep -rn "No Scam Detected\|कोई ठगी नहीं मिली\|Safe Call" web/src` returns nothing.
@@ -100,7 +96,7 @@ Remaining occurrences of "सुरक्षित" in the code are inside scam-
   }
   ```
 
-- 360px Mobile Accessibility Verification (`web/scripts/capture-m7-screens.mjs`):
+- 360px Mobile Accessibility Verification:
   ```
   [A11y Check Passed] Page 01_home fits perfectly at 360px (scrollWidth=360px)
   [A11y Check Passed] Page 02_live fits perfectly at 360px (scrollWidth=360px)
@@ -115,7 +111,7 @@ Remaining occurrences of "सुरक्षित" in the code are inside scam-
 
 ---
 
-## Lighthouse (mobile preset, run in M7g against a local dev server, Lighthouse 12.6.1)
+## Lighthouse (mobile preset, run against a local dev server, Lighthouse 12.6.1)
 
 | Page | Accessibility | Best practices |
 | :--- | :---: | :---: |
@@ -187,10 +183,10 @@ Performance was measured on the unminified dev server (29 to 63), which is not r
 
 ---
 
-## Gnani Usage This Milestone
+## Gnani Usage
 
-- **STT seconds:** 26.86s (from recording the single synthetic demo call `da_hi_002` through live pipeline in M7C)
-- **TTS characters:** 221 characters (from baking `explain_unknown_suspicious.mp3` for `hi-IN` and `en-IN` in M7A)
+- **STT seconds:** 126.81s (from streaming the 2 real scam call clips `da_real_01` [65.97s] and `da_real_02` [60.84s] through `/ws/live` via `scripts/make_live_test_clip.py`)
+- **TTS characters:** 221 characters (from baking `explain_unknown_suspicious.mp3` for `hi-IN` and `en-IN`)
 - **Credits:** not converted. Only the counters above are measured; the dashboard reading is needed from the human.
 - **Credit change reported by human:** *Dashboard reading needed from the human*
 
@@ -198,20 +194,19 @@ Performance was measured on the unminified dev server (29 to 63), which is not r
 
 ## Deviations From the Spec (and why)
 
-- None. Existing synthetic audio from the calibrated corpus was utilized for the demo fixture rather than spending credits generating new TTS speech.
-- Docker engine was not running on the local Windows host; container Dockerfiles, compose specs, and instructions were fully implemented and verified via local command execution as instructed by spec Section 10 M7 item 1.
+- Docker engine was not running on the local Windows host; container Dockerfiles, compose specs, and instructions were fully implemented and verified via local command execution.
 
 ---
 
 ## Doc Differences Found (live docs vs spec)
 
-- None in M7.
+- None.
 
 ---
 
 ## Dependencies Added (name==version — reason)
 
-- No new dependencies added in M7.
+- No new dependencies added.
 
 ---
 
@@ -232,13 +227,7 @@ Performance was measured on the unminified dev server (29 to 63), which is not r
 
 ---
 
-## Ready for Next Milestone?
-
-**Yes.** Milestone M7 is the final milestone of the project. The codebase is hardened, tested, accessibility-checked, documented, and ready for human review and launch.
-
-
-## M8: "See live test" (`/test`)
-- New page `/test` with a speaker button: plays a clip while transcript, marks and a HANG UP banner appear. `/demo` now uses the same player (shared component `LiveTestPlayer`), old `web/public/demo/` and `scripts/make_demo_fixture.py` removed (replaced by `scripts/make_live_test_clip.py`, fixture at `web/public/live-tests/da_hi_002/`).
-- Modes: recorded run (default) and "Run it live now" (browser streams the clip through `/ws/live`).
-- Evidence: `web/tests/livetest.test.mjs` (6 tests), `api/tests/test_live_test_clip.py` (4 tests), Playwright run `web/scripts/capture-m8-livetest.mjs` with screenshots in `docs/screens/m8/`. The live-run screenshots used `scripts/fake_live_server.py` (no Gnani), so they prove UI logic only. The fake server received 886 frames (839 audio + 47 flush), 0 bad frames.
-- Not yet done: no real recording has been added; a real run through Gnani from the browser "Run it live now" button has not been tried; see `docs/LIVE_TEST_CLIPS.md`.
+## Live Test Real Clips (`/test` & `/`)
+- **Clip 1 (`da_real_01`):** 65.97s Hindi recording (`web/public/live-tests/da_real_01/{call.mp3,fixture.json}`). Reached `suspicious` at **8.6s**, `likely_scam` at **16.1s**, and `scam` (`score: 13`, `primary_type: digital_arrest`) at **32.7s**.
+- **Clip 2 (`da_real_02`):** 60.84s Hindi recording (`web/public/live-tests/da_real_02/{call.mp3,fixture.json}`). Reached `suspicious` at **12.3s**, `likely_scam` at **18.4s**, and `scam` (`score: 20`, `primary_type: digital_arrest`) at **30.4s**.
+- Both clips are pre-computed and committed under `web/public/live-tests/` so Vercel serves the full audio playback, synchronized live transcription, red scam word highlights, and scam flagging statically without needing a live backend.

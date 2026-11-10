@@ -173,7 +173,7 @@ body {
   pointer-events: none;
 }
 
-/* --- M0.6 Alive Animations & Keyframes --- */
+/* --- Alive Animations & Keyframes --- */
 @keyframes drawCircle {
   0% {
     stroke-dashoffset: 380;

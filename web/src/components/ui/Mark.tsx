@@ -111,8 +111,11 @@ export function Mark({
             toggleTooltip(e);
           }
         }}
-        className="relative inline-block mx-0.5 px-1.5 py-0.5 rounded cursor-pointer font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--alarm)] select-text"
-        style={{ color: "var(--alarm-text)" }}
+        className="relative inline-block mx-0.5 px-1.5 py-0.5 rounded cursor-pointer font-bold focus:outline-none focus:ring-2 focus:ring-[var(--alarm)] select-text"
+        style={{
+          color: "var(--alarm-text)",
+          backgroundColor: "rgba(217, 45, 32, 0.14)",
+        }}
       >
         <span className="relative z-10">{children}</span>
         {/* Vermilion hand-drawn ellipse SVG background */}
@@ -156,10 +159,11 @@ export function Mark({
           toggleTooltip(e);
         }
       }}
-      className="relative inline-block mx-0.5 px-1 py-0.5 rounded-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] select-text"
+      className="relative inline-block mx-0.5 px-1.5 py-0.5 rounded-sm font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--alarm)] select-text"
       style={{
-        backgroundColor: "var(--marker)",
-        color: "var(--ink)",
+        backgroundColor: "rgba(217, 45, 32, 0.16)",
+        color: "var(--alarm-text)",
+        borderBottom: "2px solid var(--alarm)",
         boxDecorationBreak: "clone",
         WebkitBoxDecorationBreak: "clone",
       }}
