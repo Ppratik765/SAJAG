@@ -17,21 +17,26 @@ export function ScrollHowItWorks() {
   const step2Ref = useRef<HTMLDivElement>(null);
   const step3Ref = useRef<HTMLDivElement>(null);
 
-  // Scroll position driver (scrubbable in both directions)
+  // Scroll position driver + interactive click/hover on steps
+  const [userPinned, setUserPinned] = useState(false);
+
   useEffect(() => {
-    if (shouldReduceMotion) return;
+    if (shouldReduceMotion || userPinned) return;
 
     const handleScroll = () => {
-      const s1 = step1Ref.current?.getBoundingClientRect();
-      const s2 = step2Ref.current?.getBoundingClientRect();
-      const s3 = step3Ref.current?.getBoundingClientRect();
-      const mid = window.innerHeight * 0.45;
-
-      if (s3 && s3.top <= mid) {
+      const container = containerRef.current;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // Map the section's position while it is comfortably inside the viewport:
+      // When rect.top is at 65% of viewport height -> Step 1
+      // When rect.top is between 30% and 55% -> Step 2
+      // When rect.top is <= 30% -> Step 3
+      if (rect.top <= vh * 0.28) {
         setActiveStep(3);
-      } else if (s2 && s2.top <= mid) {
+      } else if (rect.top <= vh * 0.52) {
         setActiveStep(2);
-      } else if (s1 && s1.top <= mid) {
+      } else {
         setActiveStep(1);
       }
     };
@@ -39,7 +44,7 @@ export function ScrollHowItWorks() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [shouldReduceMotion]);
+  }, [shouldReduceMotion, userPinned]);
 
   const lines = [
     {
@@ -96,23 +101,42 @@ export function ScrollHowItWorks() {
           </div>
         </div>
       ) : (
-        /* Scroll-driven Sticky Sheet Section */
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
-          {/* Left Column: Pinned Sticky Sheet (desktop) / Compact Sticky Strip (mobile) */}
-          <div className="lg:col-span-6 sticky top-20 z-20">
+        /* Side-by-side Aligned Sheet & Steps Section */
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch relative">
+          {/* Left Column: Live Sheet State */}
+          <div className="lg:col-span-6 flex flex-col">
             {/* Step status bar indicator */}
-            <div className="flex items-center justify-between mb-2 text-xs font-semibold px-1">
+            <div className="flex items-center justify-between mb-3 text-xs font-semibold px-1">
               <span className="text-[var(--ink-muted)]">
-                {locale === "hi" ? "लाइव कागज़ की स्थिति" : "Live Sheet State"}
+                {locale === "hi" ? "लाइव कागज़ की स्थिति" : "Live Sheet State"} —{" "}
+                <span className="text-[var(--stamp)] font-bold">
+                  {activeStep === 1
+                    ? locale === "hi"
+                      ? "चरण 1: सुनना"
+                      : "Step 1: Listen"
+                    : activeStep === 2
+                    ? locale === "hi"
+                      ? "चरण 2: निशान लगाना"
+                      : "Step 2: Mark"
+                    : locale === "hi"
+                    ? "चरण 3: बोलकर चेतावनी"
+                    : "Step 3: Warn"}
+                </span>
               </span>
               <div className="flex items-center gap-1.5">
-                {[1, 2, 3].map((s) => (
-                  <span
+                {([1, 2, 3] as const).map((s) => (
+                  <button
                     key={s}
-                    className={`h-2 rounded-full transition-all duration-300 ${
+                    type="button"
+                    aria-label={`Show step ${s}`}
+                    onClick={() => {
+                      setUserPinned(true);
+                      setActiveStep(s);
+                    }}
+                    className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                       activeStep === s
-                        ? "w-6 bg-[var(--stamp)]"
-                        : "w-2 bg-[var(--line)]"
+                        ? "w-7 bg-[var(--stamp)]"
+                        : "w-2.5 bg-[var(--line)] hover:bg-[var(--ink-muted)]"
                     }`}
                   />
                 ))}
@@ -120,125 +144,169 @@ export function ScrollHowItWorks() {
             </div>
 
             {/* The Interactive Responsive Sheet */}
-            <div className="paper-sheet paper-folded p-4 sm:p-6 w-full shadow-md transition-all duration-300">
+            <div className="paper-sheet paper-folded p-5 sm:p-6 w-full flex-1 flex flex-col justify-between shadow-md transition-all duration-300">
               <div className="paper-dog-ear" />
 
-              {/* Sheet header: clean sentence-case title and state */}
-              <div className="border-b border-[var(--line)] pb-2.5 mb-4 flex items-center justify-between">
-                <span className="text-xs sm:text-sm font-bold text-[var(--ink)]">
-                  {locale === "hi" ? "बातचीत का विवरण" : "Transcript call sheet"}
-                </span>
-                <span className="text-xs font-semibold text-[var(--ink-muted)]">
-                  {activeStep === 1
-                    ? locale === "hi"
-                      ? "सुनना जारी..."
-                      : "Listening..."
-                    : activeStep === 2
-                    ? locale === "hi"
-                      ? "निशान लगाए गए"
-                      : "Marks applied"
-                    : locale === "hi"
-                    ? "चेतावनी जारी"
-                    : "Warning issued"}
-                </span>
-              </div>
+              <div>
+                {/* Sheet header: clean sentence-case title and state */}
+                <div className="border-b border-[var(--line)] pb-2.5 mb-4 flex items-center justify-between">
+                  <span className="text-xs sm:text-sm font-bold text-[var(--ink)]">
+                    {locale === "hi" ? "बातचीत का विवरण" : "Transcript call sheet"}
+                  </span>
+                  <span className="text-xs font-semibold text-[var(--ink-muted)]">
+                    {activeStep === 1
+                      ? locale === "hi"
+                        ? "सुनना जारी..."
+                        : "Listening..."
+                      : activeStep === 2
+                      ? locale === "hi"
+                        ? "निशान लगाए गए"
+                        : "Marks applied"
+                      : locale === "hi"
+                      ? "चेतावनी जारी"
+                      : "Warning issued"}
+                  </span>
+                </div>
 
-              {/* Lines reacting to scroll step */}
-              <div className="space-y-3.5 min-h-[160px]">
-                {lines.map((line, i) => {
-                  const text = locale === "hi" ? line.hi : line.en;
-                  const markEvidence = locale === "hi" ? line.markHi : line.markEn;
-                  const noteText = locale === "hi" ? line.noteHi : line.noteEn;
+                {/* Lines reacting to scroll/selected step */}
+                <div className="space-y-4">
+                  {lines.map((line, i) => {
+                    const text = locale === "hi" ? line.hi : line.en;
+                    const markEvidence = locale === "hi" ? line.markHi : line.markEn;
+                    const noteText = locale === "hi" ? line.noteHi : line.noteEn;
 
-                  return (
-                    <div
-                      key={i}
-                      className="flex flex-col sm:flex-row sm:items-start gap-2 py-1 border-b border-[var(--line)]/40 last:border-b-0"
-                    >
-                      <div className="w-10 shrink-0 text-[11px] font-semibold text-[var(--ink-muted)] tabular-nums">
-                        {line.time}
-                      </div>
-                      <div className="flex-1 text-[14px] text-[var(--ink)] leading-relaxed">
-                        {activeStep === 1 ? (
-                          <span>{text}</span>
-                        ) : (
-                          <span>
-                            {text.split(markEvidence)[0]}
-                            <Mark
-                              category="THREAT_ARREST"
-                              kind={i === 0 ? "highlight" : "circle"}
-                              weight={3}
-                            >
-                              {markEvidence}
-                            </Mark>
-                            {text.split(markEvidence)[1]}
-                          </span>
+                    return (
+                      <div
+                        key={i}
+                        className="flex flex-col sm:flex-row sm:items-start gap-2.5 py-2 border-b border-[var(--line)]/40 last:border-b-0"
+                      >
+                        <div className="w-10 shrink-0 text-[11px] font-semibold text-[var(--ink-muted)] tabular-nums pt-0.5">
+                          {line.time}
+                        </div>
+                        <div className="flex-1 text-[14px] sm:text-[15px] text-[var(--ink)] leading-relaxed">
+                          {activeStep === 1 ? (
+                            <span>{text}</span>
+                          ) : (
+                            <span>
+                              {text.split(markEvidence)[0]}
+                              <Mark
+                                category="THREAT_ARREST"
+                                kind={i === 0 ? "highlight" : "circle"}
+                                weight={3}
+                              >
+                                {markEvidence}
+                              </Mark>
+                              {text.split(markEvidence)[1]}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Margin note draws in on step 2 & 3 */}
+                        {activeStep >= 2 && (
+                          <div className="sm:w-36 shrink-0 pt-0.5 animate-[penWriteReveal_400ms_ease-out]">
+                            <MarginNote text={noteText} category="ALERT" />
+                          </div>
                         )}
                       </div>
-
-                      {/* Margin note draws in on step 2 & 3 */}
-                      {activeStep >= 2 && (
-                        <div className="sm:w-36 shrink-0 pt-0.5 animate-[penWriteReveal_400ms_ease-out]">
-                          <MarginNote text={noteText} category="ALERT" />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
 
-              {/* Step 3: Stamp & Spoken alert appear */}
-              {activeStep === 3 && (
-                <div className="mt-4 pt-3 border-t border-[var(--line)] flex items-center justify-between gap-2 animate-[penWriteReveal_300ms_ease-out]">
-                  <div className="flex items-center gap-2 text-[var(--alarm-text)] text-xs font-bold">
-                    <Volume2 size={16} className="text-[var(--alarm)] shrink-0" />
-                    <span>
-                      {locale === "hi"
-                        ? "तुरंत फोन काटें — ठगी है"
-                        : "Hang up now — scam detected"}
-                    </span>
-                  </div>
-                  <VerdictStamp level="scam" size="sm" lang={locale} />
-                </div>
-              )}
+              {/* Step 3: Stamp & Spoken alert appear (fixed-height footer so card never jumps) */}
+              <div className="mt-4 pt-3 border-t border-[var(--line)] min-h-[64px] flex items-center justify-between gap-2">
+                {activeStep === 3 ? (
+                  <>
+                    <div className="flex items-center gap-2 text-[var(--alarm-text)] text-xs sm:text-sm font-bold animate-[penWriteReveal_300ms_ease-out]">
+                      <Volume2 size={18} className="text-[var(--alarm)] shrink-0" />
+                      <span>
+                        {locale === "hi"
+                          ? "तुरंत फोन काटें — ठगी है"
+                          : "Hang up now — scam detected"}
+                      </span>
+                    </div>
+                    <VerdictStamp level="scam" size="sm" lang={locale} />
+                  </>
+                ) : (
+                  <span className="text-xs text-[var(--ink-muted)]">
+                    {activeStep === 1
+                      ? locale === "hi"
+                        ? "चरण 1: कॉल की आवाज़ को सीधे ट्रांसक्राइब किया जा रहा है…"
+                        : "Step 1: Transcribing live speech from speakerphone…"
+                      : locale === "hi"
+                      ? "चरण 2: ठगी के शब्दों को लाल रंग में चिह्नित किया गया…"
+                      : "Step 2: Red flags marked with evidence quotes & margin notes…"}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Right Column: 3 Detailed Scrolling Steps */}
-          <div className="lg:col-span-6 space-y-24 py-6">
+          {/* Right Column: 3 Compact, Aligned, Interactive Steps (all visible together) */}
+          <div className="lg:col-span-6 flex flex-col justify-between gap-4 pt-0 lg:pt-7">
             {/* Step 1: Listen */}
             <div
               ref={step1Ref}
-              className={`p-6 sm:p-8 rounded-2xl border transition-all duration-300 ${
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                setUserPinned(true);
+                setActiveStep(1);
+              }}
+              onMouseEnter={() => setActiveStep(1)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setUserPinned(true);
+                  setActiveStep(1);
+                }
+              }}
+              className={`p-5 sm:p-6 rounded-2xl border transition-all duration-200 cursor-pointer flex items-start gap-4 ${
                 activeStep === 1
-                  ? "bg-[var(--sheet)] border-[var(--stamp)] shadow-md scale-[1.02]"
-                  : "bg-[var(--sheet)]/60 border-[var(--line)] opacity-80"
+                  ? "bg-[var(--sheet)] border-2 border-[var(--stamp)] shadow-md"
+                  : "bg-[var(--sheet)]/60 border-[var(--line)] opacity-80 hover:opacity-100"
               }`}
             >
-              <div className="w-12 h-12 rounded-xl bg-[var(--stamp)]/10 text-[var(--stamp)] flex items-center justify-center mb-4">
-                <Radio size={24} />
+              <div className="w-11 h-11 rounded-xl bg-[var(--stamp)]/10 text-[var(--stamp)] flex items-center justify-center shrink-0 mt-0.5">
+                <Radio size={22} />
               </div>
-              <h3 className="text-2xl font-bold font-display text-[var(--ink)]">
-                {t("steps.step1_title")}
-              </h3>
-              <p className="text-base text-[var(--ink-muted)] mt-2 leading-relaxed">
-                {t("steps.step1_desc")}
-              </p>
+              <div>
+                <h3 className="text-lg sm:text-xl font-bold font-display text-[var(--ink)]">
+                  {t("steps.step1_title")}
+                </h3>
+                <p className="text-sm text-[var(--ink-muted)] mt-1 leading-relaxed">
+                  {t("steps.step1_desc")}
+                </p>
+              </div>
             </div>
 
             {/* Step 2: Mark */}
             <div
               ref={step2Ref}
-              className={`p-6 sm:p-8 rounded-2xl border transition-all duration-300 ${
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                setUserPinned(true);
+                setActiveStep(2);
+              }}
+              onMouseEnter={() => setActiveStep(2)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setUserPinned(true);
+                  setActiveStep(2);
+                }
+              }}
+              className={`p-5 sm:p-6 rounded-2xl border transition-all duration-200 cursor-pointer flex items-start gap-4 ${
                 activeStep === 2
-                  ? "bg-[var(--sheet)] border-[var(--alarm)] shadow-md scale-[1.02]"
-                  : "bg-[var(--sheet)]/60 border-[var(--line)] opacity-80"
+                  ? "bg-[var(--sheet)] border-2 border-[var(--alarm)] shadow-md"
+                  : "bg-[var(--sheet)]/60 border-[var(--line)] opacity-80 hover:opacity-100"
               }`}
             >
-              <div className="w-12 h-12 rounded-xl bg-[var(--alarm)]/10 text-[var(--alarm)] flex items-center justify-center mb-4">
+              <div className="w-11 h-11 rounded-xl bg-[var(--alarm)]/10 text-[var(--alarm)] flex items-center justify-center shrink-0 mt-0.5">
                 <svg
-                  width="26"
-                  height="26"
+                  width="22"
+                  height="22"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -250,32 +318,50 @@ export function ScrollHowItWorks() {
                   <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold font-display text-[var(--ink)]">
-                {t("steps.step2_title")}
-              </h3>
-              <p className="text-base text-[var(--ink-muted)] mt-2 leading-relaxed">
-                {t("steps.step2_desc")}
-              </p>
+              <div>
+                <h3 className="text-lg sm:text-xl font-bold font-display text-[var(--ink)]">
+                  {t("steps.step2_title")}
+                </h3>
+                <p className="text-sm text-[var(--ink-muted)] mt-1 leading-relaxed">
+                  {t("steps.step2_desc")}
+                </p>
+              </div>
             </div>
 
             {/* Step 3: Warn */}
             <div
               ref={step3Ref}
-              className={`p-6 sm:p-8 rounded-2xl border transition-all duration-300 ${
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                setUserPinned(true);
+                setActiveStep(3);
+              }}
+              onMouseEnter={() => setActiveStep(3)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setUserPinned(true);
+                  setActiveStep(3);
+                }
+              }}
+              className={`p-5 sm:p-6 rounded-2xl border transition-all duration-200 cursor-pointer flex items-start gap-4 ${
                 activeStep === 3
-                  ? "bg-[var(--sheet)] border-[var(--safe)] shadow-md scale-[1.02]"
-                  : "bg-[var(--sheet)]/60 border-[var(--line)] opacity-80"
+                  ? "bg-[var(--sheet)] border-2 border-[var(--safe)] shadow-md"
+                  : "bg-[var(--sheet)]/60 border-[var(--line)] opacity-80 hover:opacity-100"
               }`}
             >
-              <div className="w-12 h-12 rounded-xl bg-[var(--safe)]/10 text-[var(--safe-text)] flex items-center justify-center mb-4">
-                <CheckCircle2 size={24} />
+              <div className="w-11 h-11 rounded-xl bg-[var(--safe)]/10 text-[var(--safe-text)] flex items-center justify-center shrink-0 mt-0.5">
+                <CheckCircle2 size={22} />
               </div>
-              <h3 className="text-2xl font-bold font-display text-[var(--ink)]">
-                {t("steps.step3_title")}
-              </h3>
-              <p className="text-base text-[var(--ink-muted)] mt-2 leading-relaxed">
-                {t("steps.step3_desc")}
-              </p>
+              <div>
+                <h3 className="text-lg sm:text-xl font-bold font-display text-[var(--ink)]">
+                  {t("steps.step3_title")}
+                </h3>
+                <p className="text-sm text-[var(--ink-muted)] mt-1 leading-relaxed">
+                  {t("steps.step3_desc")}
+                </p>
+              </div>
             </div>
           </div>
         </div>

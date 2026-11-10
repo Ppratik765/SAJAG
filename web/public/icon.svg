@@ -1,0 +1,43 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="48" fill="#F5F7FB" />
+  <circle
+    cx="50"
+    cy="50"
+    r="44"
+    stroke="#2A2FB8"
+    stroke-width="4"
+    stroke-dasharray="95 3 45 4 60 2"
+    stroke-linecap="round"
+  />
+  <circle
+    cx="50"
+    cy="50"
+    r="39"
+    stroke="#2A2FB8"
+    stroke-width="1.5"
+    stroke-dasharray="2 3"
+    opacity="0.75"
+  />
+  <text
+    x="50"
+    y="51"
+    text-anchor="middle"
+    dominant-baseline="central"
+    fill="#2A2FB8"
+    font-family="sans-serif"
+    font-weight="900"
+    font-size="25"
+    letter-spacing="0.04em"
+  >सजग</text>
+  <path
+    d="M26 68 L36 68 L40 64 L44 72 L48 62 L52 74 L56 65 L60 68 L74 68"
+    stroke="#E5322D"
+    stroke-width="2.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <circle cx="50" cy="22" r="2.5" fill="#2A2FB8" />
+  <circle cx="34" cy="26" r="1.8" fill="#2A2FB8" opacity="0.7" />
+  <circle cx="66" cy="26" r="1.8" fill="#2A2FB8" opacity="0.7" />
+</svg>
+

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Mark, HARD_CATEGORIES } from "./Mark";
 import { MarginNote } from "./MarginNote";
 import { VerdictStamp, RiskLevel } from "./VerdictStamp";
@@ -50,8 +50,16 @@ export function CallSheet({
   subtitle,
 }: CallSheetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollListRef = useRef<HTMLDivElement>(null);
   const { locale: contextLocale } = useI18n();
   const activeLang = (lang === "en" || lang === "hi" ? lang : contextLocale) as "en" | "hi";
+
+  useEffect(() => {
+    const el = scrollListRef.current;
+    if (el && segments.length > 0) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [segments.length]);
 
   // Group signals by segment index
   const signalsBySegment = signals.reduce<Record<number, CallSignal[]>>((acc, sig) => {
@@ -172,8 +180,11 @@ export function CallSheet({
         </div>
       </div>
 
-      {/* Transcript Lines */}
-      <div className="space-y-4">
+      {/* Transcript Lines (Scrollable so long transcripts never push the page down) */}
+      <div
+        ref={scrollListRef}
+        className="space-y-3 max-h-[300px] sm:max-h-[340px] overflow-y-auto pr-2 scroll-smooth"
+      >
         {segments.length === 0 ? (
           <p className="text-center py-10 text-[var(--ink-muted)] italic text-sm">
             {emptyStateText}

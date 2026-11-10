@@ -796,8 +796,8 @@ export default function AccuracyPage() {
               </tr>
             </thead>
             <tbody className="divide-y" style={{ borderColor: "var(--rule)" }}>
-              {items.map((it) => (
-                <tr key={it.script_id}>
+              {items.map((it, idx) => (
+                <tr key={`${it.script_id}-${idx}`}>
                   <td className="py-2.5 font-mono text-xs">{it.script_id}</td>
                   <td className="py-2.5">{it.language}</td>
                   <td className="py-2.5 font-medium">
@@ -823,6 +823,7 @@ export default function AccuracyPage() {
                     </span>
                   </td>
                   <td className="py-2.5 text-xs font-mono">{it.primary_type}</td>
+                  <td className="py-2.5 text-xs font-mono">{it.score}</td>
                   <td className="py-2.5 text-xs">
                     {it.cer !== null && it.cer !== undefined ? `${(it.cer * 100).toFixed(1)}%` : "N/A"}
                   </td>

@@ -42,7 +42,8 @@ const T = {
     hangUp: "HANG UP",
     hangUpSub: "This call shows strong signs of a scam. In a real call: hang up, share no codes or money, call 1930.",
     suspiciousSub: "Warning signs so far. Stay careful and do not share any code or money.",
-    waiting: "Press the speaker button. The transcript and warnings appear here as the call is heard.",
+    waiting: "Press the speaker button above to play the call audio. The live transcript and red scam highlights appear here as the call is heard.",
+    listeningNow: "Playing call audio & transcribing live speech… first segment arriving…",
     sheetTitle: "Live transcript",
     appeared: "Appeared",
     intoCall: "into the call",
@@ -71,7 +72,8 @@ const T = {
     hangUp: "फोन काटें",
     hangUpSub: "इस कॉल में ठगी के मज़बूत संकेत हैं। असली कॉल में: फोन काट दें, कोई कोड या पैसे न दें, 1930 पर कॉल करें।",
     suspiciousSub: "अब तक चेतावनी संकेत मिले हैं। सावधान रहें, कोई कोड या पैसे न दें।",
-    waiting: "स्पीकर बटन दबाएँ। कॉल सुनते-सुनते ट्रांसक्रिप्ट और चेतावनियाँ यहाँ दिखेंगी।",
+    waiting: "कॉल ऑडियो चलाने के लिए ऊपर स्पीकर बटन दबाएँ। कॉल सुनते-सुनते लाइव ट्रांसक्रिप्ट और लाल निशान यहाँ दिखेंगे।",
+    listeningNow: "कॉल ऑडियो चल रहा है और लाइव ट्रांसक्राइब हो रहा है… पहली पंक्ति आ रही है…",
     sheetTitle: "लाइव ट्रांसक्रिप्ट",
     appeared: "दिखा",
     intoCall: "कॉल शुरू होने के बाद",
@@ -211,6 +213,8 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
   const playRecorded = () => {
     const a = audioRef.current;
     if (!a) return;
+    a.muted = false;
+    a.volume = 1.0;
     a.play()
       .then(() => {
         setIsPlaying(true);
@@ -564,7 +568,9 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
           )}
         </div>
         {view.segments.length === 0 ? (
-          <p className="text-sm text-[var(--ink-muted)] p-4 rounded-md border border-dashed border-[var(--line)]">{t.waiting}</p>
+          <p className="text-sm text-[var(--ink-muted)] p-4 rounded-md border border-dashed border-[var(--line)]">
+            {isPlaying ? t.listeningNow : t.waiting}
+          </p>
         ) : (
           <CallSheet
             segments={view.segments.map((s) => ({ index: s.index, text: s.text, time: formatClock(s.appear_s) }))}

@@ -65,7 +65,7 @@ html:lang(hi) {
 }
 
 .hero-cycling-headline-container {
-  height: 96px; /* fixed reserved box height for mobile */
+  min-height: 88px;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -74,26 +74,40 @@ html:lang(hi) {
 .hero-cycling-headline {
   font-family: var(--font-display), var(--font-body), sans-serif;
   font-weight: 800;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
   color: var(--ink);
-  font-size: 40px;
-  line-height: 1.04;
+  font-size: clamp(32px, 8vw, 44px);
+  line-height: 1.08;
   user-select: none;
+  overflow-wrap: break-word;
 }
 
 @media (min-width: 640px) {
   .hero-cycling-headline-container {
-    height: 125px;
+    min-height: 108px;
+  }
+  .hero-cycling-headline {
+    font-size: clamp(38px, 5.5vw, 54px);
   }
 }
 
 @media (min-width: 1024px) {
   .hero-cycling-headline-container {
-    height: 220px; /* fixed reserved box height for desktop clamp(48px, 7vw, 112px) */
+    min-height: 148px;
   }
   .hero-cycling-headline {
-    font-size: clamp(48px, 7vw, 112px);
-    line-height: 1.04;
+    font-size: clamp(44px, 4.5vw, 62px);
+    line-height: 1.06;
+  }
+}
+
+/* Compact vertical rhythm on phone landscape (short viewport height) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-cycling-headline-container {
+    min-height: 68px;
+  }
+  .hero-cycling-headline {
+    font-size: clamp(28px, 4.5vw, 38px);
   }
 }
 

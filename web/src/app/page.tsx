@@ -37,7 +37,7 @@ export default function HomePage() {
       <LivingHero />
 
       {/* 1b. See this run on real examples (2 real pre-computed calls) */}
-      <section id="real-examples" className="max-w-5xl mx-auto px-4 sm:px-6 space-y-6 scroll-mt-20">
+      <section id="real-examples" className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6 scroll-mt-20">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-2">
             <span className="inline-block px-2.5 py-0.5 rounded-full bg-[var(--alarm)]/10 text-[var(--alarm-text)] font-mono font-bold text-xs uppercase">

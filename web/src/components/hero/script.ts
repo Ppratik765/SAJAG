@@ -33,15 +33,15 @@ export interface HeroScriptData {
 }
 
 export const HERO_SCRIPT_HI: HeroScriptData = {
-  totalDurationMs: 9000,
-  alertAtMs: 5800,
-  stampAtMs: 8400,
+  totalDurationMs: 17500,
+  alertAtMs: 10500,
+  stampAtMs: 15000,
   alertSpeech: "तुरंत फोन काटें — यह डिजिटल अरेस्ट की ठगी है।",
   steps: [
     {
-      atMs: 1000,
+      atMs: 0,
       lineIndex: 0,
-      time: "0:04",
+      time: "0:01",
       text: "नमस्ते जी, मैं सीबीआई हेडक्वार्टर से डीसीपी राजेश कुमार बात कर रहा हूँ।",
       marks: [
         {
@@ -60,9 +60,9 @@ export const HERO_SCRIPT_HI: HeroScriptData = {
       scoreAfter: 2,
     },
     {
-      atMs: 2800,
+      atMs: 4120,
       lineIndex: 1,
-      time: "0:14",
+      time: "0:04",
       text: "आपके आधार से लिंक बैंक खाते में संदिग्ध विदेशी फंड आए हैं। मनी लॉन्ड्रिंग की एफआईआर दर्ज है।",
       marks: [
         {
@@ -81,9 +81,9 @@ export const HERO_SCRIPT_HI: HeroScriptData = {
       scoreAfter: 5,
     },
     {
-      atMs: 4800,
+      atMs: 9170,
       lineIndex: 2,
-      time: "0:25",
+      time: "0:09",
       text: "सुप्रीम कोर्ट के निर्देशानुसार आप डिजिटल अरेस्ट में हैं। तुरंत वीडियो कॉल पर रहिए, फोन मत काटना।",
       marks: [
         {
@@ -110,9 +110,9 @@ export const HERO_SCRIPT_HI: HeroScriptData = {
       scoreAfter: 9,
     },
     {
-      atMs: 7000,
+      atMs: 14080,
       lineIndex: 3,
-      time: "0:36",
+      time: "0:14",
       text: "वेरिफिकेशन के लिए तुरंत सेफ अकाउंट में चालीस हज़ार रुपये भेजिए।",
       marks: [
         {
@@ -134,15 +134,15 @@ export const HERO_SCRIPT_HI: HeroScriptData = {
 };
 
 export const HERO_SCRIPT_EN: HeroScriptData = {
-  totalDurationMs: 9000,
-  alertAtMs: 5800,
-  stampAtMs: 8400,
+  totalDurationMs: 18000,
+  alertAtMs: 10500,
+  stampAtMs: 15200,
   alertSpeech: "Hang up now — this is an illegal digital arrest scam.",
   steps: [
     {
-      atMs: 1000,
+      atMs: 0,
       lineIndex: 0,
-      time: "0:04",
+      time: "0:01",
       text: "Hello, I am DCP Rajesh Kumar speaking from CBI Headquarters.",
       marks: [
         {
@@ -161,9 +161,9 @@ export const HERO_SCRIPT_EN: HeroScriptData = {
       scoreAfter: 2,
     },
     {
-      atMs: 2800,
+      atMs: 3860,
       lineIndex: 1,
-      time: "0:14",
+      time: "0:04",
       text: "Suspicious foreign funds arrived in bank accounts linked to your Aadhaar. A money laundering FIR is filed.",
       marks: [
         {
@@ -182,9 +182,9 @@ export const HERO_SCRIPT_EN: HeroScriptData = {
       scoreAfter: 5,
     },
     {
-      atMs: 4800,
+      atMs: 8910,
       lineIndex: 2,
-      time: "0:25",
+      time: "0:09",
       text: "As per Supreme Court orders, you are under digital arrest. Stay on video call immediately, do not hang up.",
       marks: [
         {
@@ -211,9 +211,9 @@ export const HERO_SCRIPT_EN: HeroScriptData = {
       scoreAfter: 9,
     },
     {
-      atMs: 7000,
+      atMs: 14220,
       lineIndex: 3,
-      time: "0:36",
+      time: "0:14",
       text: "For verification, transfer forty thousand rupees to our safe account immediately.",
       marks: [
         {

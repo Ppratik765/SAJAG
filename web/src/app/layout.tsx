@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   title: "Sajag — Scam-call shield for Indian families",
   description:
     "Sajag listens to suspicious calls, marks warning signs on a live paper call sheet with exact quotes, and speaks an alert aloud in your language.",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -24,9 +29,10 @@ export default function RootLayout({
   return (
     <html
       lang="hi"
+      suppressHydrationWarning
       className={`${fontDisplay.variable} ${fontBody.variable} ${fontHand.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body suppressHydrationWarning className="min-h-full flex flex-col font-sans">
         <AppShell>{children}</AppShell>
       </body>
     </html>

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Play, Pause, RotateCcw, Volume2, ArrowRight } from "lucide-react";
+import { Play, Pause, RotateCcw, Volume2, VolumeX, ArrowRight } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n/context";
 import { HEADLINE_CYCLE, CYCLE_INTERVAL_MS, CycleEntry } from "@/lib/i18n/cycle";
@@ -63,19 +63,49 @@ export function LivingHero() {
     : undefined;
 
   // -------------------------------------------------------------
-  // 2. Living Call Sheet (P0-1 Scripted Playback)
+  // 2. Living Call Sheet (Scripted Playback + Real Audio)
   // -------------------------------------------------------------
   const scriptData = getHeroScript(locale);
   const heroRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const transcriptBoxRef = useRef<HTMLDivElement>(null);
+  const callAudioRef = useRef<HTMLAudioElement | null>(null);
+  const alertAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Playback state: time in milliseconds (0 to 9000)
+  // Playback state: time in milliseconds (0 to totalDurationMs)
   const [currentTimeMs, setCurrentTimeMs] = useState(
     shouldReduceMotion ? scriptData.totalDurationMs : 0
   );
   const [isPlaying, setIsPlaying] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const [hasStartedAutoPlay, setHasStartedAutoPlay] = useState(false);
   const vibratedRef = useRef(false);
+  const playedAlertRef = useRef(false);
+
+  const heroAudioSrc = locale === "hi" ? "/audio/hero_hi.mp3" : "/audio/hero_en.mp3";
+  const alertAudioSrc =
+    locale === "hi"
+      ? "/audio/warnings/hi-IN/alert_scam.mp3"
+      : "/audio/warnings/en-IN/alert_scam.mp3";
+
+  const stopAudio = useCallback(() => {
+    if (callAudioRef.current) {
+      callAudioRef.current.pause();
+    }
+    if (alertAudioRef.current) {
+      alertAudioRef.current.pause();
+      alertAudioRef.current.currentTime = 0;
+    }
+  }, []);
+
+  // Reset audio when locale switches
+  useEffect(() => {
+    stopAudio();
+    playedAlertRef.current = false;
+    if (callAudioRef.current) {
+      callAudioRef.current.currentTime = 0;
+    }
+  }, [locale, stopAudio]);
 
   // IntersectionObserver: auto-start when >= 50% visible
   useEffect(() => {
@@ -106,22 +136,45 @@ export function LivingHero() {
     const handleVisibility = () => {
       if (document.hidden) {
         setIsPlaying(false);
+        stopAudio();
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);
     return () => document.removeEventListener("visibilitychange", handleVisibility);
-  }, []);
+  }, [stopAudio]);
 
-  // Main playback timer loop
+  // Main playback timer loop (syncs to audio element when soundEnabled is true)
   useEffect(() => {
     if (!isPlaying || shouldReduceMotion) return;
 
     const interval = 50; // 50ms tick for smooth timeline
     const timer = setInterval(() => {
+      const audioEl = callAudioRef.current;
+      if (soundEnabled && audioEl && !audioEl.paused) {
+        const audioMs = Math.round(audioEl.currentTime * 1000);
+        if (audioMs >= scriptData.totalDurationMs || audioEl.ended) {
+          setIsPlaying(false);
+          setCurrentTimeMs(scriptData.totalDurationMs);
+          if (!playedAlertRef.current && alertAudioRef.current) {
+            playedAlertRef.current = true;
+            alertAudioRef.current.currentTime = 0;
+            alertAudioRef.current.play().catch(() => {});
+          }
+        } else {
+          setCurrentTimeMs(audioMs);
+        }
+        return;
+      }
+
       setCurrentTimeMs((prev) => {
         const next = prev + interval;
         if (next >= scriptData.totalDurationMs) {
           setIsPlaying(false);
+          if (soundEnabled && !playedAlertRef.current && alertAudioRef.current) {
+            playedAlertRef.current = true;
+            alertAudioRef.current.currentTime = 0;
+            alertAudioRef.current.play().catch(() => {});
+          }
           return scriptData.totalDurationMs;
         }
         return next;
@@ -129,14 +182,18 @@ export function LivingHero() {
     }, interval);
 
     return () => clearInterval(timer);
-  }, [isPlaying, shouldReduceMotion, scriptData.totalDurationMs]);
+  }, [isPlaying, shouldReduceMotion, soundEnabled, scriptData.totalDurationMs]);
 
   // Vibrate phone once when alert threshold is crossed
   useEffect(() => {
     if (shouldReduceMotion) return;
     if (currentTimeMs >= scriptData.alertAtMs && !vibratedRef.current) {
       vibratedRef.current = true;
-      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      if (
+        typeof navigator !== "undefined" &&
+        "vibrate" in navigator &&
+        (navigator as Navigator & { userActivation?: { hasBeenActive?: boolean } }).userActivation?.hasBeenActive
+      ) {
         try {
           navigator.vibrate([200, 100, 200]);
         } catch {
@@ -148,28 +205,72 @@ export function LivingHero() {
     }
   }, [currentTimeMs, scriptData.alertAtMs, shouldReduceMotion]);
 
+  const startPlaybackWithSound = (fromTimeMs?: number) => {
+    const targetMs =
+      fromTimeMs !== undefined
+        ? fromTimeMs
+        : currentTimeMs >= scriptData.totalDurationMs
+        ? 0
+        : currentTimeMs;
+    setCurrentTimeMs(targetMs);
+    setSoundEnabled(true);
+    setIsPlaying(true);
+    if (targetMs < scriptData.totalDurationMs) {
+      playedAlertRef.current = false;
+    }
+    if (alertAudioRef.current) {
+      alertAudioRef.current.pause();
+      alertAudioRef.current.currentTime = 0;
+    }
+    if (callAudioRef.current) {
+      callAudioRef.current.currentTime = targetMs / 1000;
+      callAudioRef.current.play().catch(() => {});
+    }
+  };
+
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      setIsPlaying(false);
+      stopAudio();
+    } else {
+      startPlaybackWithSound();
+    }
+  };
+
   // Keyboard shortcut: Space toggles play/pause when sheet focused
   const handleSheetKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === " " || e.key === "Spacebar") {
       e.preventDefault();
-      setIsPlaying((prev) => !prev);
+      togglePlayPause();
     } else if (e.key === "ArrowLeft") {
       e.preventDefault();
-      setCurrentTimeMs((prev) => Math.max(0, prev - 1000));
+      handleScrub(Math.max(0, currentTimeMs - 1000));
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
-      setCurrentTimeMs((prev) => Math.min(scriptData.totalDurationMs, prev + 1000));
+      handleScrub(Math.min(scriptData.totalDurationMs, currentTimeMs + 1000));
     }
   };
 
   const handleReplay = () => {
-    setCurrentTimeMs(0);
-    setIsPlaying(true);
+    startPlaybackWithSound(0);
   };
 
   const handleScrub = (timeMs: number) => {
     setCurrentTimeMs(timeMs);
     setIsPlaying(false);
+    stopAudio();
+    if (callAudioRef.current) {
+      callAudioRef.current.currentTime = timeMs / 1000;
+    }
+  };
+
+  const toggleSound = () => {
+    if (soundEnabled) {
+      setSoundEnabled(false);
+      stopAudio();
+    } else {
+      startPlaybackWithSound();
+    }
   };
 
   // Pure derived state for border flash and sheet shift
@@ -243,16 +344,27 @@ export function LivingHero() {
     }, 1500);
   };
 
+  // Auto-scroll inner transcript container when a new line lands (without scrolling the window)
+  useEffect(() => {
+    const el = transcriptBoxRef.current;
+    if (el && visibleSteps.length > 0) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [visibleSteps.length]);
+
   return (
     <section
       ref={heroRef}
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-12"
+      className="max-w-6xl mx-auto px-4 sm:px-6 pt-2 sm:pt-4 pb-8"
       aria-label="Sajag Hero: Is this call a scam?"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <audio ref={callAudioRef} src={heroAudioSrc} preload="auto" />
+      <audio ref={alertAudioRef} src={alertAudioSrc} preload="auto" />
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
         {/* Left Column: Cycling headline, quiet pills, subline, 2 CTA buttons, parent link */}
         <div
-          className="lg:col-span-5 flex flex-col space-y-2 sm:space-y-3 pt-0.5 sm:pt-2 text-left"
+          className="lg:col-span-5 min-w-0 flex flex-col space-y-3 pt-0.5 sm:pt-2 text-left"
           onMouseEnter={() => setIsHeadlinePaused(true)}
           onMouseLeave={() => setIsHeadlinePaused(false)}
           onFocus={() => setIsHeadlinePaused(true)}
@@ -290,7 +402,7 @@ export function LivingHero() {
           </div>
 
           {/* Language quick switcher pills: small, quiet, secondary 14px muted pills placed UNDER headline */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full whitespace-nowrap sm:flex-wrap">
+          <div className="flex flex-wrap items-center gap-1.5 py-0.5 max-w-full">
             {HEADLINE_CYCLE.map((entry, idx) => {
               const isCurrent = cycleIndex === idx;
               return (
@@ -323,18 +435,18 @@ export function LivingHero() {
             {t("hero.description")}
           </p>
 
-          {/* TWO buttons max */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 pt-0.5">
+          {/* TWO buttons max — wrap cleanly inside left column so they never overlap the right column */}
+          <div className="flex flex-wrap items-center gap-2.5 pt-1">
             <Link
-              href="/test"
-              className="btn-stamp inline-flex items-center justify-center min-h-[52px] h-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-full bg-[var(--stamp)] text-white font-bold text-xs sm:text-base text-center whitespace-normal sm:whitespace-nowrap hover:opacity-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] leading-tight"
+              href="#real-examples"
+              className="btn-stamp inline-flex items-center justify-center min-h-[48px] h-auto py-2.5 px-5 rounded-full bg-[var(--stamp)] text-white font-bold text-xs sm:text-sm text-center hover:opacity-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] leading-tight"
             >
               <span>{t("hero.cta_watch_demo")}</span>
-              <ArrowRight size={16} className="ml-1.5 sm:ml-2 shrink-0" />
+              <ArrowRight size={15} className="ml-1.5 shrink-0" />
             </Link>
             <Link
               href="/spot"
-              className="btn-stamp inline-flex items-center justify-center min-h-[52px] h-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-full bg-[var(--marker)] text-[var(--ink)] font-bold text-xs sm:text-base text-center whitespace-normal sm:whitespace-nowrap hover:opacity-90 shadow-sm border border-[var(--line)] focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] leading-tight"
+              className="btn-stamp inline-flex items-center justify-center min-h-[48px] h-auto py-2.5 px-5 rounded-full bg-[var(--marker)] text-[var(--ink)] font-bold text-xs sm:text-sm text-center hover:opacity-90 shadow-sm border border-[var(--line)] focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] leading-tight"
             >
               <span>{t("hero.cta_spot_game")}</span>
             </Link>
@@ -352,25 +464,25 @@ export function LivingHero() {
           </div>
         </div>
 
-        {/* Right Column: Call Sheet & Scrubber (Desktop side-by-side, mobile directly below buttons) */}
-        <div className="lg:col-span-7 w-full space-y-2 pt-0.5 lg:pt-0">
+        {/* Right Column: Call Sheet & Scrubber (Straight, aligned, scrollable fixed height) */}
+        <div className="lg:col-span-7 min-w-0 w-full space-y-2.5 pt-0.5 lg:pt-0">
           {/* LevelStrip live ruler needle */}
           <LevelStrip level={currentLevel} score={currentScore} />
 
-          {/* Call Sheet Container: slightly rotated, overlapping grid edge on desktop */}
+          {/* Call Sheet Container: straight, aligned, fixed scrollable height */}
           <div
             ref={sheetRef}
             tabIndex={0}
             onKeyDown={handleSheetKeyDown}
             aria-label="Living Call Sheet demonstration. Press Space to play or pause, left and right arrows to scrub."
-            className={`cursor-marker paper-sheet paper-folded p-4 sm:p-6 w-full relative transition-all duration-300 lg:rotate-[-0.75deg] lg:translate-x-1 shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] ${
+            className={`cursor-marker paper-sheet paper-folded p-4 sm:p-5 w-full relative transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] ${
               isBorderFlashing ? "animate-[vermilionFlash_900ms_ease-out]" : ""
             } ${isSheetShifting ? "animate-[sheetShift_240ms_ease-in-out]" : ""}`}
           >
             <div className="paper-dog-ear" />
 
             {/* Sheet Header: sentence-case with attached normal-case "Example, written by us" label */}
-            <div className="border-b border-[var(--line)] pb-2.5 mb-4 flex items-center justify-between gap-3">
+            <div className="border-b border-[var(--line)] pb-2.5 mb-3 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
                 <div>
                   <span className="text-xs sm:text-sm font-bold text-[var(--ink)] block">
@@ -393,8 +505,11 @@ export function LivingHero() {
               </div>
             </div>
 
-          {/* Transcript Lines landing one-by-one */}
-          <div className="space-y-4 min-h-[220px]">
+          {/* Scrollable Transcript Lines (fixed height so it never pushes the page down) */}
+          <div
+            ref={transcriptBoxRef}
+            className="space-y-3 h-[215px] sm:h-[230px] overflow-y-auto pr-2 scroll-smooth"
+          >
             {visibleSteps.map((step) => {
               // Word level tokenization for pointer marker interaction (P0-2)
               const words = step.text.split(" ");
@@ -402,15 +517,15 @@ export function LivingHero() {
               return (
                 <div
                   key={step.lineIndex}
-                  className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4 py-2 border-b border-[var(--line)]/50 last:border-b-0 animate-[penWriteReveal_350ms_ease-out]"
+                  className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 py-1.5 border-b border-[var(--line)]/50 last:border-b-0 animate-[penWriteReveal_350ms_ease-out]"
                 >
                   {/* Left Gutter: Timestamp */}
-                  <div className="w-12 sm:w-14 shrink-0 text-[12px] font-semibold text-[var(--ink-muted)] tabular-nums pt-0.5 select-none">
+                  <div className="w-11 sm:w-12 shrink-0 text-[12px] font-semibold text-[var(--ink-muted)] tabular-nums pt-0.5 select-none">
                     {step.time}
                   </div>
 
                   {/* Main Transcript with Marks */}
-                  <div className="flex-1 min-w-0 text-[15px] sm:text-[17px] text-[var(--ink)] leading-relaxed">
+                  <div className="flex-1 min-w-0 text-[14px] sm:text-[15px] text-[var(--ink)] leading-relaxed">
                     {/* Render annotated text */}
                     {step.marks.length === 0 ? (
                       <span>
@@ -441,7 +556,7 @@ export function LivingHero() {
 
                   {/* Right Gutter: Kalam Margin Note */}
                   {step.note && (
-                    <div className="sm:w-48 lg:w-52 shrink-0 pl-1 sm:pl-2 pt-0.5 self-start animate-[penWriteReveal_450ms_ease-out]">
+                    <div className="sm:w-40 lg:w-44 shrink-0 pl-1 sm:pl-2 pt-0.5 self-start animate-[penWriteReveal_450ms_ease-out]">
                       <MarginNote
                         text={step.note.text}
                         category={step.note.category}
@@ -454,73 +569,111 @@ export function LivingHero() {
             })}
           </div>
 
-          {/* Spoken Alert Speech Bubble with animated waveform (P0-1) */}
-          {showSpeechBubble && (
-            <div
-              className="mt-6 p-3.5 sm:p-4 rounded-xl bg-[var(--alarm)]/10 border border-[var(--alarm)]/30 flex items-center justify-between gap-3 text-[var(--alarm-text)] animate-[penWriteReveal_300ms_ease-out]"
-              role="alert"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[var(--alarm)] text-white flex items-center justify-center shrink-0">
-                  <Volume2 size={16} />
+          {/* Fixed-height Footer inside Call Sheet for Alert Speech Bubble + VerdictStamp */}
+          <div className="mt-3 pt-3 border-t border-[var(--line)] min-h-[72px] flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
+            {showSpeechBubble ? (
+              <button
+                type="button"
+                onClick={() => {
+                  if (alertAudioRef.current) {
+                    alertAudioRef.current.currentTime = 0;
+                    alertAudioRef.current.play().catch(() => {});
+                  }
+                }}
+                className="flex-1 p-2.5 sm:p-3 rounded-xl bg-[var(--alarm)]/10 border border-[var(--alarm)]/30 flex items-center justify-between gap-2.5 text-left text-[var(--alarm-text)] hover:bg-[var(--alarm)]/15 transition-colors animate-[penWriteReveal_300ms_ease-out]"
+                role="alert"
+                title={locale === "hi" ? "चेतावनी सुनने के लिए क्लिक करें" : "Click to hear spoken warning"}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full bg-[var(--alarm)] text-white flex items-center justify-center shrink-0">
+                    <Volume2 size={14} />
+                  </div>
+                  <div>
+                    <span className="font-bold text-xs sm:text-sm block">
+                      {t("hero.hang_up_alert")}
+                    </span>
+                    <span className="text-[11px] opacity-90 block">
+                      {scriptData.alertSpeech}
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <span className="font-bold text-sm block">
-                    {t("hero.hang_up_alert")}
-                  </span>
-                  <span className="text-xs opacity-90">
-                    {scriptData.alertSpeech}
-                  </span>
+
+                {/* Animated visual waveform */}
+                <div className="flex items-center gap-1 h-4 shrink-0 px-1" aria-hidden="true">
+                  {[4, 12, 8, 16, 10, 14, 6].map((h, i) => (
+                    <span
+                      key={i}
+                      className="w-1 bg-[var(--alarm)] rounded-full"
+                      style={{
+                        height: `${h}px`,
+                        animation: shouldReduceMotion
+                          ? "none"
+                          : `waveBar 800ms ease-in-out infinite ${i * 120}ms`,
+                      }}
+                    />
+                  ))}
                 </div>
-              </div>
+              </button>
+            ) : (
+              <span className="text-xs text-[var(--ink-muted)] italic">
+                {locale === "hi"
+                  ? "कॉल का विश्लेषण जारी है… आवाज़ सुनने के लिए नीचे Play / Sound दबाएँ"
+                  : "Analyzing call lines… Press Play or Sound below to hear the call aloud"}
+              </span>
+            )}
 
-              {/* Animated visual waveform (no audio, no fake play button) */}
-              <div className="flex items-center gap-1 h-5 shrink-0 px-2" aria-hidden="true">
-                {[4, 12, 8, 16, 10, 14, 6].map((h, i) => (
-                  <span
-                    key={i}
-                    className="w-1 bg-[var(--alarm)] rounded-full"
-                    style={{
-                      height: `${h}px`,
-                      animation: shouldReduceMotion
-                        ? "none"
-                        : `waveBar 800ms ease-in-out infinite ${i * 120}ms`,
-                    }}
-                  />
-                ))}
+            {showVerdictStamp && (
+              <div className="shrink-0">
+                <VerdictStamp level={currentLevel} size="sm" lang={locale} />
               </div>
-            </div>
-          )}
-
-          {/* VerdictStamp landing slam (P0-1) */}
-          {showVerdictStamp && (
-            <div className="mt-6 pt-4 border-t border-[var(--line)] flex justify-end">
-              <VerdictStamp level={currentLevel} size="md" lang={locale} />
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* 3. Timeline Scrubber and Controls */}
-        <div className="p-3 rounded-lg bg-[var(--sheet)] border border-[var(--line)] space-y-3">
-          <div className="flex items-center justify-between gap-4">
+        <div className="p-3 rounded-lg bg-[var(--sheet)] border border-[var(--line)] space-y-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setIsPlaying((p) => !p)}
-                className="p-2 rounded-full border border-[var(--line)] bg-[var(--bg)] text-[var(--ink)] hover:text-[var(--stamp)] hover:border-[var(--stamp)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--stamp)]"
-                aria-label={isPlaying ? "Pause call simulation" : "Play call simulation"}
+                onClick={togglePlayPause}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[var(--stamp)] text-white text-xs font-bold hover:opacity-95 transition-opacity focus:outline-none focus:ring-2 focus:ring-[var(--stamp)]"
+                aria-label={isPlaying ? "Pause call simulation" : "Play call simulation with sound"}
               >
-                {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                <span>
+                  {isPlaying
+                    ? locale === "hi"
+                      ? "रोकें"
+                      : "Pause"
+                    : locale === "hi"
+                    ? "आवाज़ के साथ चलाएँ"
+                    : "Play with sound"}
+                </span>
               </button>
 
               <button
                 type="button"
                 onClick={handleReplay}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--line)] bg-[var(--bg)] text-xs font-semibold text-[var(--ink)] hover:text-[var(--stamp)] hover:border-[var(--stamp)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--stamp)]"
-                aria-label="Replay call simulation from start"
+                aria-label="Replay call simulation with sound from start"
               >
                 <RotateCcw size={13} />
                 <span>{locale === "hi" ? "दोबारा चलाएं" : "Replay"}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={toggleSound}
+                className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full border text-xs font-semibold transition-colors ${
+                  soundEnabled
+                    ? "border-[var(--stamp)] bg-[var(--stamp)]/10 text-[var(--stamp)]"
+                    : "border-[var(--line)] bg-[var(--bg)] text-[var(--ink-muted)] hover:text-[var(--ink)]"
+                }`}
+                aria-label={soundEnabled ? "Mute call audio" : "Unmute call audio"}
+              >
+                {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
+                <span>{soundEnabled ? (locale === "hi" ? "आवाज़ चालू" : "Sound on") : locale === "hi" ? "आवाज़ सुनें" : "Unmute"}</span>
               </button>
             </div>
 
