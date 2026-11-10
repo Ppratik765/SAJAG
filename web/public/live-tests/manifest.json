@@ -3,9 +3,9 @@
   "clips": [
     {
       "id": "da_real_02",
-      "kind": "real",
-      "title": "Call 1: Parcel Drugs & Arrest Warrant Scam (HDFC Bank)",
-      "title_hi": "कॉल 1: पार्सल ड्रग्स और अरेस्ट वारंट ठगी (एचडीएफसी बैंक)",
+      "kind": "dramatised",
+      "title": "Call 1: Parcel Drugs & Arrest Warrant (HDFC Bank awareness dramatisation)",
+      "title_hi": "कॉल 1: पार्सल ड्रग्स और अरेस्ट वारंट (एचडीएफसी बैंक जागरूकता नाट्य रूपांतरण)",
       "language_code": "hi-IN",
       "duration_s": 60.84,
       "fixture_url": "/live-tests/da_real_02/fixture.json",

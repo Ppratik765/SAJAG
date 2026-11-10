@@ -1,136 +1,141 @@
-# Sajag (सजग) — AI Scam-Call Shield for Indian Families
+# Sajag (सजग): a scam-call shield for Indian families
 
-Sajag (सजग) is a real-time, privacy-first companion and scam-call shield designed for Indian families. It transcribes suspicious telephone calls using **Gnani Prisma** multi-lingual speech-to-text across 10 Indian languages, evaluates cumulative transcripts against a deterministic, rules-based scam playbook (zero generative models, zero hallucinations), visibly marks warning signs on an ink-style case sheet with a dynamic rubber stamp, and speaks regional voice warnings using **Gnani Timbre** voice synthesis.
+> **Prototype.** Sajag listens to a suspicious phone call, **marks the warning signs on a paper-style transcript with the evidence**, and says out loud when it is time to **hang up**. It uses **Gnani Prisma** (speech-to-text) and **Gnani Timbre** (spoken warnings). The detection itself is a transparent, rule-based engine: **no LLM, no guessing, every mark points to words that were actually said.**
+
+Built for the **Great Indian AI Internship Challenge** by Priyanshu Pratik.
+
+| | |
+|---|---|
+| **Live demo (recorded examples, no sign-up)** | `https://YOUR-SITE.vercel.app/test`  (replace with your Vercel URL) |
+| **One-page pitch** | [docs/PITCH.md](docs/PITCH.md) |
+| **Honest accuracy and limits** | [/accuracy page](web/src/app/accuracy/page.tsx) and the section below |
+| **Hosting guide** | [docs/DEPLOY.md](docs/DEPLOY.md) |
 
 ---
 
-## Architecture Diagram
+## The problem
+
+"Digital arrest" and similar scams do not hack phones. They pressure a person on a call: a fake officer, a fake parcel, a fake warrant, then a demand for money and secrecy. The victim is often a parent or grandparent who has nobody listening for the pattern. By the time a relative finds out, the money has moved.
+
+## What Sajag does
+
+1. **Listen.** Phone audio goes to Gnani Prisma and comes back as a live transcript (Hindi, English and Hinglish are what we tested).
+2. **Mark.** A rules engine compares the growing transcript to a scam playbook (authority claims, urgency, arrest threats, secrecy, money transfer, remote access, OTP requests and more). Each hit is circled on the transcript with a plain-language note such as "claims official authority".
+3. **Warn.** The risk level moves `safe → suspicious → likely scam → scam`. At high risk the screen says **HANG UP**, shows a rubber-stamp verdict and can speak a short warning in Hindi or English through Gnani Timbre. A family member can be warned over WhatsApp with one tap (the message names the scam type only, never the call content).
+
+### Screens
+
+| Landing and recorded example | Recorded example in progress |
+|---|---|
+| ![Landing](docs/screens/readme/landing.png) | ![Live test](docs/screens/readme/live-test.png) |
+
+| Live call (microphone) | Parent mode (large text, one button) |
+|---|---|
+| ![Live](docs/screens/readme/live.png) | <img src="docs/screens/readme/parent.png" width="260" alt="Parent mode on a phone"> |
+
+Other pages: **Check recording** (upload audio), **Paste message** (check an SMS or WhatsApp text), **Spot red flags** (a small game), **Accuracy** (every number below, with caveats), **About**.
+
+---
+
+## Try it
+
+- **Fastest:** open the live demo link above and press the **speaker button** on one of the two examples. The call plays, the transcript builds, the evidence gets circled and the HANG UP banner appears. These are **recorded runs**: the transcripts were captured earlier by streaming the audio through the real pipeline, and each alert appears at the time it actually arrived (including the speech-to-text delay).
+- **On your own call:** run it locally (below) and open `/live`. Put the call on speakerphone near the device running Sajag. Phones do not let web apps tap call audio, so a second device is required.
+
+The two examples: (1) an HDFC Bank awareness-campaign **dramatisation** of a parcel-and-warrant scam, and (2) a news-channel recording of a fake-police "digital arrest" call (The Lallantop), used with permission for educational purposes. They are labelled as such on the page.
+
+---
+
+## Measured results (and what they do not prove)
+
+Everything here comes from files in [`eval/results/`](eval/results). Read the caveats.
+
+**1. Corpus test, 239 clips (synthetic dialogues voiced with Gnani Timbre, some with simulated telephone noise), speech → Prisma → engine.**
+
+| Split | Clips | Scam recall | Legit flagged |
+|---|---:|---:|---:|
+| Overall | 239 | 76.3% (87/114) | 0 of 125 |
+| Dev (tuned on) | 113 | 83.9% (47/56) | 0 of 57 |
+| Test | 54 | 75.0% (21/28) | 0 of 26 |
+| Holdout | 60 | 63.3% (19/30) | 0 of 30 |
+
+Mean character error rate 9.7%. **Caveat:** the scripts and the rules were written by the same process and the speech is synthetic and cleaner than a real phone line, so these numbers are optimistic. The lower holdout recall (63.3%) is the more honest signal.
+
+**2. Final holdout (10 new scripts, text only, run once after freezing the engine):** 5 of 5 scams flagged, **2 of 5 genuine bank/police advisories also flagged**. Genuine advisories that say "never share your OTP" use the same words scammers use, which is the known weakness. n=10 is far too small to quote a rate.
+
+**3. Live streaming replay (10 runs through the real WebSocket pipeline at real-time pace).** 5 of 6 clean scam clips reached "likely scam" (11.8 to 24.7 seconds of audio, median 18.2 s); 1 scam clip stayed "safe" (both clean and noisy versions); both legitimate-advisory clips stayed "safe". Detection runs once per speech segment (about 6 s), so alert delay is segment length plus speech-to-text latency.
+
+**4. The two website examples**, from the recorded runs (seconds into the call when each alert appeared): Lallantop call: suspicious 8.6, likely scam 16.1, scam 32.7. HDFC dramatisation: suspicious 12.3, likely scam 18.4, scam 30.4. In the dramatisation the second half is the narrator giving advice, which the engine can also flag.
+
+### Known limits
+
+- **A helper, not a guarantee.** It can miss scams and can raise false alarms. Never share OTPs, PINs or money with an unverified caller. India's cyber-crime helpline is 1930.
+- **Phone call audio cannot be tapped by a web app**, so Sajag needs speakerphone and a second device. Room noise and speaker-to-microphone loss hurt recognition.
+- **Genuine advisories can false-alarm** (above).
+- **Tested on Hindi, English and Hinglish only.** Prisma supports more Indian languages; we have not evaluated them.
+- **The spoken warning clips are machine-generated and have not yet been reviewed by a native speaker**; the app only plays them after the review flags are set ([docs/WARNING_REVIEW.md](docs/WARNING_REVIEW.md)).
+- Real-recording evaluation on private audio exists as a tool ([`scripts/eval_real_audio.py`](scripts/eval_real_audio.py)); no real-world accuracy figure is claimed.
+
+---
+
+## How it works
 
 ```
-                                      ┌─────────────────────────────────────┐
-                                      │   Mobile Phone / Second Device      │
-                                      │  (Speakerphone audio at 16 kHz)     │
-                                      └──────────────────┬──────────────────┘
-                                                         │  PCM16 mono audio
-                                                         │  via WebSocket /ws/live
-                                                         ▼
-┌───────────────────────────────────────────────────────────────────────────────────┐
-│ FastAPI Streaming Pipeline (api/app/)                                             │
-│                                                                                   │
-│  1. Pacing & Framing     ──────► 2. Gnani Prisma STT Relay                        │
-│     (1024-byte chunks,             (16 kHz multi-lingual ASR streaming)           │
-│      32 ms cadence)                                    │                          │
-│                                                        ▼                          │
-│  4. Timbre Voice Warning ◄────── 3. Deterministic Detection Engine                │
-│     (Reviewed regional             (Regex signals, weights, risk escalation:      │
-│      spoken alert clips)            safe -> suspicious -> likely_scam -> scam)   │
-└────────────────────────────────────────┬──────────────────────────────────────────┘
-                                         │ JSON Events (segments, signals, level)
-                                         ▼
-┌───────────────────────────────────────────────────────────────────────────────────┐
-│ Next.js 15 Web Client (web/src/)                                                  │
-│                                                                                   │
-│  • Live Mode (/live)       • Parent Mode (/parent)     • Offline Check (/paste)   │
-│  • Dynamic CallSheet       • Verdict Rubber Stamp      • Demo Replay (/demo)      │
-└───────────────────────────────────────────────────────────────────────────────────┘
+ phone on speaker ──► browser mic ──► 16 kHz PCM16, 1,024-byte frames every 32 ms
+                                        │  WebSocket /ws/live
+                                        ▼
+        FastAPI relay ──► Gnani Prisma streaming STT (segments of ~6 s of speech)
+                                        │ transcript segments
+                                        ▼
+        Rules engine (data/playbook/playbook.yaml, frozen)  ── evidence quotes are exact substrings
+                                        │ risk updates: safe → suspicious → likely_scam → scam
+                                        ▼
+        Next.js UI: circled evidence, level strip, HANG UP + stamp, Timbre warning clips, WhatsApp family alert
 ```
 
----
+- **Backend:** Python 3.13, FastAPI. REST `/stt/v3` for uploads and WebSocket `/stt/v3/stream` for live audio; per-IP limits, daily credit caps, maintenance switch.
+- **Engine:** deterministic and data-driven; advisory language ("never share your OTP") is only treated as protective when it tells the listener *not* to act, so scammers who imitate advisories are still caught. Details and decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
+- **Frontend:** Next.js 16, React 19, TypeScript, Tailwind 4, Hindi/English UI, light and dark themes, accessible (Lighthouse accessibility 95 to 96 on the main pages in dev; performance re-check pending on the deployed site).
+- **Voice:** Gnani Timbre v2.5 (Chitra for Hindi, Kaveri for English); warnings are pre-baked MP3s so the live path never waits on synthesis.
+- **Engineering notes:** the upstream streaming VAD never closes a segment on continuous speech, so the relay sets `x-max-speech-s: 6.0` and flushes with silent frames; replay pacing uses absolute deadlines so frames really go out every 32 ms.
 
-<!-- BEGIN_README_NUMBERS -->
-### Empirical Benchmark Results
+### Static showcase on Vercel
 
-Evaluated on 239 audio clips across clean and telephony variants with real background noise (Gnani Prisma STT → Deterministic Rules Engine):
-
-| Evaluation Split | Clips / Scripts | Modality | Scam Recall | False Alarm Rate (Legit) | F1 Score |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Overall Corpus** | 239 | Audio (WAV → STT → Engine) | 76.3% (87/114) | 0.0% (0/125) | 0.866 |
-| **DEV Split** | 113 | Audio (WAV → STT → Engine) | 83.9% (47/56) | 0.0% (0/57) | 0.913 |
-| **TEST Split** | 54 | Audio (WAV → STT → Engine) | 75.0% (21/28) | 0.0% (0/26) | 0.857 |
-| **HOLDOUT Split** | 60 | Audio (WAV → STT → Engine) | 63.3% (19/30) | 0.0% (0/30) | 0.775 |
-| **FINAL HOLDOUT** (frozen engine) | 10 | Text-Only (zero STT noise) | 100.0% (5/5) | 40.0% (2/5)* | 0.833 |
-
-- **STT Mean CER**: 9.7% on multi-lingual Indian speech.
-- **Real-Time Live Streaming (WebSocket)**: Evaluated on 6 live scam calls at real-time 32 ms pacing; median time to detect `likely_scam` is **18.2s audio time** (18.9s wall-clock latency).
-- *** Known Weakness**: On the frozen final holdout, 2 out of 5 genuine advisory or alert scripts mentioning OTP/SIM/refund were flagged as suspicious. Legitimate bank advisories remain a known source of false alarms and are documented in [docs/DECISIONS.md](docs/DECISIONS.md).
-<!-- END_README_NUMBERS -->
+The recorded examples need no backend. Hosting only the `web/` folder on Vercel is enough for `/`, `/test`, `/accuracy`, `/about`. Pages that use the microphone, upload or Gnani APIs need the backend running; see [docs/DEPLOY.md](docs/DEPLOY.md). To add your own clip: [docs/LIVE_TEST_CLIPS.md](docs/LIVE_TEST_CLIPS.md).
 
 ---
 
-## Honest System Limitations (Spec 1.1)
+## Run it locally
 
-1. **Mobile OS Sandboxing**: Modern mobile operating systems (Android and iOS) deliberately isolate telephone dialers and WhatsApp from background web applications. Browsers cannot directly tap cellular call audio. Users run Sajag on a nearby tablet, laptop, or second phone while placing the primary phone on speakerphone.
-2. **Acoustic Noise**: Real-world speaker-to-mic acoustic transmission suffers from room reverberation, ambient chatter, and aggressive mobile microphone noise gating.
-3. **Advisory False Positives**: Official advisories from banks and police warning citizens *"Never share your OTP or click refund links"* mention the exact keywords scammers use. In our frozen holdout evaluation, 2 of 5 legitimate warning scripts triggered suspicious alerts.
-4. **Sajag is a helper, not a guarantee**: No algorithmic shield detects 100% of evolving social engineering techniques. Never share OTPs, PINs, or money with unverified callers.
+Prerequisites: Python 3.13+, ffmpeg on PATH, Node 20.9+ (22 LTS recommended), a Gnani API key.
 
----
-
-## How to Run Locally
-
-### Prerequisites
-- **Python**: 3.13+ (standard library + `ffmpeg` installed on PATH)
-- **Node.js**: 20.9+ (Node 22 LTS recommended)
-- **Gnani API Key**: Obtain from [https://app.gnani.ai/voice](https://app.gnani.ai/voice)
-
-### 1. Setup Backend API
 ```bash
-# Clone the repository
-git clone https://github.com/Ppratik765/SAJAG.git
-cd SAJAG
+git clone https://github.com/Ppratik765/SAJAG.git && cd SAJAG
+cp .env.example .env            # set GNANI_API_KEY=...
 
-# Configure environment
-cp .env.example .env
-# Edit .env and set your GNANI_API_KEY=...
-
-# Create virtual environment and install dependencies
+# backend
 python -m venv api/.venv
-api/.venv/Scripts/python.exe -m pip install -r api/requirements.txt
+api/.venv/bin/python -m pip install -r api/requirements.txt     # Windows: api\.venv\Scripts\python.exe
+cd api && ../api/.venv/bin/python -m pytest && ../api/.venv/bin/python -m uvicorn app.main:app --port 8000
 
-# Run backend test suite (162 tests)
-cd api
-.\.venv\Scripts\python.exe -m pytest
-
-# Start API server
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --port 8000
+# frontend (second terminal)
+cd web && npm install && npm run dev        # http://localhost:3000
 ```
-*Expected output: Uvicorn running on `http://127.0.0.1:8000`. Querying `http://127.0.0.1:8000/healthz` returns `{"status":"ok"}`.*
 
-### 2. Setup Web Client
-In a second terminal:
-```bash
-cd web
-npm install
-npm run lint
-npm run build
-npm run dev
-```
-*Expected output: Next.js dev server running on `http://localhost:3000`.*
-
-### 3. Docker Compose (Full Stack)
-```bash
-docker compose up --build
-```
+Tests: 166 backend tests (`pytest`) and 21 frontend unit tests (`node --test tests/*.test.mjs`). Docker: `docker compose up --build`.
 
 ---
 
-## Security & Privacy Guarantee
+## Privacy and security
 
-- **Zero Audio Retention**: Audio uploaded for analysis is converted in ephemeral directories and unlinked immediately in a guaranteed `finally` block.
-- **Zero Transcript Storage**: Transcripts and evidence quotes are held exclusively in volatile RAM during the call and are never written to disk or database stores.
-- **Sanitized Logging**: Server logs record only anonymized event types and credit counters; no API keys, phone numbers, or caller dialog are ever logged.
-- **Rate Limiting & Circuit Breaker**: Public endpoints are protected by per-IP token buckets (`/api/analyze/audio`: 10/min, `/api/analyze/text`: 30/min, `/api/tts/warning`: 5/min). When `MAINTENANCE_MODE=true` is set, billable speech APIs safely answer HTTP 503 while text analysis remains fully active.
+- Uploaded audio is converted in a temporary directory and deleted in a `finally` block; transcripts live only in memory during a call and are never stored.
+- Logs hold event types and credit counters only: no keys, phone numbers or call content.
+- Public endpoints are rate limited per IP; billable speech APIs have daily caps and a `MAINTENANCE_MODE` switch. See [SECURITY.md](SECURITY.md).
 
----
+## Credits
 
-## Credits & Model Attributions
-
-Built for the **Great Indian AI Challenge** utilizing Indian language speech foundation models from **Gnani.ai**:
-- **Gnani Prisma Speech-to-Text (v2.5)** — Multi-lingual Indian speech recognition (Hindi, English, Tamil, Telugu, Bengali, Gujarati, Marathi, Kannada, Malayalam, Punjabi).
-- **Gnani Timbre Voice Synthesis (v2.5)** — Natural regional speech synthesis for emergency spoken warnings.
-
----
+Speech recognition (**Gnani Prisma**) and voice (**Gnani Timbre**) by [Gnani.ai](https://gnani.ai). Example call audio: The Lallantop and HDFC Bank's awareness campaign, used with permission for educational purposes; ownership remains with the original creators.
 
 ## License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+MIT, see [LICENSE](LICENSE).

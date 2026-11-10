@@ -383,8 +383,8 @@ export function LivingHero() {
             </span>
             <span>
               {locale === "hi"
-                ? "लाइव स्कैम शील्ड • 11 भारतीय भाषाएँ"
-                : "Live Scam Shield • 11 Indian Languages"}
+                ? "स्कैम-कॉल शील्ड • हिन्दी, अंग्रेज़ी, हिंग्लिश पर परखा गया"
+                : "Scam-call shield • tested on Hindi, English, Hinglish"}
             </span>
           </div>
 

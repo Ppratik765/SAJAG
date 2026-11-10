@@ -40,7 +40,7 @@ LOG_DIR = REPO_ROOT / "eval" / "results" / "live_logs"
 
 MAX_CLIP_SECONDS = 150  # server MAX_LIVE_SESSION_SECONDS defaults to 180; leave room for connect + flush
 SUPPORTED_LANGS = {"hi-IN", "en-IN"}
-KINDS = {"synthetic", "real"}
+KINDS = {"synthetic", "real", "dramatised"}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{1,40}$")
 RANK = {"safe": 0, "suspicious": 1, "likely_scam": 2, "scam": 3}
 
@@ -174,7 +174,7 @@ def main() -> None:
 
     if not ID_RE.match(a.id):
         raise SystemExit("--id must be lowercase letters, digits, - or _ (2-41 chars)")
-    if a.kind == "real" and not a.credit.strip():
+    if a.kind != "synthetic" and not a.credit.strip():
         raise SystemExit("--credit is required for kind=real (who made the recording, and the permission basis).")
     if not a.audio.is_file():
         raise SystemExit(f"Audio not found: {a.audio}")

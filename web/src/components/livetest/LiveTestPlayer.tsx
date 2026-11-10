@@ -15,7 +15,6 @@ import {
   ClipData,
   TestFixture,
   deriveView,
-  deriveStreamingView,
   formatClock,
   framesDue,
 } from "@/lib/livetest/view";
@@ -40,6 +39,7 @@ const T = {
     badgeConnecting: "Connecting to the live server…",
     synthetic: "SYNTHETIC CALL",
     real: "REAL RECORDING",
+    dramatised: "AWARENESS DRAMATISATION",
     hangUp: "HANG UP",
     hangUpSub: "This call shows strong signs of a scam. In a real call: hang up, share no codes or money, call 1930.",
     suspiciousSub: "Warning signs so far. Stay careful and do not share any code or money.",
@@ -52,6 +52,7 @@ const T = {
     liveFail: "Could not reach the live server. You can still watch the recorded run.",
     liveFailBudget: "The live server stopped this run (daily limit or session limit). The recorded run is still available.",
     realNote: "Real recording, used with permission for education. Transcribed by a machine, so errors are possible. Sajag helps you spot warning signs; it cannot guarantee a call is safe or a scam.",
+    dramNote: "Staged awareness-campaign video, not a recorded real scam call. Transcribed by a machine, so errors are possible. The second half is the narrator giving advice, which the engine can also flag: a known weakness.",
     synthNote: "Synthetic call: voices are generated, script written for this project.",
     level: { safe: "No warning signs yet", suspicious: "Suspicious", likely_scam: "Likely scam", scam: "Scam" },
     shown: "of",
@@ -70,6 +71,7 @@ const T = {
     badgeConnecting: "लाइव सर्वर से जुड़ रहे हैं…",
     synthetic: "सिंथेटिक कॉल",
     real: "असली रिकॉर्डिंग",
+    dramatised: "जागरूकता नाट्य रूपांतरण",
     hangUp: "फोन काटें",
     hangUpSub: "इस कॉल में ठगी के मज़बूत संकेत हैं। असली कॉल में: फोन काट दें, कोई कोड या पैसे न दें, 1930 पर कॉल करें।",
     suspiciousSub: "अब तक चेतावनी संकेत मिले हैं। सावधान रहें, कोई कोड या पैसे न दें।",
@@ -82,6 +84,7 @@ const T = {
     liveFail: "लाइव सर्वर से नहीं जुड़ सका। आप रिकॉर्डेड रन अब भी देख सकते हैं।",
     liveFailBudget: "लाइव सर्वर ने यह रन रोक दिया (दैनिक या सत्र सीमा)। रिकॉर्डेड रन अब भी उपलब्ध है।",
     realNote: "असली रिकॉर्डिंग, शिक्षा के लिए अनुमति से इस्तेमाल की गई। मशीन से ट्रांसक्राइब हुई है, इसलिए गलतियाँ हो सकती हैं। सजग चेतावनी संकेत पहचानने में मदद करता है; यह गारंटी नहीं दे सकता कि कॉल सुरक्षित है या ठगी।",
+    dramNote: "यह जागरूकता अभियान का नाट्य रूपांतरण है, असली ठगी कॉल की रिकॉर्डिंग नहीं। मशीन से ट्रांसक्राइब हुआ है, इसलिए गलतियाँ हो सकती हैं। दूसरे हिस्से में सलाह दी जा रही है, जिसे इंजन भी चिह्नित कर सकता है: यह एक ज्ञात कमज़ोरी है।",
     synthNote: "सिंथेटिक कॉल: आवाज़ें बनाई गई हैं, स्क्रिप्ट इसी प्रोजेक्ट के लिए लिखी गई।",
     level: { safe: "अभी कोई संकेत नहीं", suspicious: "संदिग्ध", likely_scam: "संभावित ठगी", scam: "ठगी" },
     shown: "में से",
@@ -374,7 +377,7 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
     if (modeRef.current === "recorded") {
       setIsPlaying(false);
       setRunState("ended");
-      setClock((audioRef.current?.currentTime ?? durationRef.current) + 1.2);
+      setClock(durationRef.current + 8); // show the transcript lines that arrive just after the audio ends
     }
   };
 
@@ -389,7 +392,7 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
     [mode, liveData, fixture]
   );
   const view = useMemo(
-    () => (mode === "live" ? deriveView(data, Number.POSITIVE_INFINITY) : deriveStreamingView(data, clock)),
+    () => deriveView(data, mode === "live" ? Number.POSITIVE_INFINITY : clock),
     [data, clock, mode]
   );
 
@@ -435,7 +438,7 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
       {/* Honest labels: what this is, and what kind of audio */}
       <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
         <span className="px-2.5 py-0.5 rounded font-bold uppercase bg-[var(--line)] text-[var(--ink)]" data-testid="kind-badge">
-          {fixture.meta.kind === "real" ? t.real : t.synthetic}
+          {fixture.meta.kind === "real" ? t.real : fixture.meta.kind === "dramatised" ? t.dramatised : t.synthetic}
         </span>
         <span
           className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded border font-bold ${
@@ -577,7 +580,7 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
           </p>
         ) : (
           <CallSheet
-            segments={view.segments.map((s) => ({ index: s.index, text: s.text, time: formatClock(s.audio_start_s) }))}
+            segments={view.segments.map((s) => ({ index: s.index, text: s.text, time: formatClock(s.appear_s) }))}
             signals={sheetSignals}
             marginNotes={marginNotes}
             level={view.level}
@@ -592,7 +595,7 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
       <div className="flex items-start gap-2 text-xs text-[var(--ink-muted)]">
         <Info className="w-4 h-4 mt-0.5 shrink-0" aria-hidden />
         <div className="space-y-1">
-          <p>{fixture.meta.kind === "real" ? t.realNote : t.synthNote}</p>
+          <p>{fixture.meta.kind === "real" ? t.realNote : fixture.meta.kind === "dramatised" ? t.dramNote : t.synthNote}</p>
           {fixture.meta.credit && <p data-testid="credit">{fixture.meta.credit}</p>}
         </div>
       </div>

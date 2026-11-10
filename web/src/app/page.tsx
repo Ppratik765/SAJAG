@@ -104,6 +104,7 @@ const REAL_CLIPS = [
     title: "Digital arrest fraud — Drugs in Parcel & Money Transfer",
     title_hi: "डिजिटल अरेस्ट धोखाधड़ी — पार्सल में ड्रग्स और पैसे ट्रांसफर",
     fixture_url: "/live-tests/da_real_02/fixture.json",
+    kind: "dramatised",
   },
   {
     id: "da_real_01",
@@ -111,6 +112,7 @@ const REAL_CLIPS = [
     title: "Digital arrest call — Fake Police Station & Video Statement",
     title_hi: "डिजिटल अरेस्ट कॉल — नकली पुलिस स्टेशन और वीडियो बयान",
     fixture_url: "/live-tests/da_real_01/fixture.json",
+    kind: "real",
   },
 ] as const;
 
@@ -169,12 +171,12 @@ export default function HomePage() {
               {locale === "hi" ? "असली रिकॉर्डिंग" : "Real scam call recordings"}
             </span>
             <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-[var(--ink)]">
-              {locale === "hi" ? "असली उदाहरणों पर चलते देखें" : "See this run on real examples"}
+              {locale === "hi" ? "उदाहरणों पर चलते देखें" : "See it on examples"}
             </h2>
             <p className="text-sm sm:text-base text-[var(--ink-muted)] max-w-2xl">
               {locale === "hi"
-                ? "नीचे दी गई 2 असली कॉल्स में से चुनें और स्पीकर बटन दबाएँ। ऑडियो के साथ-साथ लाइव ट्रांसक्रिप्ट दिखेगी, खतरनाक शब्द लाल रंग में हाइलाइट होंगे और कॉल को ठगी के रूप में चिह्नित किया जाएगा।"
-                : "Choose between 2 real calls below and press play. The audio streams with live transcription, scam trigger words are highlighted in red, and Sajag flags the call as a scam."}
+                ? "नीचे दिए 2 उदाहरणों में से एक चुनें और प्ले दबाएँ। ट्रांसक्रिप्ट कॉल के साथ बनेगी (रिकॉर्डेड रन, पहले प्रिस्मा से लिया गया), खतरनाक शब्द लाल घेरे में दिखेंगे और खतरा ज़्यादा होने पर कॉल चिह्नित होगी।"
+                : "Choose one of 2 examples below and press play. The transcript builds as the call plays (recorded runs, captured earlier from Prisma), scam trigger words are circled in red, and Sajag flags the call when the risk is high."}
             </p>
           </div>
           <Link
@@ -186,7 +188,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div role="tablist" aria-label="Choose between 2 real calls" className="grid sm:grid-cols-2 gap-3">
+        <div role="tablist" aria-label="Choose between 2 examples" className="grid sm:grid-cols-2 gap-3">
           {REAL_CLIPS.map((clip, idx) => {
             const isSelected = clip.id === activeClip.id;
             return (
@@ -204,8 +206,8 @@ export default function HomePage() {
               >
                 <span className="block text-[11px] font-mono uppercase text-[var(--stamp)] mb-1">
                   {locale === "hi"
-                    ? `कॉल ${idx + 1} • असली रिकॉर्डिंग (${clip.duration_s}s)`
-                    : `Call ${idx + 1} • Real recording (${clip.duration_s}s)`}
+                    ? `कॉल ${idx + 1} • ${clip.kind === "real" ? "असली रिकॉर्डिंग" : "नाट्य रूपांतरण"} (${clip.duration_s}s)`
+                    : `Call ${idx + 1} • ${clip.kind === "real" ? "Real recording" : "Awareness dramatisation"} (${clip.duration_s}s)`}
                 </span>
                 <span className="text-sm sm:text-base text-[var(--ink)] block">
                   {locale === "hi" ? clip.title_hi : clip.title}

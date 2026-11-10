@@ -10,7 +10,7 @@ import { safeClipId } from "@/lib/livetest/view";
 
 interface ManifestClip {
   id: string;
-  kind: "synthetic" | "real";
+  kind: "synthetic" | "real" | "dramatised";
   title: string;
   title_hi: string;
   language_code: string;
@@ -55,12 +55,12 @@ export default function LiveTestPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl sm:text-3xl font-display font-black text-[var(--ink)] tracking-tight">
-          {lang === "hi" ? "असली उदाहरणों पर चलते देखें: सुनिए और देखिए सजग कैसे पकड़ता है" : "See this run on real examples: hear a call, watch Sajag catch it"}
+          {lang === "hi" ? "उदाहरणों पर देखें: सुनिए और देखिए सजग कैसे पकड़ता है" : "See it on examples: hear a call, watch Sajag catch it"}
         </h1>
         <p className="text-sm text-[var(--ink-muted)] leading-relaxed">
           {lang === "hi"
-            ? "नीचे दी गई 2 असली कॉल्स में से किसी एक को चुनें और स्पीकर बटन दबाइए। कॉल चलेगी, साथ-साथ लाइव ट्रांसक्रिप्ट बनेगी, ठगी के शब्द लाल रंग में चिह्नित होंगे और खतरा बढ़ने पर इसे ठगी घोषित कर \"फोन काटें\" दिखेगा।"
-            : "Choose between the 2 real calls below and press the speaker button. The audio streams as the live transcript builds, scam words are highlighted in red, and the call is flagged as a scam."}
+            ? "नीचे दिए 2 उदाहरणों में से एक चुनें और स्पीकर बटन दबाइए। कॉल चलते-चलते ट्रांसक्रिप्ट बनेगी, ठगी के शब्द लाल घेरे में दिखेंगे और खतरा ज़्यादा होने पर \"फोन काटें\" दिखेगा। ये रिकॉर्डेड रन हैं: ट्रांसक्रिप्ट पहले प्रिस्मा से लिए गए थे और हर चेतावनी उसी समय दिखती है जब वह असल में आई थी।"
+            : "Choose one of the 2 examples below and press the speaker button. The transcript builds as the call plays, scam words are circled in red, and the call is flagged when the risk is high. These are recorded runs: the transcripts were captured earlier from Prisma, and each alert appears at the time it actually arrived."}
         </p>
       </div>
 
@@ -69,7 +69,7 @@ export default function LiveTestPage() {
       {clips && clips.length > 1 && (
         <div className="space-y-2">
           <p className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-            {lang === "hi" ? "2 असली कॉल्स में से चुनें:" : "Choose between 2 real calls:"}
+            {lang === "hi" ? "2 उदाहरणों में से चुनें:" : "Choose between 2 examples:"}
           </p>
           <div role="tablist" aria-label="Test clips" className="grid sm:grid-cols-2 gap-3">
             {clips.map((c, idx) => (
@@ -87,7 +87,7 @@ export default function LiveTestPage() {
                 }`}
               >
                 <span className="block text-[10px] font-mono uppercase text-[var(--stamp)] mb-0.5">
-                  {lang === "hi" ? `उदाहरण ${idx + 1} • असली रिकॉर्डिंग (${Math.round(c.duration_s)}s)` : `Call ${idx + 1} • Real recording (${Math.round(c.duration_s)}s)`}
+                  {lang === "hi" ? `उदाहरण ${idx + 1} • ${c.kind === "real" ? "असली रिकॉर्डिंग" : "नाट्य रूपांतरण"} (${Math.round(c.duration_s)}s)` : `Call ${idx + 1} • ${c.kind === "real" ? "Real recording" : "Awareness dramatisation"} (${Math.round(c.duration_s)}s)`}
                 </span>
                 <span className="text-[var(--ink)]">{lang === "hi" ? c.title_hi : c.title}</span>
               </button>
