@@ -21,6 +21,9 @@ import { resampleTo16k } from "@/lib/audio/resample";
 import { getActiveMicPreset } from "@/lib/audio/constraints";
 import { createWarningPlayer, WarningPlayer } from "@/lib/warnings/policy";
 import { useServerMeta } from "@/lib/warnings/useServerMeta";
+import { useI18n } from "@/lib/i18n/context";
+import { resolveWsBaseUrl } from "@/lib/api/backend";
+import { PrototypeClosedNotice } from "@/components/common/PrototypeClosedNotice";
 
 type ParentSessionState = "idle" | "connecting" | "listening" | "ended" | "error";
 
@@ -41,7 +44,9 @@ const SCAM_TYPE_NAMES: Record<string, { hi: string; en: string }> = {
 function ParentContent() {
   const searchParams = useSearchParams();
   const mockParam = searchParams.get("mock");
-  const { meta } = useServerMeta();
+  const { locale } = useI18n();
+  const activeLang = locale === "hi" ? "hi" : "en";
+  const { meta, loaded, backendReachable } = useServerMeta();
 
   // Derive mock states without triggering set-state-in-effect lint error
   const mockState = useMemo(() => {
@@ -158,7 +163,12 @@ function ParentContent() {
       sourceNode.connect(workletNode);
 
       const framer = new Framer();
-      const wsUrl = process.env.NEXT_PUBLIC_API_WS_URL || "ws://127.0.0.1:8000";
+      const wsUrl = resolveWsBaseUrl();
+      if (!wsUrl) {
+        setRealSessionState("error");
+        stopAudio();
+        return;
+      }
       const ws = new WebSocket(`${wsUrl}/ws/live?lang=hi-IN`);
       websocketRef.current = ws;
 
@@ -215,6 +225,10 @@ function ParentContent() {
     }
   };
 
+  const isCheckingBackend = !mockState && !loaded;
+  const isPrototypeClosed =
+    !mockState && loaded && (!backendReachable || meta.maintenance || !meta.live_sessions_available);
+
   const isScam = level === "likely_scam" || level === "scam";
   const isSuspicious = level === "suspicious";
 
@@ -228,18 +242,26 @@ function ParentContent() {
       className="min-h-screen w-full flex flex-col justify-between overflow-x-hidden select-none transition-colors duration-300"
       style={{
         backgroundColor:
-          sessionState === "idle"
+          isCheckingBackend || isPrototypeClosed || sessionState === "idle"
             ? "var(--bg)"
             : isScam
             ? "#b91c1c" // Vermilion full screen
             : isSuspicious
             ? "#d97706" // Marker yellow full screen
             : "#15803d", // Green full screen
-        color: sessionState === "idle" ? "var(--ink)" : "#ffffff",
+        color: isCheckingBackend || isPrototypeClosed || sessionState === "idle" ? "var(--ink)" : "#ffffff",
       }}
     >
       {/* Top Bar Navigation */}
-      <header className="p-3 sm:p-5 flex items-center justify-between border-b" style={{ borderColor: sessionState === "idle" ? "var(--line)" : "rgba(255,255,255,0.2)" }}>
+      <header
+        className="p-3 sm:p-5 flex items-center justify-between border-b"
+        style={{
+          borderColor:
+            isCheckingBackend || isPrototypeClosed || sessionState === "idle"
+              ? "var(--line)"
+              : "rgba(255,255,255,0.2)",
+        }}
+      >
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-base sm:text-lg font-bold font-display hover:opacity-80 transition-opacity shrink-0"
@@ -253,7 +275,7 @@ function ParentContent() {
       </header>
 
       {/* Unreviewed warning language notice */}
-      {meta.reviewed_warning_languages.length === 0 && (
+      {!isCheckingBackend && !isPrototypeClosed && meta.reviewed_warning_languages.length === 0 && (
         <div
           data-testid="parent-unreviewed-banner"
           className="bg-amber-100 text-amber-950 py-2 px-4 text-center text-xs sm:text-sm font-bold border-b border-amber-300"
@@ -271,7 +293,19 @@ function ParentContent() {
       )}
 
       {/* Main Full-Screen Status Field */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 text-center max-w-xl mx-auto w-full space-y-6 sm:space-y-8">
+      <div
+        className={`flex-1 flex flex-col items-center justify-center p-4 sm:p-8 text-center mx-auto w-full space-y-6 sm:space-y-8 ${
+          isPrototypeClosed ? "max-w-3xl" : "max-w-xl"
+        }`}
+      >
+        {isCheckingBackend ? (
+          <p className="text-xl text-[var(--ink-muted)] font-semibold">
+            {activeLang === "hi" ? "लोड हो रहा है..." : "Checking server availability..."}
+          </p>
+        ) : isPrototypeClosed ? (
+          <PrototypeClosedNotice mode="parent" lang={activeLang} />
+        ) : (
+          <>
         {/* 1. IDLE STATE */}
         {sessionState === "idle" && (
           <div className="space-y-8 w-full">
@@ -408,6 +442,8 @@ function ParentContent() {
               पुनः प्रयास करें
             </button>
           </div>
+        )}
+          </>
         )}
       </div>
 

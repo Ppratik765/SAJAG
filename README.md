@@ -6,7 +6,7 @@ Built for the **Great Indian AI Internship Challenge** by Priyanshu Pratik.
 
 | | |
 |---|---|
-| **Live demo (recorded examples, no sign-up)** | `https://YOUR-SITE.vercel.app/test`  (replace with your Vercel URL) |
+| **Live demo (recorded examples, no sign-up)** | [https://sajag-alpha.vercel.app/test](https://sajag-alpha.vercel.app/test) |
 | **One-page pitch** | [docs/PITCH.md](docs/PITCH.md) |
 | **Honest accuracy and limits** | [/accuracy page](web/src/app/accuracy/page.tsx) and the section below |
 | **Hosting guide** | [docs/DEPLOY.md](docs/DEPLOY.md) |
@@ -101,7 +101,7 @@ Mean character error rate 9.7%. **Caveat:** the scripts and the rules were writt
 
 ### Static showcase on Vercel
 
-The recorded examples need no backend. Hosting only the `web/` folder on Vercel is enough for `/`, `/test`, `/accuracy`, `/about`. Pages that use the microphone, upload or Gnani APIs need the backend running; see [docs/DEPLOY.md](docs/DEPLOY.md). To add your own clip: [docs/LIVE_TEST_CLIPS.md](docs/LIVE_TEST_CLIPS.md).
+Live at **[sajag-alpha.vercel.app](https://sajag-alpha.vercel.app)** ([recorded examples](https://sajag-alpha.vercel.app/test)). Hosting only the `web/` folder on Vercel serves `/`, `/test`, `/paste` (client-side rules engine), `/spot`, `/accuracy`, and `/about` with no backend. Routes that require the microphone, audio upload, or live speech APIs (`/live`, `/check`, `/parent`) show **"Prototype: not open for testing"** when no backend server is connected; run the FastAPI backend locally to enable them ([docs/DEPLOY.md](docs/DEPLOY.md)). To add your own clip: [docs/LIVE_TEST_CLIPS.md](docs/LIVE_TEST_CLIPS.md).
 
 ---
 

@@ -93,28 +93,51 @@ export default function PastePage() {
     }
   };
 
-  // Convert API result into CallSheet props
-  const sheetSegments: CallSegment[] = result
-    ? result.transcript
-        .split(/(?<=[.?!।॥\n])\s+/)
-        .filter((s) => s.trim().length > 0)
-        .map((sentence, idx) => ({
-          index: idx,
-          text: sentence.trim(),
-          time: `0:${(idx * 8).toString().padStart(2, "0")}`,
-        }))
-    : [];
+  // Convert API result into CallSheet props with character span tracking
+  const sheetSegmentsWithOffsets: Array<CallSegment & { start: number; end: number }> = [];
+  if (result) {
+    let cursor = 0;
+    const rawParts = result.transcript
+      .split(/(?<=[.?!।॥])\s+|\n+/)
+      .filter((s) => s.trim().length > 0);
+    rawParts.forEach((part, idx) => {
+      const trimmed = part.trim();
+      const foundAt = result.transcript.indexOf(trimmed, cursor);
+      const start = foundAt !== -1 ? foundAt : cursor;
+      const end = start + trimmed.length;
+      cursor = end;
+      sheetSegmentsWithOffsets.push({
+        index: idx,
+        text: trimmed,
+        time: `0:${(idx * 8).toString().padStart(2, "0")}`,
+        start,
+        end,
+      });
+    });
+  }
 
-  // Map API signals to CallSheet signals
+  const sheetSegments: CallSegment[] = sheetSegmentsWithOffsets.map(({ index, text: segText, time }) => ({
+    index,
+    text: segText,
+    time,
+  }));
+
+  // Map API signals to CallSheet signals using exact character offsets when available
   const sheetSignals: CallSignal[] = result
     ? result.signals.map((s, idx) => {
-        // Determine which sentence segment contains this evidence
-        let segIdx = 0;
-        sheetSegments.forEach((seg, i) => {
-          if (seg.text.toLowerCase().includes(s.evidence.toLowerCase())) {
-            segIdx = i;
-          }
-        });
+        let segIdx = -1;
+        if (typeof s.start_char === "number" && sheetSegmentsWithOffsets.length > 0) {
+          const hit = sheetSegmentsWithOffsets.find(
+            (seg) => s.start_char >= seg.start && s.start_char < seg.end
+          );
+          if (hit) segIdx = hit.index;
+        }
+        if (segIdx === -1) {
+          const fallback = sheetSegments.find((seg) =>
+            seg.text.toLowerCase().includes(s.evidence.toLowerCase())
+          );
+          segIdx = fallback ? fallback.index : 0;
+        }
 
         const plainNote =
           CATEGORY_PLAIN_NOTES[s.category]?.[activeLang] || s.category.toLowerCase().replace(/_/g, " ");

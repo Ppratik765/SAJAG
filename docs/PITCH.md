@@ -33,4 +33,4 @@ Not a guarantee; can miss scams and false-alarm on genuine bank advisories; need
 ## Next steps
 Native-speaker review of warnings; test on real phone-line audio with consenting volunteers; more languages; an Android helper for one-tap family alerts; a bank-advisory allow-list to cut false alarms.
 
-**Repo:** github.com/Ppratik765/SAJAG  |  **Demo:** see README
+**Repo:** github.com/Ppratik765/SAJAG  |  **Demo:** https://sajag-alpha.vercel.app/test

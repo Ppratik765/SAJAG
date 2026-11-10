@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { resolveApiBaseUrl } from "@/lib/api/backend";
 
 export interface ServerMeta {
   reviewed_warning_languages: string[];
@@ -8,25 +9,53 @@ export interface ServerMeta {
   live_sessions_available: boolean;
 }
 
+export interface ServerMetaState {
+  meta: ServerMeta;
+  loaded: boolean;
+  backendReachable: boolean;
+}
+
+const DEFAULT_META: ServerMeta = {
+  reviewed_warning_languages: [],
+  maintenance: false,
+  live_sessions_available: false,
+};
+
 /**
- * Reads `/api/meta` once. `loaded` stays false until the request settles; on network
- * failure we treat no language as reviewed (spoken warnings off, with a visible note).
+ * Checks `/api/meta` once when a backend URL is configured (explicit NEXT_PUBLIC_API_URL
+ * or local development on localhost). When no backend is configured (e.g. Vercel static deploy)
+ * or `/api/meta` cannot be reached, `backendReachable` settles to `false` cleanly without
+ * making mixed-content localhost requests in production.
  */
-export function useServerMeta(): { meta: ServerMeta; loaded: boolean } {
-  const [meta, setMeta] = useState<ServerMeta>({
-    reviewed_warning_languages: [],
-    maintenance: false,
-    live_sessions_available: true,
-  });
+export function useServerMeta(): ServerMetaState {
+  const [meta, setMeta] = useState<ServerMeta>(DEFAULT_META);
   const [loaded, setLoaded] = useState(false);
+  const [backendReachable, setBackendReachable] = useState(false);
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = resolveApiBaseUrl();
+    if (!apiUrl) {
+      const timer = setTimeout(() => {
+        setMeta(DEFAULT_META);
+        setBackendReachable(false);
+        setLoaded(true);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+
     let cancelled = false;
-    fetch(`${apiUrl}/api/meta`)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+    fetch(`${apiUrl}/api/meta`, { signal: controller.signal, cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (cancelled || !data) return;
+        if (cancelled) return;
+        if (!data || typeof data !== "object") {
+          setMeta(DEFAULT_META);
+          setBackendReachable(false);
+          return;
+        }
         setMeta({
           reviewed_warning_languages: Array.isArray(data.reviewed_warning_languages)
             ? data.reviewed_warning_languages
@@ -34,15 +63,24 @@ export function useServerMeta(): { meta: ServerMeta; loaded: boolean } {
           maintenance: Boolean(data.maintenance),
           live_sessions_available: data.live_sessions_available !== false,
         });
+        setBackendReachable(true);
       })
-      .catch(() => {})
+      .catch(() => {
+        if (cancelled) return;
+        setMeta(DEFAULT_META);
+        setBackendReachable(false);
+      })
       .finally(() => {
+        clearTimeout(timeoutId);
         if (!cancelled) setLoaded(true);
       });
+
     return () => {
       cancelled = true;
+      clearTimeout(timeoutId);
+      controller.abort();
     };
   }, []);
 
-  return { meta, loaded };
+  return { meta, loaded, backendReachable };
 }

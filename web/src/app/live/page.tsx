@@ -26,6 +26,8 @@ import { floatToPcm16 } from "@/lib/audio/pcm";
 import { Framer } from "@/lib/audio/framer";
 import { createWarningPlayer, WarningPlayer } from "@/lib/warnings/policy";
 import { useServerMeta } from "@/lib/warnings/useServerMeta";
+import { resolveWsBaseUrl } from "@/lib/api/backend";
+import { PrototypeClosedNotice } from "@/components/common/PrototypeClosedNotice";
 
 const SUPPORTED_LANGUAGES = [
   { code: "hi-IN", label: "हिन्दी (Hindi)", script: "Devanagari" },
@@ -97,7 +99,10 @@ function LiveContent() {
   const selectedLangRef = useRef<string>("hi-IN");
   const userGestureStarted = useRef<boolean>(false);
   const [audioUnavailable, setAudioUnavailable] = useState<boolean>(false);
-  const { meta } = useServerMeta();
+  const { meta, loaded, backendReachable } = useServerMeta();
+  const isCheckingBackend = !mockParam && !loaded;
+  const isPrototypeClosed =
+    !mockParam && loaded && (!backendReachable || (!meta.maintenance && !meta.live_sessions_available));
   const playerRef = useRef<WarningPlayer | null>(null);
 
   useEffect(() => {
@@ -273,9 +278,11 @@ function LiveContent() {
       sourceNode.connect(workletNode);
 
       // 3. Connect to backend WebSocket
-      const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const wsHost = process.env.NEXT_PUBLIC_API_WS_URL || `${wsProtocol}//${window.location.hostname}:8000`;
-      const wsUrl = `${wsHost.replace(/^http/, "ws")}/ws/live?lang=${selectedLang}`;
+      const wsHost = resolveWsBaseUrl();
+      if (!wsHost) {
+        throw new Error("Prototype: not open for testing without a backend server.");
+      }
+      const wsUrl = `${wsHost}/ws/live?lang=${selectedLang}`;
 
       const ws = new WebSocket(wsUrl);
       ws.binaryType = "arraybuffer";
@@ -502,31 +509,33 @@ function LiveContent() {
         </div>
 
         {/* Language selector & Dev link */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <label htmlFor="live-lang" className="sr-only">
-            Speech Recognition Language
-          </label>
-          <select
-            id="live-lang"
-            value={selectedLang}
-            disabled={sessionState === "listening" || sessionState === "connecting"}
-            onChange={(e) => setSelectedLang(e.target.value)}
-            className="flex-1 sm:flex-none text-xs sm:text-sm font-semibold px-3 py-2 rounded border border-[var(--line)] bg-[var(--sheet)] text-[var(--ink)] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--stamp)]"
-          >
-            {SUPPORTED_LANGUAGES.map((l) => (
-              <option key={l.code} value={l.code}>
-                {l.label}
-              </option>
-            ))}
-          </select>
-          <Link
-            href="/dev"
-            title="Configure mic presets"
-            className="p-2 rounded border border-[var(--line)] bg-[var(--sheet)] text-[var(--ink-muted)] hover:text-[var(--stamp)]"
-          >
-            <Info className="w-4 h-4" />
-          </Link>
-        </div>
+        {!isPrototypeClosed && !isCheckingBackend && (
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <label htmlFor="live-lang" className="sr-only">
+              Speech Recognition Language
+            </label>
+            <select
+              id="live-lang"
+              value={selectedLang}
+              disabled={sessionState === "listening" || sessionState === "connecting"}
+              onChange={(e) => setSelectedLang(e.target.value)}
+              className="flex-1 sm:flex-none text-xs sm:text-sm font-semibold px-3 py-2 rounded border border-[var(--line)] bg-[var(--sheet)] text-[var(--ink)] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--stamp)]"
+            >
+              {SUPPORTED_LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>
+                  {l.label}
+                </option>
+              ))}
+            </select>
+            <Link
+              href="/dev"
+              title="Configure mic presets"
+              className="p-2 rounded border border-[var(--line)] bg-[var(--sheet)] text-[var(--ink-muted)] hover:text-[var(--stamp)]"
+            >
+              <Info className="w-4 h-4" />
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Screen Reader Level Announcement */}
@@ -536,68 +545,76 @@ function LiveContent() {
           : ""}
       </div>
 
-      {/* Maintenance Mode Notice */}
-      {meta.maintenance && (
-        <div className="p-4 rounded-md border border-[var(--warning)]/40 bg-[var(--warning)]/10 flex items-start gap-3">
-          <Info className="w-5 h-5 text-[var(--warning-text)] shrink-0 mt-0.5" />
-          <div className="text-xs sm:text-sm text-[var(--warning-text)] leading-relaxed">
-            <span className="font-bold block">
-              {activeLang === "hi" ? "सेवा रखरखाव मोड में है" : "Service Under Maintenance"}
-            </span>
-            {activeLang === "hi"
-              ? "लाइव ऑडियो सेवा अभी रखरखाव में है। टेक्स्ट विश्लेषण पूरी तरह चालू है।"
-              : "Live speech streaming is temporarily offline for maintenance. Text analysis remains fully operational."}
-            <div className="mt-2">
-              <Link href="/paste" className="font-semibold underline hover:opacity-80">
-                {activeLang === "hi" ? "टेक्स्ट पेस्ट करके जांचें →" : "Analyze text transcript instead →"}
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 1. IDLE STATE: Permission & Start Gesture */}
-      {sessionState === "idle" && (
-        <section className="paper-sheet p-6 sm:p-8 space-y-6 text-center">
-          <div className="max-w-md mx-auto space-y-3">
-            <div className="w-14 h-14 mx-auto rounded-full bg-[var(--stamp)]/10 text-[var(--stamp)] flex items-center justify-center">
-              <Mic className="w-7 h-7" />
-            </div>
-            <h2 className="text-xl font-display font-bold text-[var(--ink)]">
-              {activeLang === "hi"
-                ? "दूसरी डिवाइस या स्पीकर के पास रखें"
-                : "Listen to a live phone call"}
-            </h2>
-            <p className="text-sm text-[var(--ink-muted)] leading-relaxed">
-              {activeLang === "hi"
-                ? "अपने फोन को स्पीकरफोन पर रखें और इस डिवाइस को पास रखें। सजग बातचीत सुनकर लाल झंडों को तुरंत चिह्नित करेगा।"
-                : "Put your call on speaker and place this device nearby. Sajag listens locally, transcribes via Gnani Prisma, and marks warning signs in real time."}
-            </p>
-          </div>
-
-          <div className="pt-2">
-            <button
-              type="button"
-              id="live-start-btn"
-              onClick={handleStart}
-              disabled={meta.maintenance}
-              className={`inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-md font-display font-bold text-base sm:text-lg text-white shadow-md transition-transform ${
-                meta.maintenance
-                  ? "bg-[var(--line)] cursor-not-allowed opacity-60"
-                  : "bg-[var(--stamp)] hover:opacity-95 active:scale-98"
-              }`}
-            >
-              <Mic className="w-5 h-5" />
-              {activeLang === "hi" ? "सुनना शुरू करें" : "Start Live Listening"}
-            </button>
-            <p className="text-xs text-[var(--ink-muted)] mt-3">
-              {activeLang === "hi"
-                ? "माइक अनुमति मांगी जाएगी। कोई भी ऑडियो सेव नहीं किया जाता है।"
-                : "Microphone permission required. Audio is streamed securely and never stored."}
-            </p>
-          </div>
+      {isCheckingBackend ? (
+        <section className="paper-sheet p-8 text-center text-sm text-[var(--ink-muted)]">
+          {activeLang === "hi" ? "सर्वर स्थिति जांची जा रही है..." : "Checking live backend availability..."}
         </section>
-      )}
+      ) : isPrototypeClosed ? (
+        <PrototypeClosedNotice mode="live" lang={activeLang} />
+      ) : (
+        <>
+          {/* Maintenance Mode Notice */}
+          {meta.maintenance && (
+            <div className="p-4 rounded-md border border-[var(--warning)]/40 bg-[var(--warning)]/10 flex items-start gap-3">
+              <Info className="w-5 h-5 text-[var(--warning-text)] shrink-0 mt-0.5" />
+              <div className="text-xs sm:text-sm text-[var(--warning-text)] leading-relaxed">
+                <span className="font-bold block">
+                  {activeLang === "hi" ? "सेवा रखरखाव मोड में है" : "Service Under Maintenance"}
+                </span>
+                {activeLang === "hi"
+                  ? "लाइव ऑडियो सेवा अभी रखरखाव में है। टेक्स्ट विश्लेषण पूरी तरह चालू है।"
+                  : "Live speech streaming is temporarily offline for maintenance. Text analysis remains fully operational."}
+                <div className="mt-2">
+                  <Link href="/paste" className="font-semibold underline hover:opacity-80">
+                    {activeLang === "hi" ? "टेक्स्ट पेस्ट करके जांचें →" : "Analyze text transcript instead →"}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 1. IDLE STATE: Permission & Start Gesture */}
+          {sessionState === "idle" && (
+            <section className="paper-sheet p-6 sm:p-8 space-y-6 text-center">
+              <div className="max-w-md mx-auto space-y-3">
+                <div className="w-14 h-14 mx-auto rounded-full bg-[var(--stamp)]/10 text-[var(--stamp)] flex items-center justify-center">
+                  <Mic className="w-7 h-7" />
+                </div>
+                <h2 className="text-xl font-display font-bold text-[var(--ink)]">
+                  {activeLang === "hi"
+                    ? "दूसरी डिवाइस या स्पीकर के पास रखें"
+                    : "Listen to a live phone call"}
+                </h2>
+                <p className="text-sm text-[var(--ink-muted)] leading-relaxed">
+                  {activeLang === "hi"
+                    ? "अपने फोन को स्पीकरफोन पर रखें और इस डिवाइस को पास रखें। सजग बातचीत सुनकर लाल झंडों को तुरंत चिह्नित करेगा।"
+                    : "Put your call on speaker and place this device nearby. Sajag listens locally, transcribes via Gnani Prisma, and marks warning signs in real time."}
+                </p>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  id="live-start-btn"
+                  onClick={handleStart}
+                  disabled={meta.maintenance}
+                  className={`inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-md font-display font-bold text-base sm:text-lg text-white shadow-md transition-transform ${
+                    meta.maintenance
+                      ? "bg-[var(--line)] cursor-not-allowed opacity-60"
+                      : "bg-[var(--stamp)] hover:opacity-95 active:scale-98"
+                  }`}
+                >
+                  <Mic className="w-5 h-5" />
+                  {activeLang === "hi" ? "सुनना शुरू करें" : "Start Live Listening"}
+                </button>
+                <p className="text-xs text-[var(--ink-muted)] mt-3">
+                  {activeLang === "hi"
+                    ? "माइक अनुमति मांगी जाएगी। कोई भी ऑडियो सेव नहीं किया जाता है।"
+                    : "Microphone permission required. Audio is streamed securely and never stored."}
+                </p>
+              </div>
+            </section>
+          )}
 
       {/* 2. CONNECTING STATE */}
       {sessionState === "connecting" && (
@@ -792,6 +809,8 @@ function LiveContent() {
             showStamp={sessionState === "ended"}
           />
         </div>
+      )}
+      </>
       )}
 
       {/* Reassuring Footer Disclaimer */}

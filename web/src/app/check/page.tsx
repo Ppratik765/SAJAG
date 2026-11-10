@@ -18,6 +18,7 @@ import Link from "next/link";
 import { uploadAudioForAnalysis, AnalysisResponse, TranscriptSegment } from "@/lib/api/analyze";
 import { useI18n } from "@/lib/i18n/context";
 import { useServerMeta } from "@/lib/warnings/useServerMeta";
+import { PrototypeClosedNotice } from "@/components/common/PrototypeClosedNotice";
 
 const SUPPORTED_LANGUAGES = [
   { code: "hi-IN", label: "हिन्दी (Hindi)" },
@@ -34,7 +35,8 @@ const SUPPORTED_LANGUAGES = [
 
 export default function CheckPage() {
   const { locale } = useI18n();
-  const { meta } = useServerMeta();
+  const activeLang = locale === "hi" ? "hi" : "en";
+  const { meta, loaded, backendReachable } = useServerMeta();
 
   // State
   const [selectedLang, setSelectedLang] = useState(locale === "hi" ? "hi-IN" : "en-IN");
@@ -202,14 +204,23 @@ export default function CheckPage() {
           <span>Up to 3 minutes</span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black text-[var(--ink)] tracking-tight leading-[1.08] mb-3">
-          Check a call recording
+          {activeLang === "hi" ? "कॉल रिकॉर्डिंग की जाँच करें" : "Check a call recording"}
         </h1>
         <p className="text-sm sm:text-base text-[var(--ink-muted)] max-w-2xl leading-relaxed">
-          Upload an audio note from WhatsApp or record live. Sajag splits the call into
-          seamless 25-second segments, transcribing multi-lingual speech with Gnani Prisma.
+          {activeLang === "hi"
+            ? "व्हाट्सएप से ऑडियो नोट अपलोड करें या सीधे रिकॉर्ड करें। सजग इसे छोटे हिस्सों में बांटकर ज्ञानी प्रिज्मा और नियम इंजन से जाँचता है।"
+            : "Upload an audio note from WhatsApp or record live. Sajag splits the call into seamless 25-second segments, transcribing multi-lingual speech with Gnani Prisma."}
         </p>
       </div>
 
+      {!loaded ? (
+        <section className="paper-sheet p-8 text-center text-sm text-[var(--ink-muted)]">
+          {activeLang === "hi" ? "सर्वर स्थिति जांची जा रही है..." : "Checking backend availability..."}
+        </section>
+      ) : !backendReachable ? (
+        <PrototypeClosedNotice mode="check" lang={activeLang} />
+      ) : (
+        <>
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Upload / Record Controls */}
@@ -574,6 +585,8 @@ export default function CheckPage() {
           </div>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }
