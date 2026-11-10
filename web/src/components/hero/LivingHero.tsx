@@ -326,7 +326,7 @@ export function LivingHero() {
           {/* TWO buttons max */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 pt-0.5">
             <Link
-              href="/demo"
+              href="/test"
               className="btn-stamp inline-flex items-center justify-center min-h-[52px] h-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-full bg-[var(--stamp)] text-white font-bold text-xs sm:text-base text-center whitespace-normal sm:whitespace-nowrap hover:opacity-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] leading-tight"
             >
               <span>{t("hero.cta_watch_demo")}</span>

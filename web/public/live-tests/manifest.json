@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "clips": [
+    {
+      "id": "da_hi_002",
+      "kind": "synthetic",
+      "title": "Digital arrest scam call (synthetic, Hindi)",
+      "title_hi": "डिजिटल अरेस्ट फ्रॉड कॉल (सिंथेटिक, हिन्दी)",
+      "language_code": "hi-IN",
+      "duration_s": 26.86,
+      "fixture_url": "/live-tests/da_hi_002/fixture.json",
+      "final_level": "scam"
+    }
+  ]
+}

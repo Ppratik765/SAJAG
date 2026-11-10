@@ -20,7 +20,7 @@ export function AppHeader() {
     { href: "/paste", label: t("nav.paste") },
     { href: "/spot", label: t("nav.spot") },
     { href: "/parent", label: t("nav.parent") },
-    { href: "/demo", label: t("nav.demo") },
+    { href: "/test", label: t("nav.demo") },
     { href: "/accuracy", label: t("nav.accuracy") },
     { href: "/about", label: t("nav.about") },
   ];

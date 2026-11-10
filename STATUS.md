@@ -22,7 +22,7 @@
 - **Part C: Demo Replay Page & Recorded Live Fixture**
   - Created `scripts/make_demo_fixture.py` which streamed dev clip `da_hi_002` (26.86s, Digital Arrest) through the live pipeline once at 1.0x real-time pace.
   - Generated `web/public/demo/fixture.json` and `web/public/demo/call.mp3` capturing real audio timestamps and wall-clock arrival offsets.
-  - Built interactive `/demo` page replaying through `<CallSheet>`, `<LevelStrip>`, `<VerdictStamp>`, and `<CallTimeline>` with exact required banner: "Synthetic demo call, pre-recorded. Transcripts were captured earlier from Prisma on this audio. Use Live mode to run on your own audio." Shows alert times computed from the recorded events by `compute_flagged_at` (no typed-in fallbacks): suspicious after 5.7 s of audio (8.2 s wall-clock), likely scam after 11.8 s of audio (16.1 s wall-clock), scam after 20.9 s (23.2 s). The earlier STATUS figure of 11.2 s / 12.4 s was wrong. The per-event `audio_time_s` field is the server session clock, not audio heard; `audio_heard_s` is the corrected field.
+  - Built interactive `/demo` page replaying through `<CallSheet>`, `<LevelStrip>`, `<VerdictStamp>`, and `<CallTimeline>` with exact required banner: "Synthetic demo call, pre-recorded. Transcripts were captured earlier from Prisma on this audio. Use Live mode to run on your own audio." Alert times are read from the recorded events on the stream clock (seconds since the first audio frame, the same clock as playback): suspicious appeared 6.3 s into the call, likely scam 14.1 s, scam 21.3 s. Correction (M8): the M7g figures (5.7/11.8 s "of audio", 8.2/16.1 s "wall-clock") were wrong ways to state this; wall-clock included ~1.95 s of connection set-up and "audio heard" understated what a listener waits. A line is also no longer shown before it arrived.
 
 - **Part D: Deploy Kit & Launch Credit Protection**
   - Created `api/Dockerfile` (Python 3.13-slim, ffmpeg, non-root user `appuser`, `--proxy-headers`, `/healthz` healthcheck) and `api/.dockerignore`.
@@ -235,3 +235,10 @@ Performance was measured on the unminified dev server (29 to 63), which is not r
 ## Ready for Next Milestone?
 
 **Yes.** Milestone M7 is the final milestone of the project. The codebase is hardened, tested, accessibility-checked, documented, and ready for human review and launch.
+
+
+## M8: "See live test" (`/test`)
+- New page `/test` with a speaker button: plays a clip while transcript, marks and a HANG UP banner appear. `/demo` now uses the same player (shared component `LiveTestPlayer`), old `web/public/demo/` and `scripts/make_demo_fixture.py` removed (replaced by `scripts/make_live_test_clip.py`, fixture at `web/public/live-tests/da_hi_002/`).
+- Modes: recorded run (default) and "Run it live now" (browser streams the clip through `/ws/live`).
+- Evidence: `web/tests/livetest.test.mjs` (6 tests), `api/tests/test_live_test_clip.py` (4 tests), Playwright run `web/scripts/capture-m8-livetest.mjs` with screenshots in `docs/screens/m8/`. The live-run screenshots used `scripts/fake_live_server.py` (no Gnani), so they prove UI logic only. The fake server received 886 frames (839 audio + 47 flush), 0 bad frames.
+- Not yet done: no real recording has been added; a real run through Gnani from the browser "Run it live now" button has not been tried; see `docs/LIVE_TEST_CLIPS.md`.

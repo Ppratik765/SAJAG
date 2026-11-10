@@ -35,6 +35,8 @@ interface CallSheetProps {
   lang?: Locale | string;
   className?: string;
   showStamp?: boolean;
+  /** Overrides the default "Recorded via second device" subtitle (e.g. for replayed test clips). */
+  subtitle?: { en: string; hi: string };
 }
 
 export function CallSheet({
@@ -45,6 +47,7 @@ export function CallSheet({
   lang,
   className = "",
   showStamp = true,
+  subtitle,
 }: CallSheetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { locale: contextLocale } = useI18n();
@@ -129,8 +132,9 @@ export function CallSheet({
 
   const headerTitle =
     activeLang === "hi" ? "बातचीत का विवरण" : "Transcript Call Sheet";
-  const headerSubtitle =
-    activeLang === "hi"
+  const headerSubtitle = subtitle
+    ? subtitle[activeLang]
+    : activeLang === "hi"
       ? "दूसरी डिवाइस से रिकॉर्ड किया गया"
       : "Recorded via second device";
   const lineCountLabel =

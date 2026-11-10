@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "id": "da_hi_002",
+    "kind": "synthetic",
+    "title": "Digital arrest scam call (synthetic, Hindi)",
+    "title_hi": "डिजिटल अरेस्ट फ्रॉड कॉल (सिंथेटिक, हिन्दी)",
+    "language_code": "hi-IN",
+    "audio_url": "/live-tests/da_hi_002/call.mp3",
+    "audio_duration_s": 26.86,
+    "credit": "Synthetic call voiced with Gnani Timbre; script written for this project.",
+    "captured_with": "Gnani Prisma STT via this site's /ws/live, streamed at real-time pace",
+    "final_level": "scam",
+    "final_score": 16,
+    "primary_type": "digital_arrest",
+    "first_appeared_s": {
+      "suspicious": 6.261,
+      "likely_scam": 14.147,
+      "scam": 21.292
+    }
+  },
+  "segments": [
+    {
+      "index": 1,
+      "text": "यह सीबीआई मुख्य मुख्यालय से चेतावनी कॉल है, आपके नाम पर मनी लॉन्ड्रिंग का केस दर्ज हुआ है।",
+      "audio_start_s": 0.0,
+      "audio_end_s": 5.728,
+      "appear_s": 6.108,
+      "stt_latency_ms": 152
+    },
+    {
+      "index": 2,
+      "text": "सीबीआई मैंने जिंदगी में कोई गलत काम नहीं किया, आपके बैंक खाते से करोड़ों का अवैध लेन देन हुआ है",
+      "audio_start_s": 5.728,
+      "audio_end_s": 11.776,
+      "appear_s": 14.141,
+      "stt_latency_ms": 151
+    },
+    {
+      "index": 3,
+      "text": "सुप्रीम कोर्ट का गैर जमानती वारंट निकला है।",
+      "audio_start_s": 11.776,
+      "audio_end_s": 14.816,
+      "appear_s": 15.095,
+      "stt_latency_ms": 73
+    },
+    {
+      "index": 4,
+      "text": "सर मैं क्या करूँ, कृपया मदद कीजिए, तुरंत वीडियो कॉल चालू रखें, अपने घर वालों को मत बताना।",
+      "audio_start_s": 14.816,
+      "audio_end_s": 20.896,
+      "appear_s": 21.286,
+      "stt_latency_ms": 159
+    }
+  ],
+  "signals": [
+    {
+      "id": "sig_01_001",
+      "category": "AUTHORITY_CLAIM",
+      "weight": 2,
+      "evidence": "सीबीआई",
+      "segment_index": 1,
+      "appear_s": 6.261
+    },
+    {
+      "id": "sig_01_002",
+      "category": "THREAT_ARREST",
+      "weight": 3,
+      "evidence": "मनी लॉन्ड्रिंग",
+      "segment_index": 1,
+      "appear_s": 6.261
+    },
+    {
+      "id": "sig_01_003",
+      "category": "THREAT_ARREST",
+      "weight": 3,
+      "evidence": "केस दर्ज",
+      "segment_index": 1,
+      "appear_s": 6.261
+    },
+    {
+      "id": "sig_02_001",
+      "category": "AUTHORITY_CLAIM",
+      "weight": 2,
+      "evidence": "सीबीआई",
+      "segment_index": 2,
+      "appear_s": 14.147
+    },
+    {
+      "id": "sig_03_001",
+      "category": "AUTHORITY_CLAIM",
+      "weight": 2,
+      "evidence": "कोर्ट",
+      "segment_index": 3,
+      "appear_s": 15.1
+    },
+    {
+      "id": "sig_03_002",
+      "category": "THREAT_ARREST",
+      "weight": 3,
+      "evidence": "गैर जमानती",
+      "segment_index": 3,
+      "appear_s": 15.1
+    },
+    {
+      "id": "sig_03_003",
+      "category": "THREAT_ARREST",
+      "weight": 3,
+      "evidence": "वारंट",
+      "segment_index": 3,
+      "appear_s": 15.1
+    },
+    {
+      "id": "sig_04_001",
+      "category": "URGENCY",
+      "weight": 1,
+      "evidence": "तुरंत",
+      "segment_index": 4,
+      "appear_s": 21.292
+    },
+    {
+      "id": "sig_04_002",
+      "category": "ISOLATION",
+      "weight": 3,
+      "evidence": "वीडियो कॉल",
+      "segment_index": 4,
+      "appear_s": 21.292
+    },
+    {
+      "id": "sig_04_003",
+      "category": "SECRECY",
+      "weight": 3,
+      "evidence": "घर वालों को मत बताना",
+      "segment_index": 4,
+      "appear_s": 21.292
+    }
+  ],
+  "risk_events": [
+    {
+      "level": "suspicious",
+      "score": 6,
+      "primary_type": "unknown_suspicious",
+      "appear_s": 6.261,
+      "audio_heard_s": 5.728
+    },
+    {
+      "level": "likely_scam",
+      "score": 7,
+      "primary_type": "unknown_suspicious",
+      "appear_s": 14.147,
+      "audio_heard_s": 11.776
+    },
+    {
+      "level": "likely_scam",
+      "score": 9,
+      "primary_type": "unknown_suspicious",
+      "appear_s": 15.1,
+      "audio_heard_s": 14.816
+    },
+    {
+      "level": "scam",
+      "score": 16,
+      "primary_type": "digital_arrest",
+      "appear_s": 21.292,
+      "audio_heard_s": 20.896
+    }
+  ],
+  "speech_events": [
+    0.475,
+    6.261,
+    14.147,
+    15.293,
+    21.603
+  ]
+}
