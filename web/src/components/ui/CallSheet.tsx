@@ -37,6 +37,8 @@ interface CallSheetProps {
   showStamp?: boolean;
   /** Overrides the default "Recorded via second device" subtitle (e.g. for replayed test clips). */
   subtitle?: { en: string; hi: string };
+  /** Shows a live pulsing transcription cursor at the end of the last line while streaming. */
+  isStreamingLast?: boolean;
 }
 
 export function CallSheet({
@@ -48,18 +50,20 @@ export function CallSheet({
   className = "",
   showStamp = true,
   subtitle,
+  isStreamingLast = false,
 }: CallSheetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollListRef = useRef<HTMLDivElement>(null);
   const { locale: contextLocale } = useI18n();
   const activeLang = (lang === "en" || lang === "hi" ? lang : contextLocale) as "en" | "hi";
+  const lastSegTextLen = segments.length > 0 ? segments[segments.length - 1].text.length : 0;
 
   useEffect(() => {
     const el = scrollListRef.current;
     if (el && segments.length > 0) {
       el.scrollTop = el.scrollHeight;
     }
-  }, [segments.length]);
+  }, [segments.length, lastSegTextLen]);
 
   // Group signals by segment index
   const signalsBySegment = signals.reduce<Record<number, CallSignal[]>>((acc, sig) => {
@@ -206,6 +210,12 @@ export function CallSheet({
                 {/* Main Content: Spoken Text with Marks */}
                 <div className="flex-1 min-w-0 text-[15px] sm:text-[16px] text-[var(--ink)] leading-relaxed">
                   {renderAnnotatedText(seg)}
+                  {isStreamingLast && seg.index === segments[segments.length - 1]?.index && (
+                    <span
+                      className="inline-block w-1.5 h-4 ml-1 align-middle bg-[var(--stamp)] animate-pulse rounded-xs"
+                      aria-hidden="true"
+                    />
+                  )}
                 </div>
 
                 {/* Right Gutter: Margin Note (Desktop) or Indented Below (Mobile) */}

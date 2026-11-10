@@ -29,6 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="hi"
+      data-theme="light"
       suppressHydrationWarning
       className={`${fontDisplay.variable} ${fontBody.variable} ${fontHand.variable} h-full antialiased`}
     >

@@ -32,12 +32,20 @@ html {
   text-size-adjust: 100%;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   max-height: 999999px;
 }
 
 body {
   background-color: var(--bg);
+  background-image:
+    radial-gradient(at 15% 10%, rgba(42, 47, 184, 0.055) 0px, transparent 50%),
+    radial-gradient(at 85% 20%, rgba(229, 50, 45, 0.045) 0px, transparent 45%),
+    radial-gradient(var(--line) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 24px 24px;
+  background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-body), system-ui, sans-serif;
   line-height: 1.6;
@@ -86,6 +94,7 @@ html:lang(hi) {
   .hero-cycling-headline-container {
     min-height: 108px;
   }
+
   .hero-cycling-headline {
     font-size: clamp(38px, 5.5vw, 54px);
   }
@@ -95,6 +104,7 @@ html:lang(hi) {
   .hero-cycling-headline-container {
     min-height: 148px;
   }
+
   .hero-cycling-headline {
     font-size: clamp(44px, 4.5vw, 62px);
     line-height: 1.06;
@@ -106,6 +116,7 @@ html:lang(hi) {
   .hero-cycling-headline-container {
     min-height: 68px;
   }
+
   .hero-cycling-headline {
     font-size: clamp(28px, 4.5vw, 38px);
   }
@@ -114,6 +125,7 @@ html:lang(hi) {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -168,13 +180,11 @@ body {
 
 /* Subtly folded dog-ear corner */
 .paper-folded {
-  clip-path: polygon(
-    0 0,
-    calc(100% - 14px) 0,
-    100% 14px,
-    100% 100%,
-    0 100%
-  );
+  clip-path: polygon(0 0,
+      calc(100% - 14px) 0,
+      100% 14px,
+      100% 100%,
+      0 100%);
 }
 
 .paper-dog-ear {
@@ -192,6 +202,7 @@ body {
   0% {
     stroke-dashoffset: 380;
   }
+
   100% {
     stroke-dashoffset: 0;
   }
@@ -201,6 +212,7 @@ body {
   0% {
     background-size: 0% 100%;
   }
+
   100% {
     background-size: 100% 100%;
   }
@@ -210,16 +222,20 @@ body {
   0% {
     clip-path: inset(0 100% 0 0);
   }
+
   100% {
     clip-path: inset(0 0 0 0);
   }
 }
 
 @keyframes vermilionFlash {
-  0%, 100% {
+
+  0%,
+  100% {
     border-color: var(--line);
     box-shadow: 0 4px 20px -2px rgba(20, 22, 58, 0.08);
   }
+
   50% {
     border-color: var(--alarm);
     box-shadow: 0 0 24px 2px rgba(229, 50, 45, 0.5);
@@ -227,21 +243,106 @@ body {
 }
 
 @keyframes sheetShift {
-  0% { transform: translateY(0); }
-  25% { transform: translateY(2px) translateX(1px); }
-  50% { transform: translateY(2px) translateX(-1px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+
+  25% {
+    transform: translateY(2px) translateX(1px);
+  }
+
+  50% {
+    transform: translateY(2px) translateX(-1px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @keyframes waveBar {
-  0%, 100% { transform: scaleY(0.25); }
-  50% { transform: scaleY(1); }
+
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes floatSlow {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+
+  70% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 34s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.card-interactive {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1), border-color 180ms ease;
+}
+
+.card-interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -6px rgba(20, 22, 58, 0.12);
+}
+
+[data-theme="dark"] .card-interactive:hover {
+  box-shadow: 0 12px 32px -6px rgba(0, 0, 0, 0.55);
 }
 
 /* P0-5 Button stamp-pad depression */
 .btn-stamp {
-  transition: transform 120ms ease, box-shadow 120ms ease;
+  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms ease;
 }
+
+.btn-stamp:hover {
+  transform: translateY(-2px);
+}
+
 .btn-stamp:active {
   transform: translateY(1px);
   box-shadow: inset 0 2px 4px rgba(20, 22, 58, 0.2);
@@ -252,6 +353,7 @@ body {
   .cursor-marker {
     cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23FFD60A' stroke='%2314163A' stroke-width='1.5'%3E%3Cpolygon points='2,22 6,22 20,8 16,4 2,18'/%3E%3Cline x1='13' y1='7' x2='17' y2='11'/%3E%3C/svg%3E") 2 22, crosshair;
   }
+
   .cursor-marker button,
   .cursor-marker a,
   .cursor-marker input {
@@ -261,6 +363,7 @@ body {
 
 /* Respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -270,4 +373,3 @@ body {
     scroll-behavior: auto !important;
   }
 }
-

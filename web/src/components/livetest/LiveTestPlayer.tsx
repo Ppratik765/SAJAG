@@ -15,6 +15,7 @@ import {
   ClipData,
   TestFixture,
   deriveView,
+  deriveStreamingView,
   formatClock,
   framesDue,
 } from "@/lib/livetest/view";
@@ -373,7 +374,7 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
     if (modeRef.current === "recorded") {
       setIsPlaying(false);
       setRunState("ended");
-      setClock(audioRef.current?.currentTime ?? 0);
+      setClock((audioRef.current?.currentTime ?? durationRef.current) + 1.2);
     }
   };
 
@@ -387,7 +388,10 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
     () => (mode === "live" ? liveData : fixture ?? { segments: [], signals: [], risk_events: [] }),
     [mode, liveData, fixture]
   );
-  const view = useMemo(() => deriveView(data, mode === "live" ? Number.POSITIVE_INFINITY : clock), [data, clock, mode]);
+  const view = useMemo(
+    () => (mode === "live" ? deriveView(data, Number.POSITIVE_INFINITY) : deriveStreamingView(data, clock)),
+    [data, clock, mode]
+  );
 
   const sheetSignals: CallSignal[] = view.signals.map((s) => ({
     id: s.id,
@@ -573,12 +577,13 @@ export function LiveTestPlayer({ fixtureUrl, allowLive = false }: Props) {
           </p>
         ) : (
           <CallSheet
-            segments={view.segments.map((s) => ({ index: s.index, text: s.text, time: formatClock(s.appear_s) }))}
+            segments={view.segments.map((s) => ({ index: s.index, text: s.text, time: formatClock(s.audio_start_s) }))}
             signals={sheetSignals}
             marginNotes={marginNotes}
             level={view.level}
             lang={lang}
             showStamp={false}
+            isStreamingLast={isPlaying && clock < duration}
             subtitle={{ en: "Test clip, transcribed by Prisma", hi: "टेस्ट क्लिप, प्रिस्मा से ट्रांसक्राइब" }}
           />
         )}

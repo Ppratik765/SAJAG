@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-const { deriveView, framesDue, formatClock, safeClipId } = await import("../src/lib/livetest/view.ts");
+const { deriveView, deriveStreamingView, framesDue, formatClock, safeClipId } = await import("../src/lib/livetest/view.ts");
 import fs from "node:fs";
 
 const fx = JSON.parse(fs.readFileSync(new URL("../public/live-tests/da_hi_002/fixture.json", import.meta.url), "utf8"));
@@ -62,6 +62,13 @@ test("real example clips in manifest have valid fixtures, exact evidence substri
     const realFx = JSON.parse(fs.readFileSync(new URL(`../public${clip.fixture_url}`, import.meta.url), "utf8"));
     const finalView = deriveView(realFx, realFx.meta.audio_duration_s + 5);
     assert.equal(finalView.level, "scam");
+    // Verify live word-by-word streaming starts after the natural STT lag
+    assert.equal(deriveStreamingView(realFx, 0.5).segments.length, 0);
+    const earlyStream = deriveStreamingView(realFx, 1.2);
+    assert.equal(earlyStream.segments.length, 1);
+    assert.ok(earlyStream.segments[0].text.length > 0);
+    const fullStream = deriveStreamingView(realFx, realFx.meta.audio_duration_s + 2);
+    assert.equal(fullStream.level, "scam");
     for (const s of realFx.signals) {
       const seg = realFx.segments.find((x) => x.index === s.segment_index);
       assert.ok(seg && seg.text.includes(s.evidence), `${clip.id}:${s.id}`);

@@ -375,6 +375,19 @@ export function LivingHero() {
             {locale === "hi" ? "क्या यह कॉल ठगी है?" : "Is this call a scam?"}
           </h1>
 
+          {/* Live Radar Status Badge */}
+          <div className="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-[var(--sheet)] border border-[var(--line)] shadow-2xs text-[11px] font-bold tracking-wide uppercase text-[var(--stamp)]">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--alarm)] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--alarm)]" />
+            </span>
+            <span>
+              {locale === "hi"
+                ? "लाइव स्कैम शील्ड • 11 भारतीय भाषाएँ"
+                : "Live Scam Shield • 11 Indian Languages"}
+            </span>
+          </div>
+
           {/* Visible cycling display headline: clamp(48px, 7vw, 112px) desktop, 40px mobile */}
           <div
             aria-hidden="true"
@@ -482,11 +495,38 @@ export function LivingHero() {
             <div className="paper-dog-ear" />
 
             {/* Sheet Header: sentence-case with attached normal-case "Example, written by us" label */}
-            <div className="border-b border-[var(--line)] pb-2.5 mb-3 flex items-center justify-between gap-3">
+            <div className="border-b border-[var(--line)] pb-2.5 mb-2 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
                 <div>
-                  <span className="text-xs sm:text-sm font-bold text-[var(--ink)] block">
-                    {locale === "hi" ? "बातचीत का विवरण" : "Transcript call sheet"}
+                  <span className="text-xs sm:text-sm font-bold text-[var(--ink)] flex items-center gap-2">
+                    <span>
+                      {locale === "hi" ? "बातचीत का विवरण" : "Transcript call sheet"}
+                    </span>
+                    {/* Live animated audio equalizer bars */}
+                    <span
+                      className="inline-flex items-end gap-0.5 h-3.5 px-1.5 py-0.5 rounded bg-[var(--bg)] border border-[var(--line)]"
+                      aria-hidden="true"
+                      title={isPlaying ? "Live audio analysis active" : "Paused"}
+                    >
+                      {[5, 11, 7, 12, 6, 10, 8].map((h, i) => (
+                        <span
+                          key={i}
+                          className="w-0.5 rounded-full transition-colors duration-300"
+                          style={{
+                            height: `${h}px`,
+                            backgroundColor:
+                              currentLevel === "scam" || currentLevel === "likely_scam"
+                                ? "var(--alarm)"
+                                : "var(--stamp)",
+                            animation:
+                              isPlaying && !shouldReduceMotion
+                                ? `waveBar ${550 + i * 70}ms ease-in-out infinite ${i * 90}ms`
+                                : "none",
+                            transform: isPlaying ? undefined : "scaleY(0.35)",
+                          }}
+                        />
+                      ))}
+                    </span>
                   </span>
                   <span className="text-[11px] text-[var(--ink-muted)]">
                     {locale === "hi"
@@ -502,6 +542,42 @@ export function LivingHero() {
               <div className="text-xs font-semibold text-[var(--ink-muted)] tabular-nums shrink-0">
                 {visibleSteps.length} / {scriptData.steps.length}{" "}
                 {locale === "hi" ? "पंक्तियाँ" : "lines"}
+              </div>
+            </div>
+
+            {/* Interactive Step Progress Bar with clickable jump nodes */}
+            <div className="mb-2.5 flex items-center gap-2">
+              <div className="relative flex-1 h-1.5 rounded-full bg-[var(--line)] overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-150"
+                  style={{
+                    width: `${Math.min(100, (currentTimeMs / scriptData.totalDurationMs) * 100)}%`,
+                    backgroundColor:
+                      currentLevel === "scam" || currentLevel === "likely_scam"
+                        ? "var(--alarm)"
+                        : "var(--stamp)",
+                  }}
+                />
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                {scriptData.steps.map((s) => {
+                  const active = currentTimeMs >= s.atMs;
+                  return (
+                    <button
+                      key={s.lineIndex}
+                      type="button"
+                      onClick={() => handleScrub(s.atMs)}
+                      title={`Jump to ${s.time}`}
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                        active
+                          ? "bg-[var(--stamp)] text-white shadow-2xs"
+                          : "bg-[var(--bg)] text-[var(--ink-muted)] hover:text-[var(--ink)] border border-[var(--line)]"
+                      }`}
+                    >
+                      {s.time}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -690,6 +766,7 @@ export function LivingHero() {
             <input
               id="hero-scrubber"
               type="range"
+              suppressHydrationWarning
               min={0}
               max={scriptData.totalDurationMs}
               step={100}

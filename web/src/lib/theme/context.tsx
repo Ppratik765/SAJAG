@@ -15,17 +15,17 @@ const ThemeContext = createContext<ThemeContextType | null>(null);
 let currentTheme: Theme = "light";
 const themeListeners = new Set<() => void>();
 
+const STORAGE_KEY = "sajag_theme_light_default";
+
 if (typeof window !== "undefined") {
   try {
-    const saved = localStorage.getItem("sajag_theme") as Theme | null;
+    const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
     if (saved === "light" || saved === "dark") {
       currentTheme = saved;
-      document.documentElement.setAttribute("data-theme", saved);
     } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      currentTheme = prefersDark ? "dark" : "light";
-      document.documentElement.setAttribute("data-theme", currentTheme);
+      currentTheme = "light";
     }
+    document.documentElement.setAttribute("data-theme", currentTheme);
   } catch {
     // ignore
   }
@@ -52,7 +52,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setTheme = (t: Theme) => {
     currentTheme = t;
     try {
-      localStorage.setItem("sajag_theme", t);
+      localStorage.setItem(STORAGE_KEY, t);
       document.documentElement.setAttribute("data-theme", t);
     } catch {
       // ignore

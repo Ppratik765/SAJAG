@@ -17,34 +17,39 @@ export function ScrollHowItWorks() {
   const step2Ref = useRef<HTMLDivElement>(null);
   const step3Ref = useRef<HTMLDivElement>(null);
 
-  // Scroll position driver + interactive click/hover on steps
+  // Auto-cycle + Scroll position driver + interactive click/hover on steps
   const [userPinned, setUserPinned] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Auto-cycle every 3.2s when not pinned or hovered so the widget is always lively in view
+  useEffect(() => {
+    if (shouldReduceMotion || userPinned || isHovered) return;
+    const timer = setInterval(() => {
+      setActiveStep((prev) => (prev === 1 ? 2 : prev === 2 ? 3 : 1));
+    }, 3200);
+    return () => clearInterval(timer);
+  }, [shouldReduceMotion, userPinned, isHovered]);
 
   useEffect(() => {
-    if (shouldReduceMotion || userPinned) return;
+    if (shouldReduceMotion || userPinned || isHovered) return;
 
     const handleScroll = () => {
       const container = containerRef.current;
       if (!container) return;
       const rect = container.getBoundingClientRect();
       const vh = window.innerHeight;
-      // Map the section's position while it is comfortably inside the viewport:
-      // When rect.top is at 65% of viewport height -> Step 1
-      // When rect.top is between 30% and 55% -> Step 2
-      // When rect.top is <= 30% -> Step 3
-      if (rect.top <= vh * 0.28) {
+      if (rect.top <= vh * 0.25 && rect.top >= -vh * 0.2) {
         setActiveStep(3);
-      } else if (rect.top <= vh * 0.52) {
+      } else if (rect.top <= vh * 0.48 && rect.top > vh * 0.25) {
         setActiveStep(2);
-      } else {
+      } else if (rect.top > vh * 0.48 && rect.top <= vh * 0.8) {
         setActiveStep(1);
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [shouldReduceMotion, userPinned]);
+  }, [shouldReduceMotion, userPinned, isHovered]);
 
   const lines = [
     {
@@ -102,13 +107,37 @@ export function ScrollHowItWorks() {
         </div>
       ) : (
         /* Side-by-side Aligned Sheet & Steps Section */
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch relative">
+        <div
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch relative"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           {/* Left Column: Live Sheet State */}
           <div className="lg:col-span-6 flex flex-col">
             {/* Step status bar indicator */}
             <div className="flex items-center justify-between mb-3 text-xs font-semibold px-1">
-              <span className="text-[var(--ink-muted)]">
-                {locale === "hi" ? "लाइव कागज़ की स्थिति" : "Live Sheet State"} —{" "}
+              <span className="text-[var(--ink-muted)] flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span
+                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                      activeStep === 3
+                        ? "bg-[var(--alarm)]"
+                        : activeStep === 2
+                        ? "bg-[var(--marker)]"
+                        : "bg-[var(--stamp)]"
+                    }`}
+                  />
+                  <span
+                    className={`relative inline-flex rounded-full h-2 w-2 ${
+                      activeStep === 3
+                        ? "bg-[var(--alarm)]"
+                        : activeStep === 2
+                        ? "bg-[var(--marker)]"
+                        : "bg-[var(--stamp)]"
+                    }`}
+                  />
+                </span>
+                <span>{locale === "hi" ? "लाइव कागज़ की स्थिति" : "Live Sheet State"} —</span>
                 <span className="text-[var(--stamp)] font-bold">
                   {activeStep === 1
                     ? locale === "hi"
@@ -124,6 +153,15 @@ export function ScrollHowItWorks() {
                 </span>
               </span>
               <div className="flex items-center gap-1.5">
+                {userPinned && (
+                  <button
+                    type="button"
+                    onClick={() => setUserPinned(false)}
+                    className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[var(--stamp)]/10 text-[var(--stamp)] hover:bg-[var(--stamp)]/20 transition-colors cursor-pointer mr-1"
+                  >
+                    {locale === "hi" ? "ऑटो-चक्र चालू करें" : "Resume auto"}
+                  </button>
+                )}
                 {([1, 2, 3] as const).map((s) => (
                   <button
                     key={s}

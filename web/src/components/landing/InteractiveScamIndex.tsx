@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { ChevronDown, ArrowRight } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { Mark } from "../ui/Mark";
 import { MarginNote } from "../ui/MarginNote";
@@ -102,8 +103,11 @@ export function InteractiveScamIndex() {
                 className="w-full py-5 px-3 sm:px-4 text-left flex items-start justify-between gap-4 focus:outline-none focus:ring-2 focus:ring-[var(--stamp)] rounded-md"
               >
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6 items-baseline flex-1">
-                  <div className="md:col-span-5 font-display font-extrabold text-xl sm:text-2xl text-[var(--ink)] tracking-tight">
-                    {title}
+                  <div className="md:col-span-5 font-display font-extrabold text-xl sm:text-2xl text-[var(--ink)] tracking-tight flex items-center gap-2.5 flex-wrap">
+                    <span>{title}</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-[var(--alarm)]/10 text-[var(--alarm-text)]">
+                      {locale === "hi" ? "उच्च जोखिम" : "High Risk"}
+                    </span>
                   </div>
                   <div className="md:col-span-7 text-sm sm:text-base text-[var(--ink-muted)] leading-relaxed">
                     {desc}
@@ -164,9 +168,18 @@ export function InteractiveScamIndex() {
                       })()}
                     </div>
 
-                    {/* Kalam Margin Note (small) */}
-                    <div className="sm:w-44 shrink-0 pt-0.5 self-start">
+                    {/* Kalam Margin Note (small) + Quick Try Action */}
+                    <div className="sm:w-48 shrink-0 pt-0.5 self-start flex flex-col items-start sm:items-end gap-2">
                       <MarginNote text={note} category="SCAM_TRAP" />
+                      <Link
+                        href="/paste"
+                        className="inline-flex items-center gap-1 text-xs font-bold text-[var(--stamp)] hover:underline"
+                      >
+                        <span>
+                          {locale === "hi" ? "पेस्ट चेकर में परखें" : "Test in Paste Checker"}
+                        </span>
+                        <ArrowRight size={12} />
+                      </Link>
                     </div>
                   </div>
                 </div>
