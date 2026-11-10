@@ -99,18 +99,18 @@ const MARQUEE_FLAGS = [
 
 const REAL_CLIPS = [
   {
-    id: "da_real_01",
-    duration_s: 66,
-    title: "Digital arrest call — Fake Police Station & Video Statement",
-    title_hi: "डिजिटल अरेस्ट कॉल — नकली पुलिस स्टेशन और वीडियो बयान",
-    fixture_url: "/live-tests/da_real_01/fixture.json",
-  },
-  {
     id: "da_real_02",
     duration_s: 61,
     title: "Digital arrest fraud — Drugs in Parcel & Money Transfer",
     title_hi: "डिजिटल अरेस्ट धोखाधड़ी — पार्सल में ड्रग्स और पैसे ट्रांसफर",
     fixture_url: "/live-tests/da_real_02/fixture.json",
+  },
+  {
+    id: "da_real_01",
+    duration_s: 66,
+    title: "Digital arrest call — Fake Police Station & Video Statement",
+    title_hi: "डिजिटल अरेस्ट कॉल — नकली पुलिस स्टेशन और वीडियो बयान",
+    fixture_url: "/live-tests/da_real_01/fixture.json",
   },
 ] as const;
 

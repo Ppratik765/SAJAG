@@ -2,23 +2,23 @@
   "version": 1,
   "clips": [
     {
-      "id": "da_real_01",
-      "kind": "real",
-      "title": "Call 1: Fake Police & Telecom Digital Arrest (The Lallantop)",
-      "title_hi": "कॉल 1: नकली पुलिस और टेलीकॉम डिजिटल अरेस्ट (दी लल्लनटॉप)",
-      "language_code": "hi-IN",
-      "duration_s": 65.97,
-      "fixture_url": "/live-tests/da_real_01/fixture.json",
-      "final_level": "scam"
-    },
-    {
       "id": "da_real_02",
       "kind": "real",
-      "title": "Call 2: Parcel Drugs & Arrest Warrant Scam (HDFC Bank)",
-      "title_hi": "कॉल 2: पार्सल ड्रग्स और अरेस्ट वारंट ठगी (एचडीएफसी बैंक)",
+      "title": "Call 1: Parcel Drugs & Arrest Warrant Scam (HDFC Bank)",
+      "title_hi": "कॉल 1: पार्सल ड्रग्स और अरेस्ट वारंट ठगी (एचडीएफसी बैंक)",
       "language_code": "hi-IN",
       "duration_s": 60.84,
       "fixture_url": "/live-tests/da_real_02/fixture.json",
+      "final_level": "scam"
+    },
+    {
+      "id": "da_real_01",
+      "kind": "real",
+      "title": "Call 2: Fake Police & Telecom Digital Arrest (The Lallantop)",
+      "title_hi": "कॉल 2: नकली पुलिस और टेलीकॉम डिजिटल अरेस्ट (दी लल्लनटॉप)",
+      "language_code": "hi-IN",
+      "duration_s": 65.97,
+      "fixture_url": "/live-tests/da_real_01/fixture.json",
       "final_level": "scam"
     }
   ]
